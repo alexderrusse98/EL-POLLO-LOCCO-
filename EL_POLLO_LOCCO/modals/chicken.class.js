@@ -2,7 +2,7 @@ class Chicken extends MovableObject {
     height = 55;
     width = 70;
     y = 360;
-
+    
     IMAGES_WALKING = [
         './img/img_pollo_locco/img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
         './img/img_pollo_locco/img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
@@ -21,7 +21,11 @@ class Chicken extends MovableObject {
 }
 
 animate(){
-    this.moveLeft();
+       setInterval(() => {
+         this.moveLeft();
+         
+      }, 1000 / 60);
+    
 
     setInterval(() => {
         this.playAnimation(this.IMAGES_WALKING);
@@ -29,3 +33,5 @@ animate(){
 }
 
 }
+
+    
