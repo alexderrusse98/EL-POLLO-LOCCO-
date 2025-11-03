@@ -18,6 +18,8 @@ class World {
         this.statusBarHealth = new StatusBar('health', 40, 0);
         this.statusBarCoins = new StatusBar('coin', 40, 60);
         this.statusBarBottles = new StatusBar('bottle', 40, 120);
+        this.statusBarCoins.setPercentage(0);
+        this.statusBarBottles.setPercentage(0);
 
         this.draw();
         this.setWorld();
