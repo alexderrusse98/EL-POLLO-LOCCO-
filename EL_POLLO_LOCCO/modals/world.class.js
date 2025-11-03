@@ -9,6 +9,7 @@ class World {
     statusBarCoins;
     statusBarBottles;
     throwAbleObjects = [];
+    coins = 0;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -50,6 +51,15 @@ class World {
                     this.statusBarHealth.setPercentage(this.character.energy);
                 }
             });
+            
+            this.level.coins.forEach((coin, index) => {
+        if (this.character.isColliding(coin)) {
+            this.statusBarCoins.setPercentage(
+                Math.min(this.statusBarCoins.percentage + 20, 100)
+            );console.log(this.statusBarCoins.percentage); 
+            this.level.coins.splice(index, 1); // Coin entfernen
+        }
+    });
     }
   
     draw() {
@@ -66,7 +76,7 @@ class World {
         this.addObjectsToMap(this.level.enemies);
 
         this.addObjectsToMap(this.throwAbleObjects);
-
+        this.addObjectsToMap(this.level.coins);
         this.ctx.translate(-this.camera_x, 0);
 
         this.addToMap(this.statusBarHealth);
@@ -109,4 +119,5 @@ class World {
         mo.x = mo.x * -1;
         this.ctx.restore();
     }
+    
 }
