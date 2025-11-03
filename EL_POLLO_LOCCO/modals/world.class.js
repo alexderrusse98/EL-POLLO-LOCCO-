@@ -21,25 +21,36 @@ class World {
 
         this.draw();
         this.setWorld();
-        this.checkCollision();
+        this.run();
     }
 
     setWorld() {
         this.character.world = this;
     };
 
-      checkCollision() {
+      run() {
         setInterval(() => {
-            this.level.enemies.forEach((enemy) => {
+            this.checkCollisions();
+            this.checkThrowObjects();
+        }, 200);
+    }
+
+    checkThrowObjects() {
+        if (this.keyboard.D) {
+            let bottle = new ThrowableObject(this.character.x, this.character.y);
+            this.throwAbleObjects.push(bottle);
+        }
+    }
+
+    checkCollisions() {
+         this.level.enemies.forEach((enemy) => {
                 if (this.character.isColliding(enemy)) {
                     this.character.hit();
                     this.statusBarHealth.setPercentage(this.character.energy);
                 }
             });
-        }, 200);
     }
-
-
+  
     draw() {
 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
