@@ -1,4 +1,5 @@
 class StatusBar extends DrawableObject {
+    
     IMAGES_COIN = [
         './img/img_pollo_locco/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/0.png',
         './img/img_pollo_locco/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/20.png',
@@ -6,9 +7,9 @@ class StatusBar extends DrawableObject {
         './img/img_pollo_locco/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/60.png',
         './img/img_pollo_locco/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/80.png',
         './img/img_pollo_locco/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/100.png',
-    ]
+    ];
     
-      IMAGES_BOTTLE = [
+    IMAGES_BOTTLE = [
         './img/img_pollo_locco/img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/0.png',
         './img/img_pollo_locco/img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/20.png',
         './img/img_pollo_locco/img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/40.png',
@@ -32,11 +33,14 @@ class StatusBar extends DrawableObject {
     percentage = 100;
 
 
-    constructor() {
+    constructor(type, x, y) {
         super();
+        if (type === 'health') this.images = this.IMAGES_HEALTH;
+        else if (type === 'coin') this.images = this.IMAGES_COIN;
+        else if (type === 'bottle') this.images = this.IMAGES_BOTTLE;
         this.loadImages(this.IMAGES);
-        this.x = 40;
-        this.y = 0;
+        this.x = x;
+        this.y = y;
         this.width = 200;
         this.height = 60;
         this.setPercentage(100);
@@ -66,7 +70,3 @@ class StatusBar extends DrawableObject {
         }
     }
 }
-
-
-
-// andere Statusbars wahrscheinlich 2 weitere Klassen hinzufügen

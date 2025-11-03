@@ -5,12 +5,19 @@ class World {
     ctx;
     keyboard;
     camera_x = 0;
-    statusBar = new StatusBar();
+    statusBarHealth;
+    statusBarCoins;
+    statusBarBottles;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        
+        this.statusBarHealth = new StatusBar('health', 40, 0);
+        this.statusBarCoins = new StatusBar('coin', 40, 60);
+        this.statusBarBottles = new StatusBar('bottle', 40, 120);
+
         this.draw();
         this.setWorld();
         this.checkCollision();
@@ -20,13 +27,13 @@ class World {
         this.character.world = this;
     };
 
-    checkCollision(){
+      checkCollision() {
         setInterval(() => {
             this.level.enemies.forEach((enemy) => {
-               if (this.character.isColliding(enemy)) {
+                if (this.character.isColliding(enemy)) {
                     this.character.hit();
-                    this.statusBar.setPercentage(this.character.energy);
-               } 
+                    this.statusBarHealth.setPercentage(this.character.energy);
+                }
             });
         }, 200);
     }
@@ -40,17 +47,18 @@ class World {
 
         this.ctx.translate(-this.camera_x, 0);
         //-----Space for fixed objects-----
-        this.addToMap(this.statusBar);
         this.ctx.translate(this.camera_x, 0);
 
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.cloud);
         this.addObjectsToMap(this.level.enemies);
 
-
         this.ctx.translate(-this.camera_x, 0);
 
-        // Draw wird immer wieder aufgerufen
+        this.addToMap(this.statusBarHealth);
+        this.addToMap(this.statusBarCoins);
+        this.addToMap(this.statusBarBottles);
+    
         let self = this;
         requestAnimationFrame(function () {
             self.draw();
@@ -69,7 +77,7 @@ class World {
         }
 
         mo.draw(this.ctx)
-        mo.drawFrame(this.ctx);
+        mo.drawFrame?.(this.ctx);
 
 
         if (mo.ortherDirection) {
