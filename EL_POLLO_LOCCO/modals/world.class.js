@@ -8,7 +8,7 @@ class World {
     statusBarHealth;
     statusBarCoins;
     statusBarBottles;
-    throwAbleObjects = [new ThrowableObject()];
+    throwAbleObjects = [];
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -37,11 +37,10 @@ class World {
 
     checkThrowObjects() {
         if (this.keyboard.D) {
-            let bottle = new ThrowableObject(this.character.x, this.character.y);
+            let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
             this.throwAbleObjects.push(bottle);
         }
     }
-
     checkCollisions() {
          this.level.enemies.forEach((enemy) => {
                 if (this.character.isColliding(enemy)) {
