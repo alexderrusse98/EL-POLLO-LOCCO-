@@ -10,7 +10,7 @@ class World {
     statusBarBottles;
     throwAbleObjects = [];
     coins = 0;
-    bottle = 0;
+    bottles = 0;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -64,12 +64,12 @@ class World {
         }
     });
 
-           this.level.bottle.forEach((bottle, index) => {
+           this.level.bottles.forEach((bottle, index) => {
         if (this.character.isColliding(bottle)) {
             this.statusBarBottles.setPercentage(
                 Math.min(this.statusBarBottles.percentage + 20, 100)
             );
-            this.level.bottle.splice(index, 1); 
+            this.level.bottles.splice(index, 1); 
         }
     });
     }
@@ -89,7 +89,7 @@ class World {
 
         this.addObjectsToMap(this.throwAbleObjects);
         this.addObjectsToMap(this.level.coins);
-        this.addObjectsToMap(this.level.bottle);
+        this.addObjectsToMap(this.level.bottles);
         this.ctx.translate(-this.camera_x, 0);
 
         this.addToMap(this.statusBarHealth);

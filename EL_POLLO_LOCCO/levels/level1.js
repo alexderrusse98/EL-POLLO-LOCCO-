@@ -42,6 +42,9 @@ const level1 = new Level(
   
 ],
 [
-  
+  new CollectableBottle(300),
+  new CollectableBottle(400),
+  new CollectableBottle(400),
+  new CollectableBottle(400),
 ]
 );
