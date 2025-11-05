@@ -2,7 +2,8 @@ class Character extends MovableObject {
     height = 250;
     y = 80;
     speed = 5;
-
+    bottleCount = 0;  
+      
     IMAGES_WALKING = [
         './img/img_pollo_locco/img/2_character_pepe/2_walk/W-21.png',
         './img/img_pollo_locco/img/2_character_pepe/2_walk/W-22.png',
@@ -52,6 +53,7 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_HURT);
         this.applyGravity();
         this.animate();
+        
     }
 
     animate() {

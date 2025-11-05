@@ -39,12 +39,17 @@ class World {
         }, 200);
     }
 
-    checkThrowObjects() {
-        if (this.keyboard.D) {
-            let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
-            this.throwAbleObjects.push(bottle);
-        }
+   checkThrowObjects() {
+    if (this.keyboard.D && this.character.bottleCount > 0) {
+        let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
+        this.throwAbleObjects.push(bottle);
+        this.character.bottleCount--;
+        this.statusBarBottles.setPercentage(
+            Math.max(this.statusBarBottles.percentage - 20, 0)
+        );
     }
+}
+
 
     //auf jeden fall hier kürzen
     checkCollisions() {
@@ -64,14 +69,16 @@ class World {
         }
     });
 
-           this.level.bottles.forEach((bottle, index) => {
-        if (this.character.isColliding(bottle)) {
-            this.statusBarBottles.setPercentage(
-                Math.min(this.statusBarBottles.percentage + 20, 100)
-            );
-            this.level.bottles.splice(index, 1); 
-        }
-    });
+        this.level.bottles.forEach((bottle, index) => {
+    if (this.character.isColliding(bottle)) {
+        this.character.bottleCount++;
+        this.statusBarBottles.setPercentage(
+            Math.min(this.statusBarBottles.percentage + 20, 100)
+        );
+        this.level.bottles.splice(index, 1);
+    }
+});
+
     }
   
     draw() {
