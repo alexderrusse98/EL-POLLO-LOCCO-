@@ -38,13 +38,18 @@ const level1 = new Level(
     new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/1_first_layer/2.png', 720 * 3),
 ],
 [
+    new Coin(300, 100),
     new Coin(350, 100),
+    new Coin(400, 100),
+    new Coin(450, 100),
+    new Coin(500, 100),
+    new Coin(550, 100),
   
 ],
 [
   new CollectableBottle(300),
+  new CollectableBottle(350),
   new CollectableBottle(400),
-  new CollectableBottle(400),
-  new CollectableBottle(400),
+  new CollectableBottle(450),
 ]
 );
