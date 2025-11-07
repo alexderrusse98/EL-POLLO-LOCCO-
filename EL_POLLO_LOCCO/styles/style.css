@@ -5,8 +5,10 @@ body {
     min-height: 100vh;
     background-position: center;
     margin: 0;
+    font-family: "Oswald", sans-serif;
 }
 
 canvas{
     background-color: black;
 }
+
