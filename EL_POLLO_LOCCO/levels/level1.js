@@ -8,7 +8,11 @@ const level1 = new Level(
 
 [
     new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/1.png', 0),
-    new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/2.png', 400)
+    new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/2.png', 1000),
+    new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/1.png', 600),
+    new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/2.png', 2000),
+    new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/1.png', 3000),
+    new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/2.png', 2700),
 ],
 
 [
