@@ -19,7 +19,7 @@ class MovableObject extends DrawableObject {
       if (this instanceof ThrowableObject) {
          return true
       } else {
-         return this.y < 180;
+         return this.y < 220;
       }
       
    }
@@ -41,12 +41,20 @@ class MovableObject extends DrawableObject {
    }
 
 
-   isColliding(mo) {
-      return this.x + this.width > mo.x &&
-         this.y + this.height > mo.y &&
-         this.x < mo.x &&
-         this.y < mo.y + mo.height;
-   }
+ isColliding(mo) {
+   const offsetX = 20;   
+   const offsetY = 60;   
+   const offsetWidth = 40;  
+   const offsetHeight = 20; 
+
+   return (
+      this.x + offsetX + (this.width - offsetWidth) > mo.x &&
+      this.y + offsetY + (this.height - offsetHeight) > mo.y &&
+      this.x + offsetX < mo.x + mo.width &&
+      this.y + offsetY < mo.y + mo.height
+   );
+}
+
 
    hit() {
       this.energy -= 5;

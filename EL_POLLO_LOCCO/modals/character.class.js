@@ -1,6 +1,6 @@
 class Character extends MovableObject {
-    height = 250;
-    y = 80;
+    height = 200;
+    y = 220;
     speed = 5;
     bottleCount = 0;  
       
