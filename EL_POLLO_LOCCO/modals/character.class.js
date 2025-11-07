@@ -2,8 +2,8 @@ class Character extends MovableObject {
     height = 200;
     y = 220;
     speed = 5;
-    bottleCount = 0;  
-      
+    bottleCount = 0;
+
     IMAGES_WALKING = [
         './img/img_pollo_locco/img/2_character_pepe/2_walk/W-21.png',
         './img/img_pollo_locco/img/2_character_pepe/2_walk/W-22.png',
@@ -53,7 +53,7 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_HURT);
         this.applyGravity();
         this.animate();
-        
+
     }
 
     animate() {
@@ -81,8 +81,8 @@ class Character extends MovableObject {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
             } else if (this.isHurt()) {
-                    this.playAnimation(this.IMAGES_HURT);
-                }
+                this.playAnimation(this.IMAGES_HURT);
+            }
             else if (this.isAboveGround()) {
                 this.playAnimation(this.IMAGES_JUMPING);
 
