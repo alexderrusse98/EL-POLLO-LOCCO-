@@ -6,8 +6,9 @@ const level1 = new Level(
     new Endboss(),
 ],
 
-    [
-    new Cloud()
+[
+    new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/1.png', 0),
+    new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/2.png', 400)
 ],
 
 [
