@@ -3,9 +3,10 @@ class Character extends MovableObject {
     y = 220;
     speed = 5;
     bottleCount = 0;
-
     isJumpAnimationOn = false;
 
+    lastMoveTime = new Date().getTime();
+    isIdle = false;
 
     IMAGES_WALKING = [
         './img/img_pollo_locco/img/2_character_pepe/2_walk/W-21.png',
@@ -80,6 +81,8 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_JUMPING);
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
+        this.loadImages(this.IMAGES_IDLE);
+        this.loadImages(this.IMAGES_LONGIDLE);
         this.applyGravity();
         this.animate();
 
@@ -88,25 +91,57 @@ class Character extends MovableObject {
     animate() {
 
         setInterval(() => {
+            let moved = false;
+
+
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.moveRight();
                 this.ortherDirection = false;
+                moved = true;
             }
 
             if (this.world.keyboard.LEFT && this.x > 0) {
                 this.moveLeft();
                 this.ortherDirection = true;
+                moved = true;
             }
 
             if (this.world.keyboard.SPACE && !this.isAboveGround()) {
                 this.jump();
+                moved = true;
             }
 
             this.world.camera_x = -this.x + 100;
+
+            if (moved) {
+                this.lastMoveTime = new Date().getTime();
+                this.isIdle = false;
+            }
+
         }, 1000 / 60);
 
 
         setInterval(() => {
+            const now = new Date().getTime();
+            const idleTime = (now - this.lastMoveTime) / 1000;
+
+            if (idleTime >= 1 && idleTime < 5) {
+                if (!this.isIdle) {
+                    this.isIdle = true;
+                    this.playAnimation(this.IMAGES_IDLE);
+                }
+            }
+
+         
+            if (idleTime >= 5) {
+                if (!this.isIdle || this.currentAnimation !== 'long') {
+                    this.isIdle = true;
+                    this.currentAnimation = 'long';
+                    this.playAnimation(this.IMAGES_LONGIDLE);
+                }
+            }
+
+
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
             } else if (this.isHurt()) {
