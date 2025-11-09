@@ -4,6 +4,9 @@ class Character extends MovableObject {
     speed = 5;
     bottleCount = 0;
 
+    isJumpAnimationOn = false;
+
+
     IMAGES_WALKING = [
         './img/img_pollo_locco/img/2_character_pepe/2_walk/W-21.png',
         './img/img_pollo_locco/img/2_character_pepe/2_walk/W-22.png',
@@ -84,7 +87,7 @@ class Character extends MovableObject {
                 this.playAnimation(this.IMAGES_HURT);
             }
             else if (this.isAboveGround()) {
-                this.playAnimation(this.IMAGES_JUMPING);
+
 
             } else {
 
@@ -96,6 +99,21 @@ class Character extends MovableObject {
     }
 
     jump() {
-        this.speedY = 30;
+        if (!this.isJumpAnimationOn) {
+            this.isJumpAnimationOn = true;
+            this.speedY = 30;
+
+            let i = 0;
+            const jumpInterval = setInterval(() => {
+                this.img = this.imageCache[this.IMAGES_JUMPING[i]];
+                i++;
+
+                if (i >= this.IMAGES_JUMPING.length) {
+                    clearInterval(jumpInterval);
+                    this.isJumpAnimationOn = false;
+                }
+            }, 90);
+        }
     }
+
 }
