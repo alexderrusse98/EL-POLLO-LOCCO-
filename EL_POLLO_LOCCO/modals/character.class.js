@@ -1,19 +1,19 @@
 class Character extends MovableObject {
-    // Grundlegende Eigenschaften
+    
     height = 200;
     y = 220;
     speed = 5;
     bottleCount = 0;
     isJumpAnimationOn = false;
 
-    lastMoveTime = new Date().getTime(); // Zeitpunkt der letzten Bewegung
-    isIdleAnimationOn = false;           // Flag für normales Idle
-    isLongIdleAnimationOn = false;       // Flag für Long-Idle
+    lastMoveTime = new Date().getTime(); 
+    isIdleAnimationOn = false;           
+    isLongIdleAnimationOn = false;       
 
-    idleInterval = null;                  // Speichert Interval für normales Idle
-    longIdleInterval = null;              // Speichert Interval für Long-Idle
+    idleInterval = null;                  
+    longIdleInterval = null;              
 
-    // Animationsbilder
+   
     IMAGES_WALKING = [
         './img/img_pollo_locco/img/2_character_pepe/2_walk/W-21.png',
         './img/img_pollo_locco/img/2_character_pepe/2_walk/W-22.png',
@@ -91,15 +91,11 @@ class Character extends MovableObject {
         this.animate();
     }
 
-    /**
-     * Spielt eine Animation einmal ab und ruft danach callback auf.
-     * Interval wird gespeichert, um bei Bewegung sofort abbrechen zu können.
-     * intervalTime lässt sich anpassen, um Animationen langsamer/smoother zu machen.
-     */
+  
     playAnimationOnce(images, callback, intervalTime = 200) {
         let i = 0;
 
-        // Vorherige Intervalle abbrechen
+    
         if (this.idleInterval) { clearInterval(this.idleInterval); this.idleInterval = null; }
         if (this.longIdleInterval) { clearInterval(this.longIdleInterval); this.longIdleInterval = null; }
 
@@ -112,49 +108,44 @@ class Character extends MovableObject {
             }
         }, intervalTime);
 
-        // Interval speichern, damit es bei Bewegung abgebrochen werden kann
+
         if (images === this.IMAGES_IDLE) this.idleInterval = interval;
         if (images === this.IMAGES_LONGIDLE) this.longIdleInterval = interval;
     }
 
-    /**
-     * Idle-/Long-Idle-Logik
-     */
     resting() {
         const now = new Date().getTime();
         const idleTime = (now - this.lastMoveTime) / 1000;
 
-        // Normales Idle nach 1 Sekunde
+        
         if (idleTime >= 1 && idleTime < 5) {
             if (!this.isIdleAnimationOn) {
                 this.isIdleAnimationOn = true;
                 this.isLongIdleAnimationOn = false;
                 this.playAnimationOnce(this.IMAGES_IDLE, () => {
                     this.isIdleAnimationOn = false;
-                }, 200); // langsamer = smoother
+                }, 200); 
             }
         }
 
-        // Long-Idle nach 5 Sekunden
+       
         if (idleTime >= 5) {
             if (!this.isLongIdleAnimationOn) {
                 this.isIdleAnimationOn = false;
                 this.isLongIdleAnimationOn = true;
                 this.playAnimationOnce(this.IMAGES_LONGIDLE, () => {
                     this.isLongIdleAnimationOn = false;
-                }, 250); // langsamer = smoother
+                }, 250); 
             }
         }
     }
 
-    /**
-     * Bewegung und Animation
-     */
+ 
     animate() {
         setInterval(() => {
             let moved = false;
 
-            // Rechts/Links Bewegung
+          
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.moveRight();
                 this.ortherDirection = false;
@@ -166,7 +157,6 @@ class Character extends MovableObject {
                 moved = true;
             }
 
-            // Jump
             if (this.world.keyboard.SPACE && !this.isAboveGround()) {
                 this.jump();
                 moved = true;
@@ -174,7 +164,7 @@ class Character extends MovableObject {
 
             this.world.camera_x = -this.x + 100;
 
-            // Bewegung → Idle abbrechen
+          
             if (moved) {
                 this.lastMoveTime = new Date().getTime();
                 this.isIdleAnimationOn = false;
@@ -185,16 +175,19 @@ class Character extends MovableObject {
             }
         }, 1000 / 60);
 
-        // Animationen abspielen
+     
         setInterval(() => {
             this.resting();
 
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
+                if (this.y < 250) {
+                    this.y += 300;
+                }
             } else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
             } else if (this.isAboveGround()) {
-                // Jump handled separately
+               
             } else {
                 if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
                     this.playAnimation(this.IMAGES_WALKING);
@@ -203,9 +196,6 @@ class Character extends MovableObject {
         }, 50);
     }
 
-    /**
-     * Jump-Animation
-     */
     jump() {
         if (!this.isJumpAnimationOn) {
             this.isJumpAnimationOn = true;
