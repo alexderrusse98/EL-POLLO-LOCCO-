@@ -1,13 +1,19 @@
 class Character extends MovableObject {
+    // Grundlegende Eigenschaften
     height = 200;
     y = 220;
     speed = 5;
     bottleCount = 0;
     isJumpAnimationOn = false;
 
-    lastMoveTime = new Date().getTime();
-    isIdle = false;
+    lastMoveTime = new Date().getTime(); // Zeitpunkt der letzten Bewegung
+    isIdleAnimationOn = false;           // Flag für normales Idle
+    isLongIdleAnimationOn = false;       // Flag für Long-Idle
 
+    idleInterval = null;                  // Speichert Interval für normales Idle
+    longIdleInterval = null;              // Speichert Interval für Long-Idle
+
+    // Animationsbilder
     IMAGES_WALKING = [
         './img/img_pollo_locco/img/2_character_pepe/2_walk/W-21.png',
         './img/img_pollo_locco/img/2_character_pepe/2_walk/W-22.png',
@@ -73,8 +79,6 @@ class Character extends MovableObject {
 
     world;
 
-
-
     constructor() {
         super().loadImage('./img/img_pollo_locco/img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.IMAGES_WALKING);
@@ -85,27 +89,84 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_LONGIDLE);
         this.applyGravity();
         this.animate();
-
     }
 
-    animate() {
+    /**
+     * Spielt eine Animation einmal ab und ruft danach callback auf.
+     * Interval wird gespeichert, um bei Bewegung sofort abbrechen zu können.
+     * intervalTime lässt sich anpassen, um Animationen langsamer/smoother zu machen.
+     */
+    playAnimationOnce(images, callback, intervalTime = 200) {
+        let i = 0;
 
+        // Vorherige Intervalle abbrechen
+        if (this.idleInterval) { clearInterval(this.idleInterval); this.idleInterval = null; }
+        if (this.longIdleInterval) { clearInterval(this.longIdleInterval); this.longIdleInterval = null; }
+
+        const interval = setInterval(() => {
+            this.img = this.imageCache[images[i]];
+            i++;
+            if (i >= images.length) {
+                clearInterval(interval);
+                callback?.();
+            }
+        }, intervalTime);
+
+        // Interval speichern, damit es bei Bewegung abgebrochen werden kann
+        if (images === this.IMAGES_IDLE) this.idleInterval = interval;
+        if (images === this.IMAGES_LONGIDLE) this.longIdleInterval = interval;
+    }
+
+    /**
+     * Idle-/Long-Idle-Logik
+     */
+    resting() {
+        const now = new Date().getTime();
+        const idleTime = (now - this.lastMoveTime) / 1000;
+
+        // Normales Idle nach 1 Sekunde
+        if (idleTime >= 1 && idleTime < 5) {
+            if (!this.isIdleAnimationOn) {
+                this.isIdleAnimationOn = true;
+                this.isLongIdleAnimationOn = false;
+                this.playAnimationOnce(this.IMAGES_IDLE, () => {
+                    this.isIdleAnimationOn = false;
+                }, 200); // langsamer = smoother
+            }
+        }
+
+        // Long-Idle nach 5 Sekunden
+        if (idleTime >= 5) {
+            if (!this.isLongIdleAnimationOn) {
+                this.isIdleAnimationOn = false;
+                this.isLongIdleAnimationOn = true;
+                this.playAnimationOnce(this.IMAGES_LONGIDLE, () => {
+                    this.isLongIdleAnimationOn = false;
+                }, 250); // langsamer = smoother
+            }
+        }
+    }
+
+    /**
+     * Bewegung und Animation
+     */
+    animate() {
         setInterval(() => {
             let moved = false;
 
-
+            // Rechts/Links Bewegung
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.moveRight();
                 this.ortherDirection = false;
                 moved = true;
             }
-
             if (this.world.keyboard.LEFT && this.x > 0) {
                 this.moveLeft();
                 this.ortherDirection = true;
                 moved = true;
             }
 
+            // Jump
             if (this.world.keyboard.SPACE && !this.isAboveGround()) {
                 this.jump();
                 moved = true;
@@ -113,45 +174,28 @@ class Character extends MovableObject {
 
             this.world.camera_x = -this.x + 100;
 
+            // Bewegung → Idle abbrechen
             if (moved) {
                 this.lastMoveTime = new Date().getTime();
-                this.isIdle = false;
-            }
+                this.isIdleAnimationOn = false;
+                this.isLongIdleAnimationOn = false;
 
+                if (this.idleInterval) { clearInterval(this.idleInterval); this.idleInterval = null; }
+                if (this.longIdleInterval) { clearInterval(this.longIdleInterval); this.longIdleInterval = null; }
+            }
         }, 1000 / 60);
 
-
+        // Animationen abspielen
         setInterval(() => {
-            const now = new Date().getTime();
-            const idleTime = (now - this.lastMoveTime) / 1000;
-
-            if (idleTime >= 1 && idleTime < 5) {
-                if (!this.isIdle) {
-                    this.isIdle = true;
-                    this.playAnimation(this.IMAGES_IDLE);
-                }
-            }
-
-         
-            if (idleTime >= 5) {
-                if (!this.isIdle || this.currentAnimation !== 'long') {
-                    this.isIdle = true;
-                    this.currentAnimation = 'long';
-                    this.playAnimation(this.IMAGES_LONGIDLE);
-                }
-            }
-
+            this.resting();
 
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
             } else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
-            }
-            else if (this.isAboveGround()) {
-
-
+            } else if (this.isAboveGround()) {
+                // Jump handled separately
             } else {
-
                 if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
                     this.playAnimation(this.IMAGES_WALKING);
                 }
@@ -159,6 +203,9 @@ class Character extends MovableObject {
         }, 50);
     }
 
+    /**
+     * Jump-Animation
+     */
     jump() {
         if (!this.isJumpAnimationOn) {
             this.isJumpAnimationOn = true;
@@ -168,7 +215,6 @@ class Character extends MovableObject {
             const jumpInterval = setInterval(() => {
                 this.img = this.imageCache[this.IMAGES_JUMPING[i]];
                 i++;
-
                 if (i >= this.IMAGES_JUMPING.length) {
                     clearInterval(jumpInterval);
                     this.isJumpAnimationOn = false;
@@ -176,5 +222,4 @@ class Character extends MovableObject {
             }, 90);
         }
     }
-
 }
