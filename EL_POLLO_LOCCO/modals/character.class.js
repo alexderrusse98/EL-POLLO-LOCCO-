@@ -1,19 +1,19 @@
 class Character extends MovableObject {
-    
+
     height = 200;
     y = 220;
     speed = 5;
     bottleCount = 0;
     isJumpAnimationOn = false;
 
-    lastMoveTime = new Date().getTime(); 
-    isIdleAnimationOn = false;           
-    isLongIdleAnimationOn = false;       
+    lastMoveTime = new Date().getTime();
+    isIdleAnimationOn = false;
+    isLongIdleAnimationOn = false;
 
-    idleInterval = null;                  
-    longIdleInterval = null;              
+    idleInterval = null;
+    longIdleInterval = null;
 
-   
+
     IMAGES_WALKING = [
         './img/img_pollo_locco/img/2_character_pepe/2_walk/W-21.png',
         './img/img_pollo_locco/img/2_character_pepe/2_walk/W-22.png',
@@ -91,11 +91,11 @@ class Character extends MovableObject {
         this.animate();
     }
 
-  
+
     playAnimationOnce(images, callback, intervalTime = 200) {
         let i = 0;
 
-    
+
         if (this.idleInterval) { clearInterval(this.idleInterval); this.idleInterval = null; }
         if (this.longIdleInterval) { clearInterval(this.longIdleInterval); this.longIdleInterval = null; }
 
@@ -117,85 +117,109 @@ class Character extends MovableObject {
         const now = new Date().getTime();
         const idleTime = (now - this.lastMoveTime) / 1000;
 
-        
+
         if (idleTime >= 1 && idleTime < 5) {
             if (!this.isIdleAnimationOn) {
                 this.isIdleAnimationOn = true;
                 this.isLongIdleAnimationOn = false;
                 this.playAnimationOnce(this.IMAGES_IDLE, () => {
                     this.isIdleAnimationOn = false;
-                }, 200); 
+                }, 200);
             }
         }
+        this.restingLong(idleTime);
+    }
 
-       
+
+    restingLong(idleTime) {
         if (idleTime >= 5) {
             if (!this.isLongIdleAnimationOn) {
                 this.isIdleAnimationOn = false;
                 this.isLongIdleAnimationOn = true;
                 this.playAnimationOnce(this.IMAGES_LONGIDLE, () => {
                     this.isLongIdleAnimationOn = false;
-                }, 250); 
+                }, 250);
             }
         }
     }
 
- 
-    animate() {
-        setInterval(() => {
-            let moved = false;
 
-          
-            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-                this.moveRight();
-                this.ortherDirection = false;
-                moved = true;
-            }
-            if (this.world.keyboard.LEFT && this.x > 0) {
-                this.moveLeft();
-                this.ortherDirection = true;
-                moved = true;
-            }
+  // 1. Prüft Tasteneingaben und bewegt den Charakter
+handleMovement() {
+    let moved = false;
 
-            if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-                this.jump();
-                moved = true;
-            }
-
-            this.world.camera_x = -this.x + 100;
-
-          
-            if (moved) {
-                this.lastMoveTime = new Date().getTime();
-                this.isIdleAnimationOn = false;
-                this.isLongIdleAnimationOn = false;
-
-                if (this.idleInterval) { clearInterval(this.idleInterval); this.idleInterval = null; }
-                if (this.longIdleInterval) { clearInterval(this.longIdleInterval); this.longIdleInterval = null; }
-            }
-        }, 1000 / 60);
-
-     
-        setInterval(() => {
-            this.resting();
-
-            if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD);
-                if (this.y < 250) {
-                    this.y += 300;
-                }
-            } else if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-            } else if (this.isAboveGround()) {
-               
-            } else {
-                if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                    this.playAnimation(this.IMAGES_WALKING);
-                }
-            }
-        }, 50);
+    if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+        this.moveRight();
+        this.ortherDirection = false;
+        moved = true;
+    }
+    if (this.world.keyboard.LEFT && this.x > 0) {
+        this.moveLeft();
+        this.ortherDirection = true;
+        moved = true;
+    }
+    if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+        this.jump();
+        moved = true;
     }
 
+    return moved;
+}
+
+// 2. Kamera aktualisieren
+updateCamera() {
+    this.world.camera_x = -this.x + 100;
+}
+
+// 3. Idle-/LongIdle-Zustand und Intervalle prüfen
+checkMovementState(moved) {
+    if (moved) {
+        this.lastMoveTime = new Date().getTime();
+        this.isIdleAnimationOn = false;
+        this.isLongIdleAnimationOn = false;
+
+        if (this.idleInterval) { clearInterval(this.idleInterval); this.idleInterval = null; }
+        if (this.longIdleInterval) { clearInterval(this.longIdleInterval); this.longIdleInterval = null; }
+    }
+}
+
+// 4. Animationen für Dead, Hurt, Walking und Idle prüfen
+animateCharacter() {
+    this.resting();
+
+    if (this.isDead()) {
+        this.playAnimation(this.IMAGES_DEAD);
+        // Smooth nach unten fallen lassen
+        if (this.y < 250) {
+            this.speedY = this.speedY || 0;
+            this.speedY += 5; // Geschwindigkeit nach unten erhöhen
+            this.y += this.speedY;
+        }
+    } else if (this.isHurt()) {
+        this.playAnimation(this.IMAGES_HURT);
+    } else if (!this.isAboveGround()) {
+        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+            this.playAnimation(this.IMAGES_WALKING);
+        }
+    }
+}
+
+// 5. Hauptanimate-Funktion
+animate() {
+    // Bewegung + Kamera + Status prüfen
+    setInterval(() => {
+        const moved = this.handleMovement();
+        this.updateCamera();
+        this.checkMovementState(moved);
+    }, 1000 / 60);
+
+    // Animationen prüfen
+    setInterval(() => {
+        this.animateCharacter();
+    }, 50);
+}
+
+    
     jump() {
         if (!this.isJumpAnimationOn) {
             this.isJumpAnimationOn = true;
