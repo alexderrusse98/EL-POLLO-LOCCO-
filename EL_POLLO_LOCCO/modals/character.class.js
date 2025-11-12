@@ -146,6 +146,7 @@ class Character extends MovableObject {
 
     // 1. Prüft Tasteneingaben und bewegt den Charakter
     handleMovement() {
+        if (this.isDead()) return false;
         let moved = false;
 
         if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
