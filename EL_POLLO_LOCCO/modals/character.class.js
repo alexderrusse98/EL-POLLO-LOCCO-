@@ -144,82 +144,81 @@ class Character extends MovableObject {
     }
 
 
-  // 1. Prüft Tasteneingaben und bewegt den Charakter
-handleMovement() {
-    let moved = false;
+    // 1. Prüft Tasteneingaben und bewegt den Charakter
+    handleMovement() {
+        let moved = false;
 
-    if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-        this.moveRight();
-        this.ortherDirection = false;
-        moved = true;
-    }
-    if (this.world.keyboard.LEFT && this.x > 0) {
-        this.moveLeft();
-        this.ortherDirection = true;
-        moved = true;
-    }
-    if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-        this.jump();
-        moved = true;
-    }
-
-    return moved;
-}
-
-// 2. Kamera aktualisieren
-updateCamera() {
-    this.world.camera_x = -this.x + 100;
-}
-
-// 3. Idle-/LongIdle-Zustand und Intervalle prüfen
-checkMovementState(moved) {
-    if (moved) {
-        this.lastMoveTime = new Date().getTime();
-        this.isIdleAnimationOn = false;
-        this.isLongIdleAnimationOn = false;
-
-        if (this.idleInterval) { clearInterval(this.idleInterval); this.idleInterval = null; }
-        if (this.longIdleInterval) { clearInterval(this.longIdleInterval); this.longIdleInterval = null; }
-    }
-}
-
-// 4. Animationen für Dead, Hurt, Walking und Idle prüfen
-animateCharacter() {
-    this.resting();
-
-    if (this.isDead()) {
-        this.playAnimation(this.IMAGES_DEAD);
-        // Smooth nach unten fallen lassen
-        if (this.y < 250) {
-            this.speedY = this.speedY || 0;
-            this.speedY += 5; // Geschwindigkeit nach unten erhöhen
-            this.y += this.speedY;
+        if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+            this.moveRight();
+            this.ortherDirection = false;
+            moved = true;
         }
-    } else if (this.isHurt()) {
-        this.playAnimation(this.IMAGES_HURT);
-    } else if (!this.isAboveGround()) {
-        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-            this.playAnimation(this.IMAGES_WALKING);
+        if (this.world.keyboard.LEFT && this.x > 0) {
+            this.moveLeft();
+            this.ortherDirection = true;
+            moved = true;
+        }
+        if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+            this.jump();
+            moved = true;
+        }
+
+        return moved;
+    }
+
+    // 2. Kamera aktualisieren
+    updateCamera() {
+        this.world.camera_x = -this.x + 100;
+    }
+
+    // 3. Idle-/LongIdle-Zustand und Intervalle prüfen
+    checkMovementState(moved) {
+        if (moved) {
+            this.lastMoveTime = new Date().getTime();
+            this.isIdleAnimationOn = false;
+            this.isLongIdleAnimationOn = false;
+
+            if (this.idleInterval) { clearInterval(this.idleInterval); this.idleInterval = null; }
+            if (this.longIdleInterval) { clearInterval(this.longIdleInterval); this.longIdleInterval = null; }
         }
     }
-}
 
-// 5. Hauptanimate-Funktion
-animate() {
-    // Bewegung + Kamera + Status prüfen
-    setInterval(() => {
-        const moved = this.handleMovement();
-        this.updateCamera();
-        this.checkMovementState(moved);
-    }, 1000 / 60);
+    // 4. Animationen für Dead, Hurt, Walking und Idle prüfen
+    animateCharacter() {
+        this.resting();
+       
+        if (this.isDead()) {
+            this.playAnimation(this.IMAGES_DEAD);
+            if (!this.speedY) this.speedY = 1;
+            if (this.y < 500) {
+                this.y += this.speedY;
+                this.speedY += 0.5;
+            }
+        } else if (this.isHurt()) {
+            this.playAnimation(this.IMAGES_HURT);
+        } else if (!this.isAboveGround()) {
+            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+                this.playAnimation(this.IMAGES_WALKING);
+            }
+        }
+    }
 
-    // Animationen prüfen
-    setInterval(() => {
-        this.animateCharacter();
-    }, 50);
-}
+    // 5. Hauptanimate-Funktion
+    animate() {
+        // Bewegung + Kamera + Status prüfen
+        setInterval(() => {
+            const moved = this.handleMovement();
+            this.updateCamera();
+            this.checkMovementState(moved);
+        }, 1000 / 60);
 
-    
+        // Animationen prüfen
+        setInterval(() => {
+            this.animateCharacter();
+        }, 50);
+    }
+
+
     jump() {
         if (!this.isJumpAnimationOn) {
             this.isJumpAnimationOn = true;
