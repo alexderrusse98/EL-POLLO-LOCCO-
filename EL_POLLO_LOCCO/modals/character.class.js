@@ -186,13 +186,14 @@ class Character extends MovableObject {
         }
     }
 
-    
+
     // 4. Animationen für Dead, Hurt, Walking und Idle prüfen
     // Hauptfunktion, die alle Animationszustände prüft
     animateCharacter() {
         this.resting();
 
         if (this.isDead()) {
+            this.speedY = 0;
             this.animateDeath();
         } else if (this.isHurt()) {
             this.animateHurt();
@@ -204,17 +205,19 @@ class Character extends MovableObject {
 
     // Animation bei Tod
     animateDeath() {
-        this.playAnimation(this.IMAGES_DEAD);
+    this.playAnimation(this.IMAGES_DEAD);
 
-        if (!this.speedY) {
-            this.speedY = 1; // Start der Sinkbewegung
-        }
-
-        if (this.y < 500) {
-            this.y += this.speedY; // nach unten bewegen
-            this.speedY += 0.5;    // langsame Beschleunigung nach unten
-        }
+    
+    if (this.currentImage >= 2) {
+    if (!this.speedY) this.speedY = 10;
+    if (this.y < 500) {
+        this.y += this.speedY;
+        this.speedY += 0.5;
     }
+}
+
+}
+
 
 
     // Animation bei Treffer
@@ -230,7 +233,6 @@ class Character extends MovableObject {
         }
     }
 
-    
     // 5. Hauptanimate-Funktion
     animate() {
         // Bewegung + Kamera + Status prüfen
