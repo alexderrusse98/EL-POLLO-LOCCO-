@@ -96,7 +96,6 @@ class Character extends MovableObject {
     playAnimationOnce(images, callback, intervalTime = 200) {
         let i = 0;
 
-
         if (this.idleInterval) { clearInterval(this.idleInterval); this.idleInterval = null; }
         if (this.longIdleInterval) { clearInterval(this.longIdleInterval); this.longIdleInterval = null; }
 
@@ -109,17 +108,17 @@ class Character extends MovableObject {
             }
         }, intervalTime);
 
-
         if (images === this.IMAGES_IDLE) this.idleInterval = interval;
         if (images === this.IMAGES_LONGIDLE) this.longIdleInterval = interval;
     }
+
 
     resting() {
         const now = new Date().getTime();
         const idleTime = (now - this.lastMoveTime) / 1000;
 
 
-        if (idleTime >= 0,1 && idleTime < 8) {
+        if (idleTime >= 0, 1 && idleTime < 8) {
             if (!this.isIdleAnimationOn) {
                 this.isIdleAnimationOn = true;
                 this.isLongIdleAnimationOn = false;
@@ -164,13 +163,16 @@ class Character extends MovableObject {
             moved = true;
         }
 
+
         return moved;
     }
+
 
     // 2. Kamera aktualisieren
     updateCamera() {
         this.world.camera_x = -this.x + 100;
     }
+
 
     // 3. Idle-/LongIdle-Zustand und Intervalle prüfen
     checkMovementState(moved) {
@@ -184,26 +186,51 @@ class Character extends MovableObject {
         }
     }
 
+    
     // 4. Animationen für Dead, Hurt, Walking und Idle prüfen
+    // Hauptfunktion, die alle Animationszustände prüft
     animateCharacter() {
         this.resting();
 
         if (this.isDead()) {
-            this.playAnimation(this.IMAGES_DEAD);
-            if (!this.speedY) this.speedY = 1;
-            if (this.y < 500) {
-                this.y += this.speedY;
-                this.speedY += 0.5;
-            }
+            this.animateDeath();
         } else if (this.isHurt()) {
-            this.playAnimation(this.IMAGES_HURT);
+            this.animateHurt();
         } else if (!this.isAboveGround()) {
-            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                this.playAnimation(this.IMAGES_WALKING);
-            }
+            this.animateWalking();
         }
     }
 
+
+    // Animation bei Tod
+    animateDeath() {
+        this.playAnimation(this.IMAGES_DEAD);
+
+        if (!this.speedY) {
+            this.speedY = 1; // Start der Sinkbewegung
+        }
+
+        if (this.y < 500) {
+            this.y += this.speedY; // nach unten bewegen
+            this.speedY += 0.5;    // langsame Beschleunigung nach unten
+        }
+    }
+
+
+    // Animation bei Treffer
+    animateHurt() {
+        this.playAnimation(this.IMAGES_HURT);
+    }
+
+
+    // Animation beim Laufen (nur wenn auf dem Boden)
+    animateWalking() {
+        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+            this.playAnimation(this.IMAGES_WALKING);
+        }
+    }
+
+    
     // 5. Hauptanimate-Funktion
     animate() {
         // Bewegung + Kamera + Status prüfen
