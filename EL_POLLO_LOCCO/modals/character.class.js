@@ -7,6 +7,7 @@ class Character extends MovableObject {
     isJumpAnimationOn = false;
 
     lastMoveTime = new Date().getTime();
+
     isIdleAnimationOn = false;
     isLongIdleAnimationOn = false;
 
@@ -118,7 +119,7 @@ class Character extends MovableObject {
         const idleTime = (now - this.lastMoveTime) / 1000;
 
 
-        if (idleTime >= 1 && idleTime < 5) {
+        if (idleTime >= 0,1 && idleTime < 8) {
             if (!this.isIdleAnimationOn) {
                 this.isIdleAnimationOn = true;
                 this.isLongIdleAnimationOn = false;
@@ -132,7 +133,7 @@ class Character extends MovableObject {
 
 
     restingLong(idleTime) {
-        if (idleTime >= 5) {
+        if (idleTime >= 8) {
             if (!this.isLongIdleAnimationOn) {
                 this.isIdleAnimationOn = false;
                 this.isLongIdleAnimationOn = true;
@@ -186,7 +187,7 @@ class Character extends MovableObject {
     // 4. Animationen für Dead, Hurt, Walking und Idle prüfen
     animateCharacter() {
         this.resting();
-       
+
         if (this.isDead()) {
             this.playAnimation(this.IMAGES_DEAD);
             if (!this.speedY) this.speedY = 1;
