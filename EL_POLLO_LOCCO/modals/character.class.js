@@ -205,19 +205,23 @@ class Character extends MovableObject {
 
 
     // Animation bei Tod
-    animateDeath() {
+animateDeath() {
     this.playAnimation(this.IMAGES_DEAD);
 
-    
     if (this.currentImage >= 2) {
-    if (!this.speedY) this.speedY = 10;
-    if (this.y < 500) {
-        this.y += this.speedY;
-        this.speedY += 0.5;
+        if (!this.speedY) this.speedY = 10;
+
+        // Stoppe das Rutschen nach rechts, wenn Boden erreicht
+        if (this.y < 500) {
+            this.y += this.speedY;
+            this.speedY += 0.5; // Schwerkraft
+            this.x += 7; // nur verschieben, wenn noch fällt
+        } else {
+            this.y = 500; // sicherstellen, dass er genau auf dem Boden landet
+        }
     }
 }
 
-}
 
 
 
