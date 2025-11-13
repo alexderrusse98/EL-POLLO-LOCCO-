@@ -10,7 +10,7 @@ class MovableObject extends DrawableObject {
     setInterval(() => {
         
         if (this.isDead && this.isDead()) return;
-
+      
         if (this.isAboveGround() || this.speedY > 0) {
             this.y -= this.speedY;
             this.speedY -= this.acceleration;

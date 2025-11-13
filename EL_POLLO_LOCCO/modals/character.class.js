@@ -170,11 +170,11 @@ class Character extends MovableObject {
 
 
     // 2. Kamera aktualisieren
-updateCamera() {
-  if (!this.isDead()) {
-    this.world.camera_x = -this.x + 100;
-  }
-}
+    updateCamera() {
+        if (!this.isDead()) {
+            this.world.camera_x = -this.x + 100;
+        }
+    }
 
 
 
@@ -208,22 +208,22 @@ updateCamera() {
 
 
     // Animation bei Tod
-animateDeath() {
-    this.playAnimation(this.IMAGES_DEAD);
+    animateDeath() {
+        this.playAnimation(this.IMAGES_DEAD);
 
-    if (this.currentImage >= 2) {
-        if (!this.speedY) this.speedY = 10;
+        if (this.currentImage >= 2) {
+            if (!this.speedY) this.speedY = 10;
 
-        
-        if (this.y < 500) {
-            this.y += this.speedY;
-            this.speedY += 0.5;
-          this.x += 7;  
-        } else {
-            this.y = 500; 
+
+            if (this.y < 500) {
+                this.y += this.speedY;
+                this.speedY += 0.5;
+                this.x += 7;
+            } else {
+                this.y = 500;
+            }
         }
     }
-}
 
 
 
@@ -243,14 +243,14 @@ animateDeath() {
 
     // 5. Hauptanimate-Funktion
     animate() {
-       
+
         setInterval(() => {
             const moved = this.handleMovement();
             this.updateCamera();
             this.checkMovementState(moved);
         }, 1000 / 60);
 
-        
+
         setInterval(() => {
             this.animateCharacter();
         }, 50);
