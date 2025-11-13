@@ -170,9 +170,12 @@ class Character extends MovableObject {
 
 
     // 2. Kamera aktualisieren
-    updateCamera() {
-        this.world.camera_x = -this.x + 100;
-    }
+updateCamera() {
+  if (!this.isDead()) {
+    this.world.camera_x = -this.x + 100;
+  }
+}
+
 
 
     // 3. Idle-/LongIdle-Zustand und Intervalle prüfen
@@ -211,13 +214,13 @@ animateDeath() {
     if (this.currentImage >= 2) {
         if (!this.speedY) this.speedY = 10;
 
-        // Stoppe das Rutschen nach rechts, wenn Boden erreicht
+        
         if (this.y < 500) {
             this.y += this.speedY;
-            this.speedY += 0.5; // Schwerkraft
-            this.x += 7; // nur verschieben, wenn noch fällt
+            this.speedY += 0.5;
+          this.x += 7;  
         } else {
-            this.y = 500; // sicherstellen, dass er genau auf dem Boden landet
+            this.y = 500; 
         }
     }
 }
@@ -240,14 +243,14 @@ animateDeath() {
 
     // 5. Hauptanimate-Funktion
     animate() {
-        // Bewegung + Kamera + Status prüfen
+       
         setInterval(() => {
             const moved = this.handleMovement();
             this.updateCamera();
             this.checkMovementState(moved);
         }, 1000 / 60);
 
-        // Animationen prüfen
+        
         setInterval(() => {
             this.animateCharacter();
         }, 50);
