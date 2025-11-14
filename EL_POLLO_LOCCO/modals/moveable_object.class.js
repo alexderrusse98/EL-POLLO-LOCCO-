@@ -11,6 +11,15 @@ class MovableObject extends DrawableObject {
 
          if (this.isDead && this.isDead()) return;
 
+         if (!this.isAboveGround()) {
+            if (!this.hasSplashed && this instanceof ThrowableObject) {
+               this.hasSplashed = true;
+               this.animateSplash();
+               return;
+            }
+            
+         }
+
          if (this.isAboveGround() || this.speedY > 0) {
             this.y -= this.speedY;
             this.speedY -= this.acceleration;
@@ -19,14 +28,11 @@ class MovableObject extends DrawableObject {
    }
 
 
-   isAboveGround() {
-      if (this instanceof ThrowableObject) {
-         return true
-      } else {
-         return this.y < 220;
-      }
+ isAboveGround() {
+    return this.y < 220;
+}
 
-   }
+
 
 
    playAnimationOnce(images, callback, intervalTime = 200) {
@@ -48,7 +54,7 @@ class MovableObject extends DrawableObject {
       if (images === this.IMAGES_LONGIDLE) this.longIdleInterval = interval;
    }
 
-   
+
    playAnimation(images) {
       let i = this.currentImage % images.length;
       let path = images[i];
