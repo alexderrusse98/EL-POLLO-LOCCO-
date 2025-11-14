@@ -93,26 +93,6 @@ class Character extends MovableObject {
     }
 
 
-    playAnimationOnce(images, callback, intervalTime = 200) {
-        let i = 0;
-
-        if (this.idleInterval) { clearInterval(this.idleInterval); this.idleInterval = null; }
-        if (this.longIdleInterval) { clearInterval(this.longIdleInterval); this.longIdleInterval = null; }
-
-        const interval = setInterval(() => {
-            this.img = this.imageCache[images[i]];
-            i++;
-            if (i >= images.length) {
-                clearInterval(interval);
-                callback?.();
-            }
-        }, intervalTime);
-
-        if (images === this.IMAGES_IDLE) this.idleInterval = interval;
-        if (images === this.IMAGES_LONGIDLE) this.longIdleInterval = interval;
-    }
-
-
     resting() {
         const now = new Date().getTime();
         const idleTime = (now - this.lastMoveTime) / 1000;
