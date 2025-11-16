@@ -5,6 +5,7 @@ class Character extends MovableObject {
     speed = 5;
     bottleCount = 0;
     isJumpAnimationOn = false;
+    isThrowingBottle = false;
 
     lastMoveTime = new Date().getTime();
 
@@ -143,7 +144,10 @@ class Character extends MovableObject {
             this.jump();
             moved = true;
         }
-
+        if (this.world.keyboard.D && this.bottleCount > 0) {
+            this.isThrowingBottle = true;
+            moved = true;
+        }
 
         return moved;
     }
