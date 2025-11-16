@@ -93,7 +93,7 @@ class World {
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.cloud);
         this.addObjectsToMap(this.level.enemies);
-        
+         this.throwAbleObjects = this.throwAbleObjects.filter(bottle => !bottle.markForDeletion);
         this.addObjectsToMap(this.throwAbleObjects);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
