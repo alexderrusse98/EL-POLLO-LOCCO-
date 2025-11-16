@@ -39,7 +39,7 @@ class World {
 
         setInterval(() => {
             this.checkThrowObjects();;
-        },100);
+        }, 100);
     }
 
     checkThrowObjects() {
@@ -54,15 +54,24 @@ class World {
     }
 
 
-    //auf jeden fall hier kürzen
     checkCollisions() {
+        this.checkEnemyCollisions();
+        this.checkCoinCollisions();
+        this.checkBottleCollisions();
+    }
+
+    
+    checkEnemyCollisions() {
         this.level.enemies.forEach((enemy) => {
             if (this.character.isColliding(enemy)) {
                 this.character.hit();
                 this.statusBarHealth.setPercentage(this.character.energy);
             }
         });
+    }
 
+
+    checkCoinCollisions() {
         this.level.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
                 this.statusBarCoins.setPercentage(
@@ -71,7 +80,10 @@ class World {
                 this.level.coins.splice(index, 1);
             }
         });
+    }
 
+
+    checkBottleCollisions() {
         this.level.bottles.forEach((bottle, index) => {
             if (this.character.isColliding(bottle)) {
                 this.character.bottleCount++;
@@ -81,8 +93,8 @@ class World {
                 this.level.bottles.splice(index, 1);
             }
         });
-
     }
+
 
     draw() {
 
@@ -96,7 +108,7 @@ class World {
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.cloud);
         this.addObjectsToMap(this.level.enemies);
-         this.throwAbleObjects = this.throwAbleObjects.filter(bottle => !bottle.markForDeletion);
+        this.throwAbleObjects = this.throwAbleObjects.filter(bottle => !bottle.markForDeletion);
         this.addObjectsToMap(this.throwAbleObjects);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
