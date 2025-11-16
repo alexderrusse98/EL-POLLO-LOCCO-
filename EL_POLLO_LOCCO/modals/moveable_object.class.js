@@ -45,7 +45,7 @@ class MovableObject extends DrawableObject {
 
 
 
-   playAnimationOnce(images, callback, intervalTime = 200) {
+   playAnimationOnce(images, callback, intervalTime = 100) {
       let i = 0;
 
       if (this.idleInterval) { clearInterval(this.idleInterval); this.idleInterval = null; }

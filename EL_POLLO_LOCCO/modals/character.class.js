@@ -124,32 +124,53 @@ class Character extends MovableObject {
         }
     }
 
-
+    
     // 1. Prüft Tasteneingaben und bewegt den Charakter
     handleMovement() {
         if (this.isDead()) return false;
-        let moved = false;
 
+        return this.handleRightMovement() |
+            this.handleLeftMovement() |
+            this.handleJump() |
+            this.handleThrow();
+    }
+
+
+    handleRightMovement() {
         if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
             this.moveRight();
             this.ortherDirection = false;
-            moved = true;
+            return true;
         }
+        return false;
+    }
+
+
+    handleLeftMovement() {
         if (this.world.keyboard.LEFT && this.x > 0) {
             this.moveLeft();
             this.ortherDirection = true;
-            moved = true;
+            return true;
         }
+        return false;
+    }
+
+
+    handleJump() {
         if (this.world.keyboard.SPACE && !this.isAboveGround()) {
             this.jump();
-            moved = true;
+            return true;
         }
+        return false;
+    }
+
+
+    handleThrow() {
         if (this.world.keyboard.D && this.bottleCount > 0) {
             this.isThrowingBottle = true;
-            moved = true;
+            return true;
         }
-
-        return moved;
+        return false;
     }
 
 
@@ -159,7 +180,6 @@ class Character extends MovableObject {
             this.world.camera_x = -this.x + 100;
         }
     }
-
 
 
     // 3. Idle-/LongIdle-Zustand und Intervalle prüfen
@@ -210,8 +230,6 @@ class Character extends MovableObject {
     }
 
 
-
-
     // Animation bei Treffer
     animateHurt() {
         this.playAnimation(this.IMAGES_HURT);
@@ -224,6 +242,7 @@ class Character extends MovableObject {
             this.playAnimation(this.IMAGES_WALKING);
         }
     }
+
 
     // 5. Hauptanimate-Funktion
     animate() {

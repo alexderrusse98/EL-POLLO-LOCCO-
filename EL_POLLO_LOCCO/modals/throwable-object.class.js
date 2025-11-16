@@ -47,21 +47,19 @@ class ThrowableObject extends MovableObject {
         setInterval(() => {
 
             if (!this.hasSplashed) {
-         
-            this.playAnimation(this.IMAGES_ROTATION);
-        }
-        
+                this.playAnimation(this.IMAGES_ROTATION);
+            }
         }, 200);
     }
 
-  animateSplash() {
-    this.speedY = 0;
-    this.acceleration = 0;
-    
-    this.playAnimationOnce(this.IMAGES_SPLASH, () => {
-        this.markForDeletion = true;
-    });
-}
+    animateSplash() {
+        this.speedY = 0;
+        this.acceleration = 0;
+
+        this.playAnimationOnce(this.IMAGES_SPLASH, () => {
+            this.markForDeletion = true;
+        });
+    }
 
 
 } 
