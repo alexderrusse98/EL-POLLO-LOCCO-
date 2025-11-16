@@ -12,7 +12,7 @@ class MovableObject extends DrawableObject {
          if (this.isDead && this.isDead()) return;
 
          if (!this.isAboveGround()) {
-            if (!this.hasSplashed && this instanceof ThrowableObject) {
+            if (this instanceof ThrowableObject && !this.hasSplashed) {
                this.hasSplashed = true;
                this.animateSplash();
                return;
@@ -20,6 +20,7 @@ class MovableObject extends DrawableObject {
             
          }
 
+         // Character is above ground
          if (this.isAboveGround() || this.speedY > 0) {
             this.y -= this.speedY;
             this.speedY -= this.acceleration;
@@ -29,8 +30,17 @@ class MovableObject extends DrawableObject {
 
 
  isAboveGround() {
-    return this.y < 220;
-}
+      // Bodenhöhe zentral definieren (niemals im Code verstreut!)
+      const ground = 220;
+
+      // Für ThrowableObject eine tiefere Bodenhöhe
+      if (this instanceof ThrowableObject) {
+         return this.y < 350;  // Hier kannst du die Zahl ändern!
+      }
+
+      return this.y < ground;
+   }
+
 
 
 
