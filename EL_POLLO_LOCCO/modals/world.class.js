@@ -54,11 +54,27 @@ class World {
     }
 
     checkCollisions() {
-        this.checkJumpOnEnemyCollisions(); 
-        this.checkEnemyCollisions();
-        this.checkCoinCollisions();
-        this.checkBottleCollisions();
-    }
+    this.checkJumpOnEnemyCollisions();
+    this.checkEnemyCollisions();
+    this.checkBottleEnemyCollisions();
+    this.checkCoinCollisions();
+    this.checkBottleCollisions();
+}
+
+
+checkBottleEnemyCollisions() {
+    this.throwAbleObjects.forEach((bottle) => {
+        if (!bottle.hasSplashed) {
+            this.level.enemies.forEach((enemy) => {
+                if (!enemy.isDead && bottle.isColliding(enemy)) {
+                    enemy.deadChicken();
+                    bottle.hasSplashed = true;
+                    bottle.animateSplash();
+                }
+            });
+        }
+    });
+}
 
  
     checkJumpOnEnemyCollisions() {

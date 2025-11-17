@@ -15,7 +15,6 @@ class ThrowableObject extends MovableObject {
         './img/img_pollo_locco/img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png'
     ];
 
-
     constructor(x, y) {
         super();
         this.loadImage('./img/img_pollo_locco/img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png');
@@ -25,10 +24,8 @@ class ThrowableObject extends MovableObject {
         this.y = y;
         this.width = 50;
         this.height = 60;
-        this.throw();
         this.hasSplashed = false;
-
-
+        this.throw();
     }
 
     throw() {
@@ -45,7 +42,6 @@ class ThrowableObject extends MovableObject {
 
     animate() {
         setInterval(() => {
-
             if (!this.hasSplashed) {
                 this.playAnimation(this.IMAGES_ROTATION);
             }
@@ -55,11 +51,16 @@ class ThrowableObject extends MovableObject {
     animateSplash() {
         this.speedY = 0;
         this.acceleration = 0;
-
-        this.playAnimationOnce(this.IMAGES_SPLASH, () => {
-            this.markForDeletion = true;
-        });
+        
+        let i = 0;
+        const splashInterval = setInterval(() => {
+            if (i < this.IMAGES_SPLASH.length) {
+                this.img = this.imageCache[this.IMAGES_SPLASH[i]];
+                i++;
+            } else {
+                clearInterval(splashInterval);
+                this.markForDeletion = true;
+            }
+        }, 100); 
     }
-
-
-} 
+}
