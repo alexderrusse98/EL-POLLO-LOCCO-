@@ -30,7 +30,7 @@ class World {
 
     setWorld() {
         this.character.world = this;
-    };
+    }
 
     run() {
         setInterval(() => {
@@ -38,7 +38,7 @@ class World {
         }, 200);
 
         setInterval(() => {
-            this.checkThrowObjects();;
+            this.checkThrowObjects();
         }, 100);
     }
 
@@ -53,31 +53,40 @@ class World {
         }
     }
 
-checkCollisions() {
-    this.checkEnemyCollisions();
-    this.checkJumpOnEnemyCollisions(); // ⭐ NEU hinzufügen
-    this.checkCoinCollisions();
-    this.checkBottleCollisions();
-}
+    checkCollisions() {
+        this.checkJumpOnEnemyCollisions(); 
+        this.checkEnemyCollisions();
+        this.checkCoinCollisions();
+        this.checkBottleCollisions();
+    }
 
-// ⭐ NEUE Methode hinzufügen
-checkJumpOnEnemyCollisions() {
-    this.level.enemies.forEach((enemy) => {
-        if (!enemy.isDead && this.character.isAboveGround()) {
-            this.character.checkJumpOnEnemy(enemy);
-        }
-    });
-}
+ 
+    checkJumpOnEnemyCollisions() {
+        this.level.enemies.forEach((enemy) => {
+            if (!enemy.isDead && this.character.isAboveGround()) {
+                this.character.checkJumpOnEnemy(enemy);
+            }
+        });
+    }
 
-checkEnemyCollisions() {
-    this.level.enemies.forEach((enemy) => {
-        if (this.character.isColliding(enemy) && !enemy.isDead) {
-            this.character.hit();
-            this.statusBarHealth.setPercentage(this.character.energy);
-        }
-    });
-}
-
+    checkEnemyCollisions() {
+        this.level.enemies.forEach((enemy) => {
+            if (this.character.isColliding(enemy) && !enemy.isDead) {
+            
+                const playerBottom = this.character.y + this.character.height;
+                const enemyTop = enemy.y;
+                const isJumpingOnEnemy = playerBottom >= enemyTop && 
+                                         playerBottom <= enemyTop + 50 && 
+                                         this.character.speedY < 0;
+                
+               
+                if (!isJumpingOnEnemy) {
+                    this.character.hit();
+                    this.statusBarHealth.setPercentage(this.character.energy);
+                }
+            }
+        });
+    }
 
     checkCoinCollisions() {
         this.level.coins.forEach((coin, index) => {
@@ -89,7 +98,6 @@ checkEnemyCollisions() {
             }
         });
     }
-
 
     checkBottleCollisions() {
         this.level.bottles.forEach((bottle, index) => {
@@ -103,24 +111,26 @@ checkEnemyCollisions() {
         });
     }
 
-
     draw() {
-
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
 
         this.ctx.translate(-this.camera_x, 0);
-        //-----Space for fixed objects-----
         this.ctx.translate(this.camera_x, 0);
+        
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.cloud);
-        this.addObjectsToMap(this.level.enemies);
-        this.throwAbleObjects = this.throwAbleObjects.filter(bottle => !bottle.markForDeletion);
+        
+        // Tote Enemies filtern
         this.level.enemies = this.level.enemies.filter(enemy => !enemy.markForDeletion);
+        this.addObjectsToMap(this.level.enemies);
+        
+        this.throwAbleObjects = this.throwAbleObjects.filter(bottle => !bottle.markForDeletion);
         this.addObjectsToMap(this.throwAbleObjects);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
+        
         this.ctx.translate(-this.camera_x, 0);
 
         this.addToMap(this.statusBarHealth);
@@ -144,24 +154,23 @@ checkEnemyCollisions() {
             this.flippImage(mo);
         }
 
-        mo.draw(this.ctx)
+        mo.draw(this.ctx);
         mo.drawFrame?.(this.ctx);
 
-
         if (mo.ortherDirection) {
-            this.flippImageBack(mo)
+            this.flippImageBack(mo);
         }
-
     }
+
     flippImage(mo) {
         this.ctx.save();
         this.ctx.translate(mo.width, 0);
         this.ctx.scale(-1, 1);
         mo.x = mo.x * -1;
     }
+
     flippImageBack(mo) {
         mo.x = mo.x * -1;
         this.ctx.restore();
     }
-
 }

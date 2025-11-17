@@ -275,15 +275,24 @@ class Character extends MovableObject {
     }
 
 
-     checkJumpOnEnemy(enemy) {
+    checkJumpOnEnemy(enemy) {
         const playerBottom = this.y + this.height;
         const enemyTop = enemy.y;
-        const isAboveEnemy = playerBottom >= enemyTop && playerBottom <= enemyTop + 30;
+        const isAboveEnemy = playerBottom >= enemyTop && playerBottom <= enemyTop + 50;
         const isHorizontallyAligned = this.x + this.width > enemy.x &&
-                                      this.x < enemy.x + enemy.width;
+            this.x < enemy.x + enemy.width;
         if (isAboveEnemy && isHorizontallyAligned && !enemy.isDead) {
-            enemy.deadChicken(); 
-         }
+            enemy.deadChicken();
+        }
+    }
+
+
+    isJumpingOnEnemy(enemy) {
+        const playerBottom = this.y + this.height;
+        const enemyTop = enemy.y;
+        return playerBottom >= enemyTop &&
+            playerBottom <= enemyTop + 30 &&
+            this.speedY < 0;
     }
 
     
@@ -310,7 +319,7 @@ class Character extends MovableObject {
             imageIndex = 2;
         } else if (this.speedY > 20) {
             imageIndex = 3;
-        }  else if (this.speedY > -10) {
+        } else if (this.speedY > -10) {
             imageIndex = 3;
         } else if (this.speedY > -20) {
             imageIndex = 4;
