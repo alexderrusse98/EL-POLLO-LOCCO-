@@ -1,7 +1,7 @@
 class Character extends MovableObject {
 
     height = 200;
-    y = 220;
+    y = 120;
     speed = 5;
     bottleCount = 0;
     isJumpAnimationOn = false;
@@ -174,7 +174,6 @@ class Character extends MovableObject {
     }
 
 
-    // 2. Kamera aktualisieren
     updateCamera() {
         if (!this.isDead()) {
             const cameraStartX = 300;
@@ -273,9 +272,21 @@ class Character extends MovableObject {
             this.speedY = 30;
             this.jumpStartY = this.y;
         }
-        console.log('space bist du da?');
-
     }
+
+
+     checkJumpOnEnemy(enemy) {
+        const playerBottom = this.y + this.height;
+        const enemyTop = enemy.y;
+        const isAboveEnemy = playerBottom >= enemyTop && playerBottom <= enemyTop + 30;
+        const isHorizontallyAligned = this.x + this.width > enemy.x &&
+                                      this.x < enemy.x + enemy.width;
+        if (isAboveEnemy && isHorizontallyAligned && !enemy.isDead) {
+            enemy.deadChicken(); 
+         }
+    }
+
+    
     animateCharacter() {
         this.resting();
 
@@ -290,6 +301,8 @@ class Character extends MovableObject {
             this.animateWalking();
         }
     }
+
+
     animateJump() {
         let imageIndex;
 

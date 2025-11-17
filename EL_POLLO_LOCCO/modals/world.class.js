@@ -53,22 +53,30 @@ class World {
         }
     }
 
+checkCollisions() {
+    this.checkEnemyCollisions();
+    this.checkJumpOnEnemyCollisions(); // ⭐ NEU hinzufügen
+    this.checkCoinCollisions();
+    this.checkBottleCollisions();
+}
 
-    checkCollisions() {
-        this.checkEnemyCollisions();
-        this.checkCoinCollisions();
-        this.checkBottleCollisions();
-    }
+// ⭐ NEUE Methode hinzufügen
+checkJumpOnEnemyCollisions() {
+    this.level.enemies.forEach((enemy) => {
+        if (!enemy.isDead && this.character.isAboveGround()) {
+            this.character.checkJumpOnEnemy(enemy);
+        }
+    });
+}
 
-    
-    checkEnemyCollisions() {
-        this.level.enemies.forEach((enemy) => {
-            if (this.character.isColliding(enemy)) {
-                this.character.hit();
-                this.statusBarHealth.setPercentage(this.character.energy);
-            }
-        });
-    }
+checkEnemyCollisions() {
+    this.level.enemies.forEach((enemy) => {
+        if (this.character.isColliding(enemy) && !enemy.isDead) {
+            this.character.hit();
+            this.statusBarHealth.setPercentage(this.character.energy);
+        }
+    });
+}
 
 
     checkCoinCollisions() {
@@ -109,6 +117,7 @@ class World {
         this.addObjectsToMap(this.level.cloud);
         this.addObjectsToMap(this.level.enemies);
         this.throwAbleObjects = this.throwAbleObjects.filter(bottle => !bottle.markForDeletion);
+        this.level.enemies = this.level.enemies.filter(enemy => !enemy.markForDeletion);
         this.addObjectsToMap(this.throwAbleObjects);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
