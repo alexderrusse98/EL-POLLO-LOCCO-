@@ -124,7 +124,7 @@ class Character extends MovableObject {
         }
     }
 
-    
+
     // 1. Prüft Tasteneingaben und bewegt den Charakter
     handleMovement() {
         if (this.isDead()) return false;
@@ -177,7 +177,14 @@ class Character extends MovableObject {
     // 2. Kamera aktualisieren
     updateCamera() {
         if (!this.isDead()) {
-            this.world.camera_x = -this.x + 100;
+            const cameraStartX = 300;
+            const cameraOffset = 300;
+
+            if (this.x > cameraStartX) {
+                this.world.camera_x = -this.x + cameraOffset;
+            } else {
+                this.world.camera_x = 0;
+            }
         }
     }
 
