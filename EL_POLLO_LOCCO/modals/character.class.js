@@ -271,17 +271,44 @@ class Character extends MovableObject {
         if (!this.isJumpAnimationOn) {
             this.isJumpAnimationOn = true;
             this.speedY = 30;
+            this.jumpStartY = this.y;
+        }
+        console.log('space bist du da?');
 
-            let i = 0;
-            const jumpInterval = setInterval(() => {
-                this.img = this.imageCache[this.IMAGES_JUMPING[i]];
-                i++;
-                if (i >= this.IMAGES_JUMPING.length) {
-                    clearInterval(jumpInterval);
-                    this.isJumpAnimationOn = false;
-                }
-            }, 90);
+    }
+    animateCharacter() {
+        this.resting();
+
+        if (this.isDead()) {
+            this.speedY = 0;
+            this.animateDeath();
+        } else if (this.isHurt()) {
+            this.animateHurt();
+        } else if (this.isAboveGround() && this.isJumpAnimationOn) {
+            this.animateJump();
+        } else if (!this.isAboveGround()) {
+            this.animateWalking();
         }
     }
-    
+    animateJump() {
+        let imageIndex;
+
+        if (this.speedY > 30) {
+            imageIndex = 2;
+        } else if (this.speedY > 20) {
+            imageIndex = 3;
+        }  else if (this.speedY > -10) {
+            imageIndex = 3;
+        } else if (this.speedY > -20) {
+            imageIndex = 4;
+        } else {
+            imageIndex = 5;
+            this.isJumpAnimationOn = false;
+        }
+        this.img = this.imageCache[this.IMAGES_JUMPING[imageIndex]];
+
+        if (!this.isAboveGround()) {
+            this.isJumpAnimationOn = false;
+        }
+    }
 }
