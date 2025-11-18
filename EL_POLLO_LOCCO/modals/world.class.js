@@ -54,59 +54,60 @@ class World {
     }
 
     checkCollisions() {
-    this.checkJumpOnEnemyCollisions();
-    this.checkEnemyCollisions();
-    this.checkBottleEnemyCollisions();
-    this.checkCoinCollisions();
-    this.checkBottleCollisions();
-}
+        this.checkJumpOnEnemyCollisions();
+        this.checkEnemyCollisions();
+        this.checkBottleEnemyCollisions();
+        this.checkCoinCollisions();
+        this.checkBottleCollisions();
+    }
 
 
-checkBottleEnemyCollisions() {
-    this.throwAbleObjects.forEach((bottle) => {
-        if (!bottle.hasSplashed) {
-            this.level.enemies.forEach((enemy) => {
-                if (!enemy.isDead && bottle.isColliding(enemy)) {
-                    enemy.deadChicken();
-                    bottle.hasSplashed = true;
-                    bottle.animateSplash();
+    checkBottleEnemyCollisions() {
+        this.throwAbleObjects.forEach((bottle) => {
+            if (!bottle.hasSplashed) {
+                this.level.enemies.forEach((enemy) => {
+                    if (!enemy.isDead && bottle.isColliding(enemy)) {
+                        enemy.deadChicken();
+                        bottle.hasSplashed = true;
+                        bottle.animateSplash();
+                    }
+                });
+            }
+        });
+    }
+
+
+    // Jump-Kollision
+    checkJumpOnEnemyCollisions() {
+        this.level.enemies.forEach((enemy) => {
+            if (!enemy.isDead && this.character.speedY < 0) {
+                const wasKilled = this.character.checkJumpOnEnemy(enemy);
+                if (wasKilled) {
+                    enemy.wasJumpKilled = true;
                 }
-            });
-        }
-    });
-}
+            }
+        });
+    }
 
- 
-   // ⭐ Verbesserte Jump-Kollision
-checkJumpOnEnemyCollisions() {
-    this.level.enemies.forEach((enemy) => {
-        if (!enemy.isDead && this.character.speedY < 0) {
-            const wasKilled = this.character.checkJumpOnEnemy(enemy);
-            if (wasKilled) {
-                enemy.wasJumpKilled = true; // Markierung für Schadenskollision
+
+    checkEnemyCollisions() {
+        this.level.enemies.forEach((enemy) => {
+            if (this.character.isColliding(enemy) && !enemy.isDead && !enemy.wasJumpKilled) {
+
+                const playerBottom = this.character.y + this.character.height;
+                const enemyTop = enemy.y;
+                const isJumpingOnEnemy = playerBottom >= enemyTop &&
+                    playerBottom <= enemyTop + 40 &&
+                    this.character.speedY < 0;
+
+
+                if (!isJumpingOnEnemy) {
+                    this.character.hit();
+                    this.statusBarHealth.setPercentage(this.character.energy);
+                }
             }
-        }
-    });
-}
-checkEnemyCollisions() {
-    this.level.enemies.forEach((enemy) => {
-        if (this.character.isColliding(enemy) && !enemy.isDead && !enemy.wasJumpKilled) {
-            
-            // Zusätzliche Sicherheitsprüfung
-            const playerBottom = this.character.y + this.character.height;
-            const enemyTop = enemy.y;
-            const isJumpingOnEnemy = playerBottom >= enemyTop && 
-                                     playerBottom <= enemyTop + 40 && 
-                                     this.character.speedY < 0;
-            
-            // Nur Damage wenn NICHT von oben gesprungen
-            if (!isJumpingOnEnemy) {
-                this.character.hit();
-                this.statusBarHealth.setPercentage(this.character.energy);
-            }
-        }
-    });
-}
+        });
+    }
 
     checkCoinCollisions() {
         this.level.coins.forEach((coin, index) => {
@@ -138,19 +139,19 @@ checkEnemyCollisions() {
 
         this.ctx.translate(-this.camera_x, 0);
         this.ctx.translate(this.camera_x, 0);
-        
+
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.cloud);
-        
+
         // Tote Enemies filtern
         this.level.enemies = this.level.enemies.filter(enemy => !enemy.markForDeletion);
         this.addObjectsToMap(this.level.enemies);
-        
+
         this.throwAbleObjects = this.throwAbleObjects.filter(bottle => !bottle.markForDeletion);
         this.addObjectsToMap(this.throwAbleObjects);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
-        
+
         this.ctx.translate(-this.camera_x, 0);
 
         this.addToMap(this.statusBarHealth);

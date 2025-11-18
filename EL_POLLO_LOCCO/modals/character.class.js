@@ -291,68 +291,63 @@ class Character extends MovableObject {
         }
     }
 
-
-
     animateJump() {
-        let imageIndex;
-
-        if (this.speedY > 25) {
-            imageIndex = 0;
-        } else if (this.speedY > 24) {
-            imageIndex = 1;
-        } else if (this.speedY > 23) {
-            imageIndex = 2;
-        } else if (this.speedY > 10) {
-            imageIndex = 3;
-        } else if (this.speedY > -1) {
-            imageIndex = 4;
-        } else if (this.speedY > -15) {
-            imageIndex = 5;
-        } else if (this.speedY > -20) {
-            imageIndex = 6;
-        } else if (this.speedY > -25) {
-            imageIndex = 7;
-        } else {
-            imageIndex = 8;
-            this.isJumpAnimationOn = false;
-        }
-
-        this.img = this.imageCache[this.IMAGES_JUMPING[imageIndex]];
-
-        if (!this.isAboveGround() && this.speedY <= 0) {
-            this.isJumpAnimationOn = false;
-        }
+        this.setJumpImage();
+        this.handleJumpEnd();
     }
+
+
+    setJumpImage() {
+        const frame = this.getJumpFrame();
+        this.img = this.imageCache[this.IMAGES_JUMPING[frame]];
+    }
+
+    getJumpFrame() {
+        if (this.speedY > 25) return 0;
+        if (this.speedY > 24) return 1;
+        if (this.speedY > 23) return 2;
+        if (this.speedY > 10) return 3;
+        if (this.speedY > -1) return 4;
+        if (this.speedY > -15) return 5;
+        if (this.speedY > -20) return 6;
+        if (this.speedY > -25) return 7;
+        return 8;
+    }
+
+    handleJumpEnd() {
+        const frame = this.getJumpFrame();
+        const landed = !this.isAboveGround() && this.speedY <= 0;
+        if (frame === 8 || landed) this.isJumpAnimationOn = false;
+    }
+
+    // Death Animation
+
     animateDeath() {
+        this.setDeathImage();
+        this.updateDeathPhysics();
+    }
 
-        let imageIndex;
+    setDeathImage() {
+        this.img = this.imageCache[this.IMAGES_DEAD[this.getDeathFrame()]];
+    }
 
-        const fallProgress = Math.max(0, this.y - 120);
+    getDeathFrame() {
+        const fallDown = Math.max(0, this.y - 80);
+        if (fallDown < 10) return 0;
+        if (fallDown < 10) return 1;
+        if (fallDown < 50) return 2;
+        if (fallDown < 100) return 3;
+        if (fallDown < 150) return 4;
+        if (fallDown < 300) return 5;
+        return 6;
+    }
 
-        if (fallProgress < 50) {
-            imageIndex = 0;
-        } else if (fallProgress < 100) {
-            imageIndex = 1;
-        } else if (fallProgress < 150) {
-            imageIndex = 2;
-        } else if (fallProgress < 200) {
-            imageIndex = 3;
-        } else if (fallProgress < 250) {
-            imageIndex = 4;
-        } else if (fallProgress < 300) {
-            imageIndex = 5;
-        } else {
-            imageIndex = 6;
-        }
-
-        this.img = this.imageCache[this.IMAGES_DEAD[imageIndex]];
-
+    updateDeathPhysics() {
         if (!this.speedY) this.speedY = 10;
-
         if (this.y < 500) {
             this.y += this.speedY;
-            this.speedY += 0.5;
-            this.x += 7;
+            this.speedY += 0.8;
+            this.x += 10;
         } else {
             this.y = 500;
             this.speedY = 0;
