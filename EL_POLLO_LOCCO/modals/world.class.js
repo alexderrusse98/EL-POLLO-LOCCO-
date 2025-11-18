@@ -77,32 +77,36 @@ checkBottleEnemyCollisions() {
 }
 
  
-    checkJumpOnEnemyCollisions() {
-        this.level.enemies.forEach((enemy) => {
-            if (!enemy.isDead && this.character.isAboveGround()) {
-                this.character.checkJumpOnEnemy(enemy);
+   // ⭐ Verbesserte Jump-Kollision
+checkJumpOnEnemyCollisions() {
+    this.level.enemies.forEach((enemy) => {
+        if (!enemy.isDead && this.character.speedY < 0) { // ⭐ Nur wenn fallend
+            const wasKilled = this.character.checkJumpOnEnemy(enemy);
+            if (wasKilled) {
+                enemy.wasJumpKilled = true; // ⭐ Markierung für Schadenskollision
             }
-        });
-    }
-
-    checkEnemyCollisions() {
-        this.level.enemies.forEach((enemy) => {
-            if (this.character.isColliding(enemy) && !enemy.isDead) {
+        }
+    });
+}
+checkEnemyCollisions() {
+    this.level.enemies.forEach((enemy) => {
+        if (this.character.isColliding(enemy) && !enemy.isDead && !enemy.wasJumpKilled) {
             
-                const playerBottom = this.character.y + this.character.height;
-                const enemyTop = enemy.y;
-                const isJumpingOnEnemy = playerBottom >= enemyTop && 
-                                         playerBottom <= enemyTop + 50 && 
-                                         this.character.speedY < 0;
-                
-               
-                if (!isJumpingOnEnemy) {
-                    this.character.hit();
-                    this.statusBarHealth.setPercentage(this.character.energy);
-                }
+            // Zusätzliche Sicherheitsprüfung
+            const playerBottom = this.character.y + this.character.height;
+            const enemyTop = enemy.y;
+            const isJumpingOnEnemy = playerBottom >= enemyTop && 
+                                     playerBottom <= enemyTop + 40 && 
+                                     this.character.speedY < 0;
+            
+            // Nur Damage wenn NICHT von oben gesprungen
+            if (!isJumpingOnEnemy) {
+                this.character.hit();
+                this.statusBarHealth.setPercentage(this.character.energy);
             }
-        });
-    }
+        }
+    });
+}
 
     checkCoinCollisions() {
         this.level.coins.forEach((coin, index) => {

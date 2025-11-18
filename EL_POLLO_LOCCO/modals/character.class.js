@@ -159,6 +159,7 @@ class Character extends MovableObject {
     handleJump() {
         if (this.world.keyboard.SPACE && !this.isAboveGround()) {
             this.jump();
+            console.log('bist du noch da Space?');
             return true;
         }
         return false;
@@ -275,16 +276,29 @@ class Character extends MovableObject {
     }
 
 
-    checkJumpOnEnemy(enemy) {
-        const playerBottom = this.y + this.height;
-        const enemyTop = enemy.y;
-        const isAboveEnemy = playerBottom >= enemyTop && playerBottom <= enemyTop + 50;
-        const isHorizontallyAligned = this.x + this.width > enemy.x &&
-            this.x < enemy.x + enemy.width;
-        if (isAboveEnemy && isHorizontallyAligned && !enemy.isDead) {
-            enemy.deadChicken();
-        }
+   checkJumpOnEnemy(enemy) {
+    // boden Charakter
+    const playerBottom = this.y + this.height;
+    // boden Charakter x mitte
+    const playerCenterX = this.x + this.width / 2;
+    // oberkante gegner
+    const enemyTop = enemy.y;
+   
+    // x mitte gegner
+    const enemyCenterX = enemy.x + enemy.width / 2;
+    
+    // Prüfen ob Charakter von oben kommt UND nach unten fällt
+    const isAboveEnemy = playerBottom >= enemyTop &&  playerBottom <= enemyTop + 50;
+    const isFalling = this.speedY < 0; // Wichtig: muss nach unten fallen
+    const isHorizontallyAligned = Math.abs(playerCenterX - enemyCenterX) < (this.width / 2 + enemy.width / 2);
+    
+    if (isAboveEnemy && isFalling && isHorizontallyAligned && !enemy.isDead) {
+        enemy.deadChicken();
+        this.speedY = 15; // Rücksprung
+        return true; 
     }
+    return false;
+}
 
 
     isJumpingOnEnemy(enemy) {
