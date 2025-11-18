@@ -204,22 +204,6 @@ class Character extends MovableObject {
     }
 
 
-    // 4. Animationen für Dead, Hurt, Walking und Idle prüfen
-    // Hauptfunktion, die alle Animationszustände prüft
-    animateCharacter() {
-        this.resting();
-
-        if (this.isDead()) {
-            this.speedY = 0;
-            this.animateDeath();
-        } else if (this.isHurt()) {
-            this.animateHurt();
-        } else if (!this.isAboveGround()) {
-            this.animateWalking();
-        }
-    }
-
-
     // Animation bei Treffer
     animateHurt() {
         this.playAnimation(this.IMAGES_HURT);
@@ -259,29 +243,29 @@ class Character extends MovableObject {
     }
 
 
-   checkJumpOnEnemy(enemy) {
-    // boden Charakter
-    const playerBottom = this.y + this.height;
-    // boden Charakter x mitte
-    const playerCenterX = this.x + this.width / 2;
-    // oberkante gegner
-    const enemyTop = enemy.y;
-   
-    // x mitte gegner
-    const enemyCenterX = enemy.x + enemy.width / 2;
-    
-    // Prüfen ob Charakter von oben kommt UND nach unten fällt
-    const isAboveEnemy = playerBottom >= enemyTop &&  playerBottom <= enemyTop + enemy.height * 0.75; 
-    const isFalling = this.speedY < 0; // Wichtig: muss nach unten fallen
-    const isHorizontallyAligned = Math.abs(playerCenterX - enemyCenterX) < (this.width / 2 + enemy.width / 2);
-    
-    if (isAboveEnemy && isFalling && isHorizontallyAligned && !enemy.isDead) {
-        enemy.deadChicken();
-        this.speedY = 15; // Rücksprung
-        return true; 
+    checkJumpOnEnemy(enemy) {
+        // boden Charakter
+        const playerBottom = this.y + this.height;
+        // boden Charakter x mitte
+        const playerCenterX = this.x + this.width / 2;
+        // oberkante gegner
+        const enemyTop = enemy.y;
+
+        // x mitte gegner
+        const enemyCenterX = enemy.x + enemy.width / 2;
+
+        // Prüfen ob Charakter von oben kommt UND nach unten fällt
+        const isAboveEnemy = playerBottom >= enemyTop && playerBottom <= enemyTop + enemy.height * 0.75;
+        const isFalling = this.speedY < 0; // Wichtig: muss nach unten fallen
+        const isHorizontallyAligned = Math.abs(playerCenterX - enemyCenterX) < (this.width / 2 + enemy.width / 2);
+
+        if (isAboveEnemy && isFalling && isHorizontallyAligned && !enemy.isDead) {
+            enemy.deadChicken();
+            this.speedY = 15; // Rücksprung
+            return true;
+        }
+        return false;
     }
-    return false;
-}
 
 
     isJumpingOnEnemy(enemy) {
@@ -292,7 +276,7 @@ class Character extends MovableObject {
             this.speedY < 0;
     }
 
-    
+
     animateCharacter() {
         this.resting();
 
@@ -328,39 +312,41 @@ class Character extends MovableObject {
         if (!this.isAboveGround()) {
             this.isJumpAnimationOn = false;
         }
-    }animateDeath() {
-
-    let imageIndex;
-    
-    const fallProgress = Math.max(0, this.y - 120);
-    
-    if (fallProgress < 50) {
-        imageIndex = 0;
-    } else if (fallProgress < 100) {
-        imageIndex = 1;
-    } else if (fallProgress < 150) {
-        imageIndex = 2;
-    } else if (fallProgress < 200) {
-        imageIndex = 3;
-    } else if (fallProgress < 250) {
-        imageIndex = 4;
-    } else if (fallProgress < 300) {
-        imageIndex = 5;
-    } else {
-        imageIndex = 6;
     }
 
-    this.img = this.imageCache[this.IMAGES_DEAD[imageIndex]];
+    animateDeath() {
 
-    if (!this.speedY) this.speedY = 10;
+        let imageIndex;
 
-    if (this.y < 500) {
-        this.y += this.speedY;
-        this.speedY += 0.5;
-        this.x += 7;
-    } else {
-        this.y = 500;
-        this.speedY = 0;
+        const fallProgress = Math.max(0, this.y - 120);
+
+        if (fallProgress < 50) {
+            imageIndex = 0;
+        } else if (fallProgress < 100) {
+            imageIndex = 1;
+        } else if (fallProgress < 150) {
+            imageIndex = 2;
+        } else if (fallProgress < 200) {
+            imageIndex = 3;
+        } else if (fallProgress < 250) {
+            imageIndex = 4;
+        } else if (fallProgress < 300) {
+            imageIndex = 5;
+        } else {
+            imageIndex = 6;
+        }
+
+        this.img = this.imageCache[this.IMAGES_DEAD[imageIndex]];
+
+        if (!this.speedY) this.speedY = 10;
+
+        if (this.y < 500) {
+            this.y += this.speedY;
+            this.speedY += 0.5;
+            this.x += 7;
+        } else {
+            this.y = 500;
+            this.speedY = 0;
+        }
     }
-}
 }
