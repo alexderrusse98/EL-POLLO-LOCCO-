@@ -80,10 +80,10 @@ checkBottleEnemyCollisions() {
    // ⭐ Verbesserte Jump-Kollision
 checkJumpOnEnemyCollisions() {
     this.level.enemies.forEach((enemy) => {
-        if (!enemy.isDead && this.character.speedY < 0) { // ⭐ Nur wenn fallend
+        if (!enemy.isDead && this.character.speedY < 0) {
             const wasKilled = this.character.checkJumpOnEnemy(enemy);
             if (wasKilled) {
-                enemy.wasJumpKilled = true; // ⭐ Markierung für Schadenskollision
+                enemy.wasJumpKilled = true; // Markierung für Schadenskollision
             }
         }
     });

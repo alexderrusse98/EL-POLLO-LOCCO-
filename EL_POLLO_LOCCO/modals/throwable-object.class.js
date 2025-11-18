@@ -33,7 +33,7 @@ class ThrowableObject extends MovableObject {
         this.applyGravity();
         setInterval(() => {
             if (!this.hasSplashed) {
-                this.x += 10;
+                this.x += 7;  
             }
         }, 25);
 
@@ -51,7 +51,7 @@ class ThrowableObject extends MovableObject {
     animateSplash() {
         this.speedY = 0;
         this.acceleration = 0;
-        
+        this.y += 30; 
         let i = 0;
         const splashInterval = setInterval(() => {
             if (i < this.IMAGES_SPLASH.length) {

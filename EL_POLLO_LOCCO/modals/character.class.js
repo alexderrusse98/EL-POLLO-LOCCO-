@@ -288,7 +288,7 @@ class Character extends MovableObject {
     const enemyCenterX = enemy.x + enemy.width / 2;
     
     // Prüfen ob Charakter von oben kommt UND nach unten fällt
-    const isAboveEnemy = playerBottom >= enemyTop &&  playerBottom <= enemyTop + 50;
+    const isAboveEnemy = playerBottom >= enemyTop &&  playerBottom <= enemyTop + enemy.height * 0.75; 
     const isFalling = this.speedY < 0; // Wichtig: muss nach unten fallen
     const isHorizontallyAligned = Math.abs(playerCenterX - enemyCenterX) < (this.width / 2 + enemy.width / 2);
     
