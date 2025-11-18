@@ -6,6 +6,8 @@ class Character extends MovableObject {
     bottleCount = 0;
     isJumpAnimationOn = false;
     isThrowingBottle = false;
+    isDeadAnimationOn = false;
+
 
     lastMoveTime = new Date().getTime();
 
@@ -218,25 +220,6 @@ class Character extends MovableObject {
     }
 
 
-    // Animation bei Tod
-    animateDeath() {
-        this.playAnimation(this.IMAGES_DEAD);
-
-        if (this.currentImage >= 2) {
-            if (!this.speedY) this.speedY = 10;
-
-
-            if (this.y < 500) {
-                this.y += this.speedY;
-                this.speedY += 0.5;
-                this.x += 7;
-            } else {
-                this.y = 500;
-            }
-        }
-    }
-
-
     // Animation bei Treffer
     animateHurt() {
         this.playAnimation(this.IMAGES_HURT);
@@ -342,9 +325,42 @@ class Character extends MovableObject {
             this.isJumpAnimationOn = false;
         }
         this.img = this.imageCache[this.IMAGES_JUMPING[imageIndex]];
-
         if (!this.isAboveGround()) {
             this.isJumpAnimationOn = false;
         }
+    }animateDeath() {
+
+    let imageIndex;
+    
+    const fallProgress = Math.max(0, this.y - 120);
+    
+    if (fallProgress < 50) {
+        imageIndex = 0;
+    } else if (fallProgress < 100) {
+        imageIndex = 1;
+    } else if (fallProgress < 150) {
+        imageIndex = 2;
+    } else if (fallProgress < 200) {
+        imageIndex = 3;
+    } else if (fallProgress < 250) {
+        imageIndex = 4;
+    } else if (fallProgress < 300) {
+        imageIndex = 5;
+    } else {
+        imageIndex = 6;
     }
+
+    this.img = this.imageCache[this.IMAGES_DEAD[imageIndex]];
+
+    if (!this.speedY) this.speedY = 10;
+
+    if (this.y < 500) {
+        this.y += this.speedY;
+        this.speedY += 0.5;
+        this.x += 7;
+    } else {
+        this.y = 500;
+        this.speedY = 0;
+    }
+}
 }
