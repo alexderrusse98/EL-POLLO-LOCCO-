@@ -161,7 +161,6 @@ class Character extends MovableObject {
     handleJump() {
         if (this.world.keyboard.SPACE && !this.isAboveGround()) {
             this.jump();
-            console.log('bist du noch da Space?');
             return true;
         }
         return false;
@@ -293,27 +292,37 @@ class Character extends MovableObject {
     }
 
 
+
     animateJump() {
         let imageIndex;
 
-        if (this.speedY > 30) {
+        if (this.speedY > 25) {
+            imageIndex = 0;
+        } else if (this.speedY > 24) {
+            imageIndex = 1;
+        } else if (this.speedY > 23) {
             imageIndex = 2;
-        } else if (this.speedY > 20) {
+        } else if (this.speedY > 10) {
             imageIndex = 3;
-        } else if (this.speedY > -10) {
-            imageIndex = 3;
-        } else if (this.speedY > -20) {
+        } else if (this.speedY > -1) {
             imageIndex = 4;
-        } else {
+        } else if (this.speedY > -15) {
             imageIndex = 5;
+        } else if (this.speedY > -20) {
+            imageIndex = 6;
+        } else if (this.speedY > -25) {
+            imageIndex = 7;
+        } else {
+            imageIndex = 8;
             this.isJumpAnimationOn = false;
         }
+
         this.img = this.imageCache[this.IMAGES_JUMPING[imageIndex]];
-        if (!this.isAboveGround()) {
+
+        if (!this.isAboveGround() && this.speedY <= 0) {
             this.isJumpAnimationOn = false;
         }
     }
-
     animateDeath() {
 
         let imageIndex;
