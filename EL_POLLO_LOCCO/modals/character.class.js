@@ -241,30 +241,32 @@ class Character extends MovableObject {
         }
     }
 
-
+    
     checkJumpOnEnemy(enemy) {
-        // boden Charakter
-        const playerBottom = this.y + this.height;
-        // boden Charakter x mitte
-        const playerCenterX = this.x + this.width / 2;
-        // oberkante gegner
-        const enemyTop = enemy.y;
-
-        // x mitte gegner
-        const enemyCenterX = enemy.x + enemy.width / 2;
-
-        // Prüfen ob Charakter von oben kommt UND nach unten fällt
-        const isAboveEnemy = playerBottom >= enemyTop && playerBottom <= enemyTop + enemy.height * 0.75;
-        const isFalling = this.speedY < 0; // Wichtig: muss nach unten fallen
-        const isHorizontallyAligned = Math.abs(playerCenterX - enemyCenterX) < (this.width / 2 + enemy.width / 2);
-
-        if (isAboveEnemy && isFalling && isHorizontallyAligned && !enemy.isDead) {
-            enemy.deadChicken();
-            this.speedY = 15; // Rücksprung
-            return true;
-        }
-        return false;
+    if (this.speedY >= 0 || enemy.isDead) return false;
+    
+    const xTolerance = 100; 
+    const yTolerance = enemy.height * 0.75;
+    
+    const playerLeft = this.x - xTolerance;
+    const playerRight = this.x + this.width + xTolerance;
+    const playerBottom = this.y + this.height;
+    
+    const enemyLeft = enemy.x;
+    const enemyRight = enemy.x + enemy.width;
+    const enemyTop = enemy.y;
+    
+    const horizontalHit = playerRight > enemyLeft && playerLeft < enemyRight;
+    const verticalHit = playerBottom >= enemyTop && 
+                        playerBottom <= enemyTop + yTolerance;
+    
+    if (horizontalHit && verticalHit) {
+        enemy.deadChicken();
+        this.speedY = 15;
+        return true;
     }
+    return false;
+}
 
 
     isJumpingOnEnemy(enemy) {

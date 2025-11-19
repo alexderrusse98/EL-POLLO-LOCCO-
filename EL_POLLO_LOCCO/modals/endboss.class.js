@@ -5,7 +5,7 @@ class Endboss extends MovableObject {
     y = -35;
 
 
-    IMAGES_WALKING = [
+    IMAGES_ALERT = [
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G5.png',
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G6.png',
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G7.png',
@@ -17,9 +17,40 @@ class Endboss extends MovableObject {
 
     ];
 
+     IMAGES_WALKING = [
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/1_walk/G1.png',
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/1_walk/G2.png',
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/1_walk/G3.png',
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/1_walk/G4.png'
+    ];
+
+    IMAGES_ATTACK = [
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/3_attack/G13.png',
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/3_attack/G14.png',
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/3_attack/G15.png',
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/3_attack/G16.png',
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/3_attack/G17.png',
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/3_attack/G18.png',
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/3_attack/G19.png',
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/3_attack/G20.png'
+    ];
+
+     IMAGES_HURT = [
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/4_hurt/G21.png',
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/4_hurt/G22.png',
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/4_hurt/G23.png'
+    ];
+    
+     IMAGES_DEAD = [
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/5_dead/G24.png',
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/5_dead/G25.png',
+        './img/img_pollo_locco/img/4_enemie_boss_chicken/5_dead/G26.png'
+    ];
+   
+
     constructor() {
-        super().loadImage(this.IMAGES_WALKING[0]);
-        this.loadImages(this.IMAGES_WALKING);
+        super().loadImage(this.IMAGES_ALERT[0]);
+        this.loadImages(this.IMAGES_ALERT);
         this.x = 1400;
         this.animate();
     }
@@ -27,7 +58,7 @@ class Endboss extends MovableObject {
 
     animate() {
         setInterval(() => {
-            this.playAnimation(this.IMAGES_WALKING);
+            this.playAnimation(this.IMAGES_ALERT);
         }, 200);
     }
 
