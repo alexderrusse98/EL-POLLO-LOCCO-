@@ -1,8 +1,8 @@
 class Endboss extends MovableObject {
-
     height = 500;
     width = 250;
     y = -35;
+    isDead = false; 
 
 
     IMAGES_ALERT = [
@@ -40,7 +40,7 @@ class Endboss extends MovableObject {
         './img/img_pollo_locco/img/4_enemie_boss_chicken/4_hurt/G22.png',
         './img/img_pollo_locco/img/4_enemie_boss_chicken/4_hurt/G23.png'
     ];
-    
+
      IMAGES_DEAD = [
         './img/img_pollo_locco/img/4_enemie_boss_chicken/5_dead/G24.png',
         './img/img_pollo_locco/img/4_enemie_boss_chicken/5_dead/G25.png',
@@ -49,17 +49,60 @@ class Endboss extends MovableObject {
    
 
     constructor() {
-        super().loadImage(this.IMAGES_ALERT[0]);
+        super().loadImage('./img/img_pollo_locco/img/4_enemie_boss_chicken/1_walk/G1.png');
+        this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_ALERT);
+        this.loadImages(this.IMAGES_ATTACK);
+        this.loadImages(this.IMAGES_HURT);
+        this.loadImages(this.IMAGES_DEAD);
         this.x = 1400;
+        this.speed = 0.15 + Math.random() * 0.25;
         this.animate();
+
+    }
+      deadChicken() {
+        this.isDead = true;
+        this.showDeadAnimation();
     }
 
+    showDeadAnimation() {
+        this.img = this.imageCache[this.IMAGES_DEAD[0]];
+        setTimeout(() => {
+            this.markForDeletion = true;
+        }, 1000);
+    }
+    animateCharacter() {
+
+        if (this.isDead()) {
+            this.speedY = 0;
+            this.animateDeath();
+        } else if (this.isHurt()) {
+            this.animateHurt();
+        } 
+    }
+    // Animation bei Treffer
+    animateHurt() {
+        this.playAnimation(this.IMAGES_HURT);
+    }
+
+    animateWalking() {
+        this.playAnimation(this.IMAGES_WALKING);
+    }
 
     animate() {
+          setInterval(() => {
+            if (!this.isDead) {
+                this.moveLeft();
+            }
+        }, 1000 / 60);
+
+        // Animation
         setInterval(() => {
-            this.playAnimation(this.IMAGES_ALERT);
-        }, 200);
+            if (!this.isDead) {
+                this.playAnimation(this.IMAGES_WALKING);
+            }
+        }, 100);
+    
     }
 
 }
