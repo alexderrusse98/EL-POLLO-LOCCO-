@@ -5,9 +5,12 @@ class World {
     ctx;
     keyboard;
     camera_x = 0;
+
     statusBarHealth;
     statusBarCoins;
     statusBarBottles;
+    statusBarBossHealth;
+
     throwAbleObjects = [];
     coins = 0;
     bottles = 0;
@@ -20,6 +23,7 @@ class World {
         this.statusBarHealth = new StatusBar('health', 40, 0);
         this.statusBarCoins = new StatusBar('coin', 40, 60);
         this.statusBarBottles = new StatusBar('bottle', 40, 120);
+        this.statusBarBossHealth = new StatusBar('endbossHealth', 40, 180);
         this.statusBarCoins.setPercentage(0);
         this.statusBarBottles.setPercentage(0);
 
@@ -157,6 +161,7 @@ class World {
         this.addToMap(this.statusBarHealth);
         this.addToMap(this.statusBarCoins);
         this.addToMap(this.statusBarBottles);
+        this.addToMap(this.statusBarBossHealth);
 
         let self = this;
         requestAnimationFrame(function () {

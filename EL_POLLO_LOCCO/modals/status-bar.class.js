@@ -28,6 +28,14 @@ class StatusBar extends DrawableObject {
         './img/img_pollo_locco/img/7_statusbars/1_statusbar/2_statusbar_health/blue/100.png'
     ];
 
+    IMAGES_ENDBOSS_HEALTH = [
+        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue100.png',
+        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue80.png',
+        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue60.png',
+        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue40.png',
+        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue20.png',
+        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue0.png'
+    ];
 
 
     percentage = 100;
@@ -38,6 +46,7 @@ class StatusBar extends DrawableObject {
         if (type === 'health') this.images = this.IMAGES;
         else if (type === 'coin') this.images = this.IMAGES_COIN;
         else if (type === 'bottle') this.images = this.IMAGES_BOTTLE;
+        else if (type === 'endbossHealth') this.images = this.IMAGES_ENDBOSS_HEALTH;
         this.loadImages(this.images);
         this.x = x;
         this.y = y;
