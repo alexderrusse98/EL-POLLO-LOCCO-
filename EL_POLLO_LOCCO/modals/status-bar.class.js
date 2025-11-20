@@ -29,12 +29,12 @@ class StatusBar extends DrawableObject {
     ];
 
     IMAGES_ENDBOSS_HEALTH = [
-        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue100.png',
-        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue80.png',
-        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue60.png',
-        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue40.png',
+        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue0.png',
         './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue20.png',
-        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue0.png'
+        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue40.png',
+        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue60.png',
+        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue80.png',
+        './img/img_pollo_locco/img/7_statusbars/2_statusbar_endboss/blue/blue100.png'
     ];
 
 

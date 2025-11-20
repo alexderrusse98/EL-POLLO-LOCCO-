@@ -3,7 +3,7 @@ class Endboss extends MovableObject {
     width = 250;
     y = -35;
     isDead = false;
-    
+
 
     IMAGES_ALERT = [
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G5.png',
@@ -81,6 +81,8 @@ class Endboss extends MovableObject {
             this.animateHurt();
         }
     }
+
+    
     // Animation bei Treffer
     animateHurt() {
         this.playAnimation(this.IMAGES_HURT);
@@ -90,34 +92,42 @@ class Endboss extends MovableObject {
         this.playAnimation(this.IMAGES_WALKING);
     }
 
-    animate() {
 
-        setInterval(() => {
-            if (!this.isDead) {
-                if (this.movingRight) {
-                    this.moveRight();
-                    this.otherDirection = true;
-                    if (this.x >= 500) {  
-                        this.movingRight = false;
-                        console.log('Nach RECHTS, otherDirection:', this.otherDirection);
-                        return true;
-                    }
-                } else {
-                    this.moveLeft();
-                    this.otherDirection = false;
-                    if (this.x <= 350) { 
-                        this.movingRight = true;
-                        console.log('Nach LINKS, otherDirection:', this.otherDirection);
-                        return true;
-                    }
-                }
-            }
-        }, 1000 / 60);
-            
+    moveRightDirection() {
+        this.moveRight();
+        this.otherDirection = true;
+
+        if (this.x >= 500) {
+            this.movingRight = false;
+            console.log('Nach RECHTS, otherDirection:', this.otherDirection);
+        }
     }
 
 
-    // Animation
+    moveLeftDirection() {
+        this.moveLeft();
+        this.otherDirection = false;
+
+        if (this.x <= 350) {
+            this.movingRight = true;
+            console.log('Nach LINKS, otherDirection:', this.otherDirection);
+        }
+    }
+
+
+    animate() {
+        setInterval(() => {
+            if (!this.isDead) {
+                if (this.movingRight) {
+                    this.moveRightDirection();
+                } else {
+                    this.moveLeftDirection();
+                }
+            }
+        }, 1000 / 60);
+    }
+
+
     walkAnimtion() {
         setInterval(() => {
             if (!this.isDead) {
