@@ -40,9 +40,7 @@ class MovableObject extends DrawableObject {
    }
 
 
-
-
-
+   // verbessern und deutlicher machen
    playAnimationOnce(images, callback, intervalTime = 100) {
       let i = 0;
 

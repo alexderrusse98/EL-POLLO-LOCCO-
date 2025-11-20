@@ -1,5 +1,6 @@
 class World {
     character = new Character();
+    endBoss = new Endboss();
     level = level1;
     canvas;
     ctx;
@@ -9,6 +10,7 @@ class World {
     statusBarHealth;
     statusBarCoins;
     statusBarBottles;
+
     statusBarBossHealth;
 
     throwAbleObjects = [];
@@ -24,6 +26,7 @@ class World {
         this.statusBarCoins = new StatusBar('coin', 40, 60);
         this.statusBarBottles = new StatusBar('bottle', 40, 120);
         this.statusBarBossHealth = new StatusBar('endbossHealth', 40, 180);
+        
         this.statusBarCoins.setPercentage(0);
         this.statusBarBottles.setPercentage(0);
 
@@ -34,6 +37,7 @@ class World {
 
     setWorld() {
         this.character.world = this;
+        this.endBoss.world = this;
     }
 
     run() {
@@ -145,11 +149,16 @@ class World {
         this.ctx.translate(this.camera_x, 0);
 
         this.addToMap(this.character);
+        
         this.addObjectsToMap(this.level.cloud);
 
-        // Tote Enemies filtern
+        //Enemies 
         this.level.enemies = this.level.enemies.filter(enemy => !enemy.markForDeletion);
         this.addObjectsToMap(this.level.enemies);
+
+        //Endboss
+        this.addToMap(this.endBoss);
+
 
         this.throwAbleObjects = this.throwAbleObjects.filter(bottle => !bottle.markForDeletion);
         this.addObjectsToMap(this.throwAbleObjects);
