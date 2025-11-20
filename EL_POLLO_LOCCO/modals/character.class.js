@@ -141,7 +141,7 @@ class Character extends MovableObject {
     handleRightMovement() {
         if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
             this.moveRight();
-            this.ortherDirection = false;
+            this.otherDirection = false;
             return true;
         }
         return false;
@@ -151,7 +151,7 @@ class Character extends MovableObject {
     handleLeftMovement() {
         if (this.world.keyboard.LEFT && this.x > 0) {
             this.moveLeft();
-            this.ortherDirection = true;
+            this.otherDirection = true;
             return true;
         }
         return false;

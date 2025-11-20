@@ -2,8 +2,8 @@ class Endboss extends MovableObject {
     height = 500;
     width = 250;
     y = -35;
-    isDead = false; 
-
+    isDead = false;
+    
 
     IMAGES_ALERT = [
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G5.png',
@@ -17,7 +17,7 @@ class Endboss extends MovableObject {
 
     ];
 
-     IMAGES_WALKING = [
+    IMAGES_WALKING = [
         './img/img_pollo_locco/img/4_enemie_boss_chicken/1_walk/G1.png',
         './img/img_pollo_locco/img/4_enemie_boss_chicken/1_walk/G2.png',
         './img/img_pollo_locco/img/4_enemie_boss_chicken/1_walk/G3.png',
@@ -35,18 +35,18 @@ class Endboss extends MovableObject {
         './img/img_pollo_locco/img/4_enemie_boss_chicken/3_attack/G20.png'
     ];
 
-     IMAGES_HURT = [
+    IMAGES_HURT = [
         './img/img_pollo_locco/img/4_enemie_boss_chicken/4_hurt/G21.png',
         './img/img_pollo_locco/img/4_enemie_boss_chicken/4_hurt/G22.png',
         './img/img_pollo_locco/img/4_enemie_boss_chicken/4_hurt/G23.png'
     ];
 
-     IMAGES_DEAD = [
+    IMAGES_DEAD = [
         './img/img_pollo_locco/img/4_enemie_boss_chicken/5_dead/G24.png',
         './img/img_pollo_locco/img/4_enemie_boss_chicken/5_dead/G25.png',
         './img/img_pollo_locco/img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
-   
+
 
     constructor() {
         super().loadImage('./img/img_pollo_locco/img/4_enemie_boss_chicken/1_walk/G1.png');
@@ -55,12 +55,13 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_ATTACK);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
-        this.x = 1400;
+        this.x = 400;
         this.speed = 0.15 + Math.random() * 0.25;
         this.animate();
-
+        this.walkAnimtion();
+        this.movingRight = true;
     }
-      deadChicken() {
+    deadChicken() {
         this.isDead = true;
         this.showDeadAnimation();
     }
@@ -78,7 +79,7 @@ class Endboss extends MovableObject {
             this.animateDeath();
         } else if (this.isHurt()) {
             this.animateHurt();
-        } 
+        }
     }
     // Animation bei Treffer
     animateHurt() {
@@ -90,19 +91,38 @@ class Endboss extends MovableObject {
     }
 
     animate() {
-          setInterval(() => {
+
+        setInterval(() => {
             if (!this.isDead) {
-                this.moveLeft();
+                if (this.movingRight) {
+                    this.moveRight();
+                    this.otherDirection = true;
+                    if (this.x >= 500) {  
+                        this.movingRight = false;
+                        console.log('Nach RECHTS, otherDirection:', this.otherDirection);
+                        return true;
+                    }
+                } else {
+                    this.moveLeft();
+                    this.otherDirection = false;
+                    if (this.x <= 350) { 
+                        this.movingRight = true;
+                        console.log('Nach LINKS, otherDirection:', this.otherDirection);
+                        return true;
+                    }
+                }
             }
         }, 1000 / 60);
+            
+    }
 
-        // Animation
+
+    // Animation
+    walkAnimtion() {
         setInterval(() => {
             if (!this.isDead) {
                 this.playAnimation(this.IMAGES_WALKING);
             }
         }, 100);
-    
     }
-
-}
+}   
