@@ -14,7 +14,6 @@ class Endboss extends MovableObject {
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G10.png',
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G11.png',
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G12.png',
-
     ];
 
     IMAGES_WALKING = [
@@ -58,13 +57,15 @@ class Endboss extends MovableObject {
         this.x = 400;
         this.speed = 0.15 + Math.random() * 0.25;
         this.animate();
-        this.walkAnimtion();
         this.movingRight = true;
     }
+
+
     deadChicken() {
         this.isDead = true;
         this.showDeadAnimation();
     }
+
 
     showDeadAnimation() {
         this.img = this.imageCache[this.IMAGES_DEAD[0]];
@@ -72,24 +73,17 @@ class Endboss extends MovableObject {
             this.markForDeletion = true;
         }, 1000);
     }
-    animateCharacter() {
 
-        if (this.isDead()) {
-            this.speedY = 0;
-            this.animateDeath();
-        } else if (this.isHurt()) {
-            this.animateHurt();
+
+    handleMovement() {
+        if (this.isDead) return false;
+
+        if (this.movingRight) {
+            this.moveRightDirection();
+        } else {
+            this.moveLeftDirection();
         }
-    }
-
-    
-    // Animation bei Treffer
-    animateHurt() {
-        this.playAnimation(this.IMAGES_HURT);
-    }
-
-    animateWalking() {
-        this.playAnimation(this.IMAGES_WALKING);
+        return true;
     }
 
 
@@ -99,7 +93,6 @@ class Endboss extends MovableObject {
 
         if (this.x >= 500) {
             this.movingRight = false;
-            console.log('Nach RECHTS, otherDirection:', this.otherDirection);
         }
     }
 
@@ -110,29 +103,44 @@ class Endboss extends MovableObject {
 
         if (this.x <= 350) {
             this.movingRight = true;
-            console.log('Nach LINKS, otherDirection:', this.otherDirection);
         }
     }
 
 
     animate() {
         setInterval(() => {
-            if (!this.isDead) {
-                if (this.movingRight) {
-                    this.moveRightDirection();
-                } else {
-                    this.moveLeftDirection();
-                }
-            }
+            this.handleMovement();
         }, 1000 / 60);
-    }
 
-
-    walkAnimtion() {
         setInterval(() => {
-            if (!this.isDead) {
-                this.playAnimation(this.IMAGES_WALKING);
-            }
-        }, 100);
+            this.animateCharacter();
+        }, 50);
     }
-}   
+
+
+    animateCharacter() {
+        if (this.isDead) {
+            this.speedY = 0;
+            this.animateDeath();
+        } else if (this.isHurt()) {
+            this.animateHurt();
+        } else {
+            this.animateWalking();
+        }
+    }
+
+
+    animateHurt() {
+        this.playAnimation(this.IMAGES_HURT);
+    }
+
+
+    animateWalking() {
+        this.playAnimation(this.IMAGES_WALKING);
+    }
+
+
+    animateDeath() {
+        this.playAnimation(this.IMAGES_DEAD);
+    }
+}

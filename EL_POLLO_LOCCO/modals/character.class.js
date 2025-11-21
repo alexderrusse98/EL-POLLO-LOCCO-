@@ -203,13 +203,13 @@ class Character extends MovableObject {
     }
 
 
-    // Animation bei Treffer
+  
     animateHurt() {
         this.playAnimation(this.IMAGES_HURT);
     }
 
 
-    // Animation beim Laufen (nur wenn auf dem Boden)
+    
     animateWalking() {
         if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
             this.playAnimation(this.IMAGES_WALKING);
@@ -217,7 +217,7 @@ class Character extends MovableObject {
     }
 
 
-    // 5. Hauptanimate-Funktion
+    
     animate() {
 
         setInterval(() => {
@@ -241,7 +241,7 @@ class Character extends MovableObject {
         }
     }
 
-    
+    // kürzen und verbessern
     checkJumpOnEnemy(enemy) {
     if (this.speedY >= 0 || enemy.isDead) return false;
     
