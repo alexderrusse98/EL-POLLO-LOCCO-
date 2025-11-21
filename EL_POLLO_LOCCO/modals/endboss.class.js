@@ -47,7 +47,6 @@ class Endboss extends MovableObject {
         './img/img_pollo_locco/img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
 
-
     constructor() {
         super().loadImage('./img/img_pollo_locco/img/4_enemie_boss_chicken/1_walk/G1.png');
         this.loadImages(this.IMAGES_WALKING);
@@ -68,12 +67,10 @@ class Endboss extends MovableObject {
         }
     }
 
-
     deadChicken() {
         this.isDead = true;
         this.showDeadAnimation();
     }
-
 
     showDeadAnimation() {
         this.img = this.imageCache[this.IMAGES_DEAD[0]];
@@ -82,12 +79,11 @@ class Endboss extends MovableObject {
         }, 1000);
     }
 
-
     handleMovement() {
         if (this.isDead) return false;
 
         if (this.isAlerted) return false;
-            
+
         if (this.movingRight) {
             this.moveRightDirection();
         } else {
@@ -95,7 +91,6 @@ class Endboss extends MovableObject {
         }
         return true;
     }
-
 
     moveRightDirection() {
         this.moveRight();
@@ -106,7 +101,6 @@ class Endboss extends MovableObject {
         }
     }
 
-
     moveLeftDirection() {
         this.moveLeft();
         this.otherDirection = false;
@@ -115,7 +109,6 @@ class Endboss extends MovableObject {
             this.movingRight = true;
         }
     }
-
 
     animate() {
         setInterval(() => {
@@ -127,18 +120,34 @@ class Endboss extends MovableObject {
         }, 50);
     }
 
-
     animateCharacter() {
         if (this.isDead) {
             this.speedY = 0;
             this.animateDeath();
         } else if (this.isAlerted) {
-            this.otherDirection = false;
+            this.alertOtherDirection();
             this.animateAlert();
         } else if (this.isHurt()) {
+            this.clearAlertTimeout();
             this.animateHurt();
         } else {
+            this.clearAlertTimeout();
             this.animateWalking();
+        }
+    }
+
+    alertOtherDirection() {
+        if (!this.alertwaiting) {
+            this.alertwaiting = setTimeout(() => {
+                this.otherDirection = false;
+            }, 500);
+        }
+    }
+
+    clearAlertTimeout() {
+        if (this.alertwaiting) {
+            clearTimeout(this.alertwaiting);
+            this.alertwaiting = null;
         }
     }
 
@@ -146,16 +155,13 @@ class Endboss extends MovableObject {
         this.playAnimation(this.IMAGES_ALERT);
     }
 
-
     animateHurt() {
         this.playAnimation(this.IMAGES_HURT);
     }
 
-
     animateWalking() {
         this.playAnimation(this.IMAGES_WALKING);
     }
-
 
     animateDeath() {
         this.playAnimation(this.IMAGES_DEAD);
