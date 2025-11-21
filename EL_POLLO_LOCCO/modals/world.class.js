@@ -97,26 +97,35 @@ class World {
             }
         });
     }
-
-
     checkEnemyCollisions() {
+
         this.level.enemies.forEach((enemy) => {
-            if (this.character.isColliding(enemy) && !enemy.isDead && !enemy.wasJumpKilled) {
-
-                const playerBottom = this.character.y + this.character.height;
-                const enemyTop = enemy.y;
-                const isJumpingOnEnemy = playerBottom >= enemyTop &&
-                    playerBottom <= enemyTop + 40 &&
-                    this.character.speedY < 0;
-
-
-                if (!isJumpingOnEnemy) {
-                    this.character.hit();
-                    this.statusBarHealth.setPercentage(this.character.energy);
-                }
-            }
+            this.checkAllEnemiesCollisions()(enemy);
         });
+
+        if (this.endBoss) {
+            this.checkAllEnemiesCollisions(this.endBoss);
+        }
     }
+
+
+    checkAllEnemiesCollisions(allEnemies) {
+        if (this.character.isColliding(allEnemies) && !allEnemies.isDead && !allEnemies.wasJumpKilled) {
+
+            const playerBottom = this.character.y + this.character.height;
+            const allEnemiesTop = allEnemies.y;
+            const isJumpingOnallEnemies = playerBottom >= allEnemiesTop &&
+                playerBottom <= allEnemiesTop + 40 &&
+                this.character.speedY < 0;
+
+            if (!isJumpingOnallEnemies) {
+                this.character.hit();
+                this.statusBarHealth.setPercentage(this.character.energy);
+            }
+
+        };
+    }
+
 
     checkBottleEndBossCollisions() {
         this.throwAbleObjects.forEach((bottle) => {
