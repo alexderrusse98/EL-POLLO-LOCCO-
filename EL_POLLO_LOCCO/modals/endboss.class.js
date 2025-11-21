@@ -5,7 +5,6 @@ class Endboss extends MovableObject {
     isDead = false;
 
 
-
     IMAGES_ALERT = [
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G5.png',
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G6.png',
@@ -81,8 +80,8 @@ class Endboss extends MovableObject {
 
     handleMovement() {
         if (this.isDead) return false;
-
         if (this.isAlerted) return false;
+        if (this.isHurt()) return false;
 
         if (this.movingRight) {
             this.moveRightDirection();
@@ -122,25 +121,41 @@ class Endboss extends MovableObject {
 
     animateCharacter() {
         if (this.isDead) {
-            this.speedY = 0;
-            this.animateDeath();
-        } else if (this.isAlerted) {
-            this.alertOtherDirection();
-            this.animateAlert();
+            this.deathState();
         } else if (this.isHurt()) {
-            this.clearAlertTimeout();
-            this.animateHurt();
+            this.hurtState();
+        } else if (this.isAlerted) {
+            this.alertState();
         } else {
-            this.clearAlertTimeout();
-            this.animateWalking();
+            this.walkingState();
         }
+    }
+
+    deathState() {
+        this.speedY = 0;
+        this.animateDeath();
+    }
+
+    hurtState() {
+        this.clearAlertTimeout();
+        this.animateHurt();
+    }
+
+    alertState() {
+        this.alertOtherDirection();
+        this.animateAlert();
+    }
+
+    walkingState() {
+        this.clearAlertTimeout();
+        this.animateWalking();
     }
 
     alertOtherDirection() {
         if (!this.alertwaiting) {
             this.alertwaiting = setTimeout(() => {
                 this.otherDirection = false;
-            }, 500);
+            }, 100);
         }
     }
 
