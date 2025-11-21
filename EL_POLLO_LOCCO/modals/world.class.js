@@ -43,11 +43,31 @@ class World {
     run() {
         setInterval(() => {
             this.checkCollisions();
+            this.checkEndBossAlert();
         }, 200);
 
         setInterval(() => {
             this.checkThrowObjects();
         }, 100);
+    }
+
+    
+    checkEndBossAlert() {
+        if (!this.endBoss || this.endBoss.isDead) return;
+
+        const distance = Math.abs(this.character.x - this.endBoss.x);
+
+        if (distance <= 200) {
+
+            if (!this.endBoss.isAlerted) {
+                this.endBoss.isAlerted = true;
+            }
+        } else {
+
+            if (this.endBoss.isAlerted) {
+                this.endBoss.isAlerted = false;
+            }
+        }
     }
 
     checkThrowObjects() {

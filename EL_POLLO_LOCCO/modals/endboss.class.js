@@ -5,6 +5,7 @@ class Endboss extends MovableObject {
     isDead = false;
 
 
+
     IMAGES_ALERT = [
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G5.png',
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G6.png',
@@ -58,6 +59,13 @@ class Endboss extends MovableObject {
         this.speed = 0.15 + Math.random() * 0.25;
         this.animate();
         this.movingRight = true;
+        this.isAlerted = false;
+    }
+
+    playAlertAnimation() {
+        if (!this.isAlerted) {
+            this.isAlerted = true;
+        }
     }
 
 
@@ -78,6 +86,8 @@ class Endboss extends MovableObject {
     handleMovement() {
         if (this.isDead) return false;
 
+        if (this.isAlerted) return false;
+            
         if (this.movingRight) {
             this.moveRightDirection();
         } else {
@@ -122,11 +132,18 @@ class Endboss extends MovableObject {
         if (this.isDead) {
             this.speedY = 0;
             this.animateDeath();
+        } else if (this.isAlerted) {
+            this.otherDirection = false;
+            this.animateAlert();
         } else if (this.isHurt()) {
             this.animateHurt();
         } else {
             this.animateWalking();
         }
+    }
+
+    animateAlert() {
+        this.playAnimation(this.IMAGES_ALERT);
     }
 
 
@@ -143,4 +160,5 @@ class Endboss extends MovableObject {
     animateDeath() {
         this.playAnimation(this.IMAGES_DEAD);
     }
+
 }
