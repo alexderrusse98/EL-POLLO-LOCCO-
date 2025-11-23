@@ -59,13 +59,13 @@ class Endboss extends MovableObject {
         this.animate();
         this.movingRight = true;
         this.isAlerted = false;
-
+        this.attackCounter = 0;
     }
 
     playAlertAnimation() {
         if (!this.isAlerted && !this.isAttackAnimation) {
             this.isAlerted = true;
-            
+
             console.log('alert + attacke');
 
             this.attack();
@@ -89,7 +89,7 @@ class Endboss extends MovableObject {
         this.moveRight();
         this.otherDirection = true;
 
-        if (this.x >= 500) {
+        if (this.x >= 1500) {
             this.movingRight = false;
         }
     }
@@ -98,7 +98,7 @@ class Endboss extends MovableObject {
         this.moveLeft();
         this.otherDirection = false;
 
-        if (this.x <= 350) {
+        if (this.x <= 500) {
             this.movingRight = true;
         }
     }
@@ -110,7 +110,7 @@ class Endboss extends MovableObject {
 
         setInterval(() => {
             this.animateCharacter();
-        }, 150);
+        }, 100);
     }
 
     animateCharacter() {
@@ -180,35 +180,57 @@ class Endboss extends MovableObject {
 
     // attack   
     attack() {
-        if (!this.isAttackAnimation) {
-            this.isAttackAnimation = true;
-            console.log("Attack gestartet - warte 2 Sekunden");
+    if (!this.isAttackAnimation) {
+        this.isAttackAnimation = true;
+        this.attackCounter++; 
+        
+        console.log(`Attack #${this.attackCounter}`);
 
-           
-            setTimeout(() => {
-                if (!this.isDead) {
-                    console.log("Springe jetzt!");
-                    this.speedY = 20;
-                    
-                    if (this.otherDirection) {
-                        this.x += 100; // rechts
-                    } else {
-                        this.x -= 100; // links
-                    }
-
-                  
-                    setTimeout(() => {
-                        this.isAttackAnimation = false;
-                        console.log("Attack beendet");
-                    }, 2000);
+        setTimeout(() => {
+            if (!this.isDead) {
+                console.log("Springe jetzt!");
+                
+        
+                if (this.attackCounter % 3 === 0) {
+                    console.log("GROSSER SPRUNG!");
+                    this.bigAttack();
+                } else {
+                    console.log("Normaler Attack");
+                    this.normalAttack();
                 }
-            }, 2000);
-        }
+
+                setTimeout(() => {
+                    this.isAttackAnimation = false;
+                    console.log("Attack beendet");
+                }, 2000);
+            }
+        }, 2000);
     }
+}
+
+normalAttack() {
+    this.speedY = 20;
+    
+    if (this.otherDirection) {
+        this.x += 100;
+    } else {
+        this.x -= 100;
+    }
+}
+
+bigAttack() {
+    this.speedY = 30; 
+    
+    if (this.otherDirection) {
+        this.x += 200; 
+    } else {
+        this.x -= 200;
+    }
+}
 
     handleMovement() {
         if (this.isDead) return false;
-        if (this.isAlerted) return false; 
+        if (this.isAlerted) return false;
         if (this.isAttackAnimation) return false;
         if (this.isHurt()) return false;
 
