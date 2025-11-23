@@ -1,5 +1,4 @@
 class Character extends MovableObject {
-
     height = 200;
     y = 120;
     speed = 5;
@@ -158,15 +157,6 @@ class Character extends MovableObject {
     }
 
 
-    handleJump() {
-        if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-            this.jump();
-            return true;
-        }
-        return false;
-    }
-
-
     handleThrow() {
         if (this.world.keyboard.D && this.bottleCount > 0) {
             this.isThrowingBottle = true;
@@ -203,13 +193,13 @@ class Character extends MovableObject {
     }
 
 
-  
+
     animateHurt() {
         this.playAnimation(this.IMAGES_HURT);
     }
 
 
-    
+
     animateWalking() {
         if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
             this.playAnimation(this.IMAGES_WALKING);
@@ -217,7 +207,7 @@ class Character extends MovableObject {
     }
 
 
-    
+
     animate() {
 
         setInterval(() => {
@@ -232,6 +222,7 @@ class Character extends MovableObject {
         }, 50);
     }
 
+    // Jumping Animation
 
     jump() {
         if (!this.isJumpAnimationOn) {
@@ -243,30 +234,39 @@ class Character extends MovableObject {
 
     // kürzen und verbessern
     checkJumpOnEnemy(enemy) {
-    if (this.speedY >= 0 || enemy.isDead) return false;
-    
-    const xTolerance = 100; 
-    const yTolerance = enemy.height * 0.75;
-    
-    const playerLeft = this.x - xTolerance;
-    const playerRight = this.x + this.width + xTolerance;
-    const playerBottom = this.y + this.height;
-    
-    const enemyLeft = enemy.x;
-    const enemyRight = enemy.x + enemy.width;
-    const enemyTop = enemy.y;
-    
-    const horizontalHit = playerRight > enemyLeft && playerLeft < enemyRight;
-    const verticalHit = playerBottom >= enemyTop && 
-                        playerBottom <= enemyTop + yTolerance;
-    
-    if (horizontalHit && verticalHit) {
-        enemy.deadChicken();
-        this.speedY = 15;
-        return true;
+        if (this.speedY >= 0 || enemy.isDead) return false;
+
+        const xTolerance = 100;
+        const yTolerance = enemy.height * 0.75;
+
+        const playerLeft = this.x - xTolerance;
+        const playerRight = this.x + this.width + xTolerance;
+        const playerBottom = this.y + this.height;
+
+        const enemyLeft = enemy.x;
+        const enemyRight = enemy.x + enemy.width;
+        const enemyTop = enemy.y;
+
+        const horizontalHit = playerRight > enemyLeft && playerLeft < enemyRight;
+        const verticalHit = playerBottom >= enemyTop &&
+            playerBottom <= enemyTop + yTolerance;
+
+        if (horizontalHit && verticalHit) {
+            enemy.deadChicken();
+            this.speedY = 15;
+            return true;
+        }
+        return false;
     }
-    return false;
-}
+
+
+    handleJump() {
+        if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+            this.jump();
+            return true;
+        }
+        return false;
+    }
 
 
     isJumpingOnEnemy(enemy) {
@@ -275,6 +275,38 @@ class Character extends MovableObject {
         return playerBottom >= enemyTop &&
             playerBottom <= enemyTop + 30 &&
             this.speedY < 0;
+    }
+
+
+    animateJump() {
+        this.setJumpImage();
+        this.handleJumpEnd();
+    }
+
+
+    setJumpImage() {
+        const frame = this.getJumpFrame();
+        this.img = this.imageCache[this.IMAGES_JUMPING[frame]];
+    }
+
+
+    getJumpFrame() {
+        if (this.speedY > 25) return 0;
+        if (this.speedY > 24) return 1;
+        if (this.speedY > 23) return 2;
+        if (this.speedY > 10) return 3;
+        if (this.speedY > -1) return 4;
+        if (this.speedY > -15) return 5;
+        if (this.speedY > -20) return 6;
+        if (this.speedY > -25) return 7;
+        return 8;
+    }
+
+
+    handleJumpEnd() {
+        const frame = this.getJumpFrame();
+        const landed = !this.isAboveGround() && this.speedY <= 0;
+        if (frame === 8 || landed) this.isJumpAnimationOn = false;
     }
 
 
@@ -293,34 +325,6 @@ class Character extends MovableObject {
         }
     }
 
-    animateJump() {
-        this.setJumpImage();
-        this.handleJumpEnd();
-    }
-
-
-    setJumpImage() {
-        const frame = this.getJumpFrame();
-        this.img = this.imageCache[this.IMAGES_JUMPING[frame]];
-    }
-
-    getJumpFrame() {
-        if (this.speedY > 25) return 0;
-        if (this.speedY > 24) return 1;
-        if (this.speedY > 23) return 2;
-        if (this.speedY > 10) return 3;
-        if (this.speedY > -1) return 4;
-        if (this.speedY > -15) return 5;
-        if (this.speedY > -20) return 6;
-        if (this.speedY > -25) return 7;
-        return 8;
-    }
-
-    handleJumpEnd() {
-        const frame = this.getJumpFrame();
-        const landed = !this.isAboveGround() && this.speedY <= 0;
-        if (frame === 8 || landed) this.isJumpAnimationOn = false;
-    }
 
     // Death Animation
 

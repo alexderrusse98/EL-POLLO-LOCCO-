@@ -4,6 +4,7 @@ class Endboss extends MovableObject {
     y = -35;
     isDead = false;
 
+    isAttackAnimation = false;
 
     IMAGES_ALERT = [
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G5.png',
@@ -58,11 +59,17 @@ class Endboss extends MovableObject {
         this.animate();
         this.movingRight = true;
         this.isAlerted = false;
+
     }
 
     playAlertAnimation() {
-        if (!this.isAlerted) {
+        if (!this.isAlerted && !this.isAttackAnimation) {
             this.isAlerted = true;
+            
+            console.log('alert + attacke');
+
+            this.attack();
+
         }
     }
 
@@ -76,19 +83,6 @@ class Endboss extends MovableObject {
         setTimeout(() => {
             this.markForDeletion = true;
         }, 1000);
-    }
-
-    handleMovement() {
-        if (this.isDead) return false;
-        if (this.isAlerted) return false;
-        if (this.isHurt()) return false;
-
-        if (this.movingRight) {
-            this.moveRightDirection();
-        } else {
-            this.moveLeftDirection();
-        }
-        return true;
     }
 
     moveRightDirection() {
@@ -116,7 +110,7 @@ class Endboss extends MovableObject {
 
         setInterval(() => {
             this.animateCharacter();
-        }, 50);
+        }, 150);
     }
 
     animateCharacter() {
@@ -124,6 +118,8 @@ class Endboss extends MovableObject {
             this.deathState();
         } else if (this.isHurt()) {
             this.hurtState();
+        } else if (this.isAttackAnimation) {
+            this.animateAttack();
         } else if (this.isAlerted) {
             this.alertState();
         } else {
@@ -182,4 +178,49 @@ class Endboss extends MovableObject {
         this.playAnimation(this.IMAGES_DEAD);
     }
 
+    // attack   
+    attack() {
+        if (!this.isAttackAnimation) {
+            this.isAttackAnimation = true;
+            console.log("Attack gestartet - warte 2 Sekunden");
+
+           
+            setTimeout(() => {
+                if (!this.isDead) {
+                    console.log("Springe jetzt!");
+                    this.speedY = 20;
+                    
+                    if (this.otherDirection) {
+                        this.x += 100; // rechts
+                    } else {
+                        this.x -= 100; // links
+                    }
+
+                  
+                    setTimeout(() => {
+                        this.isAttackAnimation = false;
+                        console.log("Attack beendet");
+                    }, 2000);
+                }
+            }, 2000);
+        }
+    }
+
+    handleMovement() {
+        if (this.isDead) return false;
+        if (this.isAlerted) return false; 
+        if (this.isAttackAnimation) return false;
+        if (this.isHurt()) return false;
+
+        if (this.movingRight) {
+            this.moveRightDirection();
+        } else {
+            this.moveLeftDirection();
+        }
+        return true;
+    }
+
+    animateAttack() {
+        this.playAnimation(this.IMAGES_ATTACK);
+    }
 }
