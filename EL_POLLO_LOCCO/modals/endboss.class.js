@@ -59,6 +59,7 @@ class Endboss extends MovableObject {
         this.animate();
         this.movingRight = true;
         this.isAlerted = false;
+        this.deathAnimationStarted = false;
         this.attackCounter = 0;
     }
 
@@ -174,59 +175,67 @@ class Endboss extends MovableObject {
         this.playAnimation(this.IMAGES_WALKING);
     }
 
-    animateDeath() {
-        this.playAnimation(this.IMAGES_DEAD);
+    deathState() {
+        this.speedY = 0;
+
+        if (!this.deathAnimationStarted) {
+            this.deathAnimationStarted = true;
+            this.playAnimationOnce(this.IMAGES_DEAD, () => {
+
+                this.markForDeletion = true;
+            }, 150);
+        }
     }
 
     // attack   
     attack() {
-    if (!this.isAttackAnimation) {
-        this.isAttackAnimation = true;
-        this.attackCounter++; 
-        
-        console.log(`Attack #${this.attackCounter}`);
+        if (!this.isAttackAnimation) {
+            this.isAttackAnimation = true;
+            this.attackCounter++;
 
-        setTimeout(() => {
-            if (!this.isDead) {
-                console.log("Springe jetzt!");
-                
-        
-                if (this.attackCounter % 3 === 0) {
-                    console.log("GROSSER SPRUNG!");
-                    this.bigAttack();
-                } else {
-                    console.log("Normaler Attack");
-                    this.normalAttack();
+            console.log(`Attack #${this.attackCounter}`);
+
+            setTimeout(() => {
+                if (!this.isDead) {
+                    console.log("Springe jetzt!");
+
+
+                    if (this.attackCounter % 3 === 0) {
+                        console.log("GROSSER SPRUNG!");
+                        this.bigAttack();
+                    } else {
+                        console.log("Normaler Attack");
+                        this.normalAttack();
+                    }
+
+                    setTimeout(() => {
+                        this.isAttackAnimation = false;
+                        console.log("Attack beendet");
+                    }, 2000);
                 }
-
-                setTimeout(() => {
-                    this.isAttackAnimation = false;
-                    console.log("Attack beendet");
-                }, 2000);
-            }
-        }, 2000);
+            }, 2000);
+        }
     }
-}
 
-normalAttack() {
-    this.speedY = 20;
-    
-    if (this.otherDirection) {
-        this.x += 100;
-    } else {
-        this.x -= 100;
-    }
-}
+    normalAttack() {
+        this.speedY = 20;
 
-bigAttack() {
-    this.speedY = 30; 
-    
-    if (this.otherDirection) {
-        this.x += 200; 
-    } else {
-        this.x -= 200;
+        if (this.otherDirection) {
+            this.x += 100;
+        } else {
+            this.x -= 100;
+        }
     }
-}
+
+    bigAttack() {
+        this.speedY = 30;
+
+        if (this.otherDirection) {
+            this.x += 200;
+        } else {
+            this.x -= 200;
+        }
+    }
 
     handleMovement() {
         if (this.isDead) return false;

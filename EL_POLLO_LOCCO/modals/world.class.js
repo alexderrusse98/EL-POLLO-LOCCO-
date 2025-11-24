@@ -51,34 +51,34 @@ class World {
         }, 100);
     }
 
-    
-   checkEndBossAlert() {
-    if (!this.endBoss || this.endBoss.isDead) return;
 
-    const distance = Math.abs(this.character.x - this.endBoss.x);
+    checkEndBossAlert() {
+        if (!this.endBoss || this.endBoss.isDead) return;
 
-    // Zone 1: Attack-Reichweite
-    if (distance < 150) {
-        if (!this.endBoss.isAttackAnimation && this.endBoss.isAlerted) {
-            console.log("Character in Attack-Range! Attacke!");
-            this.endBoss.attack();
+        const distance = Math.abs(this.character.x - this.endBoss.x);
+
+        // Zone 1: Attack-Reichweite
+        if (distance < 150) {
+            if (!this.endBoss.isAttackAnimation && this.endBoss.isAlerted) {
+                console.log("Character in Attack-Range! Attacke!");
+                this.endBoss.attack();
+            }
         }
-    } 
-    // Zone 2: Alert-Reichweite
-    else if (distance < 300) {
-        if (!this.endBoss.isAlerted && !this.endBoss.isAttackAnimation) {
-            console.log("Character in Alert-Range!");
-            this.endBoss.isAlerted = true;
+        // Zone 2: Alert-Reichweite
+        else if (distance < 300) {
+            if (!this.endBoss.isAlerted && !this.endBoss.isAttackAnimation) {
+                console.log("Character in Alert-Range!");
+                this.endBoss.isAlerted = true;
+            }
         }
-    } 
-    // Zone 3: Außerhalb (> 300px)
-    else {
-        if (this.endBoss.isAlerted && !this.endBoss.isAttackAnimation) {
-            console.log("Character zu weit weg - zurück zu Walking");
-            this.endBoss.isAlerted = false;
+        // Zone 3: Außerhalb (> 300px)
+        else {
+            if (this.endBoss.isAlerted && !this.endBoss.isAttackAnimation) {
+                console.log("Character zu weit weg - zurück zu Walking");
+                this.endBoss.isAlerted = false;
+            }
         }
     }
-}
 
     checkThrowObjects() {
         if (this.keyboard.D && this.character.bottleCount > 0) {
@@ -211,7 +211,11 @@ class World {
         this.addObjectsToMap(this.level.enemies);
 
         //Endboss
-        this.addToMap(this.endBoss);
+        if (this.endBoss && !this.endBoss.markForDeletion) {
+            this.addToMap(this.endBoss);
+        } else if (this.endBoss && this.endBoss.markForDeletion) {
+            this.endBoss = null;
+        }
 
 
         this.throwAbleObjects = this.throwAbleObjects.filter(bottle => !bottle.markForDeletion);
