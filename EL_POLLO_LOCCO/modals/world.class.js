@@ -127,10 +127,12 @@ class World {
             }
         });
     }
+
+
     checkEnemyCollisions() {
 
         this.level.enemies.forEach((enemy) => {
-            this.checkAllEnemiesCollisions()(enemy);
+            this.checkAllEnemiesCollisions(enemy);
         });
 
         if (this.endBoss) {
