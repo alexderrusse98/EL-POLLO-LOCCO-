@@ -128,10 +128,6 @@ class Endboss extends MovableObject {
         }
     }
 
-    deathState() {
-        this.speedY = 0;
-        this.animateDeath();
-    }
 
     hurtState() {
         this.clearAlertTimeout();

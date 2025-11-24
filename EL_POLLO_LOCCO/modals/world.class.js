@@ -168,6 +168,11 @@ class World {
                     this.statusBarBossHealth.setPercentage(this.endBoss.energy);
                     bottle.hasSplashed = true;
                     bottle.animateSplash();
+                    
+        
+                    if (this.endBoss.energy <= 0 && !this.endBoss.isDead) {
+                        this.endBoss.deadChicken();
+                    }
                 }
             }
         });
