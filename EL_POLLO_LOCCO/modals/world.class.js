@@ -19,6 +19,7 @@ class World {
 
     intervals = [];
     gameOver = false;
+    gameOverImage;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -36,6 +37,9 @@ class World {
         this.draw();
         this.setWorld();
         this.run();
+
+        this.gameOverImage = new Image();
+        this.gameOverImage.src = './img/img_pollo_locco/img/9_intro_outro_screens/game_over/game over.png';
     }
 
 
@@ -75,23 +79,30 @@ class World {
         });
     }
 
-     checkGameOver() {
+    checkGameOver() {
         if (this.character.isDead() && !this.gameOver) {
-            this.gameOver = true; 
+            this.gameOver = true;
             this.stopGame();
         }
     }
 
     showGameOver() {
-        let gameOverImg = new Image();
-        gameOverImg.src = './img/img_pollo_locco/img/9_intro_outro_screens/game_over/game over.png';
-        gameOverImg.onload = () => {
-            this.ctx.drawImage(gameOverImg,
-                this.canvas.width / 2 - 200,
-                this.canvas.height / 2 - 100,
-                400, 200
-            );
-        }
+
+        this.ctx.drawImage(
+            this.gameOverImage,
+            0,
+            0,
+            this.canvas.width,
+            this.canvas.height
+        );
+        this.ctx.font = '30px Arial';
+        this.ctx.fillStyle = 'white';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText(
+            'Press R to restart',
+            this.canvas.width / 2,
+            this.canvas.height - 50
+        );
     }
 
     checkEndBossAlert() {
@@ -267,7 +278,10 @@ class World {
         }
         // Game Over
         if (this.gameOver) {
+            this.ctx.save();
+            this.ctx.setTransform(1, 0, 0, 1, 0, 0);
             this.showGameOver();
+            this.ctx.restore();
             return;
         }
 
