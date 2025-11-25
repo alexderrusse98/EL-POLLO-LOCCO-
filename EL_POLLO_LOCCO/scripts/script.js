@@ -1,10 +1,13 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-let gameStarted = false;
+
 
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('startButton').addEventListener('click', startGame);
+  document.getElementById('controllsBtn').addEventListener('click', () => {
+    alert("Controlls:\n\nArrow Keys: Move\nSpace: Jump\nD: Throw Bottle\nR: Restart Game (after Game Over/Win)");
+  });
 });
 
 function startGame() {
