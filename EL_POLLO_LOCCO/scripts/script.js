@@ -7,6 +7,13 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('startButton').addEventListener('click', startGame);
   document.getElementById('controllsBtn').addEventListener('click', showControls);
   document.getElementById('closeControlsBtn').addEventListener('click', hideControls);
+  // close outside click
+  document.getElementById('controllsSection').addEventListener('click', (e) => {
+        
+        if (e.target.id === 'controllsSection') {
+            hideControls();
+        }
+    });
 });
 
 function startGame() {
