@@ -7,6 +7,7 @@ class Character extends MovableObject {
     isThrowingBottle = false;
     isDeadAnimationOn = false;
 
+    intervals = [];
 
     lastMoveTime = new Date().getTime();
 
@@ -92,6 +93,11 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_LONGIDLE);
         this.applyGravity();
         this.animate();
+    }
+
+    stopAllIntervals(){
+        this.intervals.forEach(clearInterval);
+        this.intervals = [];
     }
 
 
@@ -209,17 +215,19 @@ class Character extends MovableObject {
 
 
     animate() {
-
+        this.intervals.push(
         setInterval(() => {
             const moved = this.handleMovement();
             this.updateCamera();
             this.checkMovementState(moved);
-        }, 1000 / 60);
+        }, 1000 / 60)
+        );
 
-
+        this.intervals.push(
         setInterval(() => {
             this.animateCharacter();
-        }, 50);
+        }, 50)
+        );
     }
 
     // Jumping Animation

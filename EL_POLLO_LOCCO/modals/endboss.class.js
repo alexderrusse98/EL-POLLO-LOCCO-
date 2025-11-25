@@ -6,6 +6,8 @@ class Endboss extends MovableObject {
 
     isAttackAnimation = false;
 
+     intervals = [];
+
     IMAGES_ALERT = [
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G5.png',
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G6.png',
@@ -63,6 +65,11 @@ class Endboss extends MovableObject {
         this.attackCounter = 0;
     }
 
+    stopAllIntervals() {
+        this.intervals.forEach(clearInterval);
+        this.intervals = [];
+    }
+
     playAlertAnimation() {
         if (!this.isAlerted && !this.isAttackAnimation) {
             this.isAlerted = true;
@@ -105,13 +112,18 @@ class Endboss extends MovableObject {
     }
 
     animate() {
+        
+        this.intervals.push(
         setInterval(() => {
             this.handleMovement();
-        }, 1000 / 60);
+        }, 1000 / 60)
+        );
 
+        this.intervals.push(
         setInterval(() => {
             this.animateCharacter();
-        }, 100);
+        }, 100)
+        );
     }
 
     animateCharacter() {

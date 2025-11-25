@@ -1,5 +1,8 @@
 class ThrowableObject extends MovableObject {
 
+    intervals = [];
+
+
     IMAGES_ROTATION = [
         './img/img_pollo_locco/img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png',
         './img/img_pollo_locco/img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png',
@@ -28,30 +31,39 @@ class ThrowableObject extends MovableObject {
         this.throw();
     }
 
+    stopAllIntervals() {
+        this.intervals.forEach(clearInterval);
+        this.intervals = [];
+    }
+
     throw() {
         this.speedY = 30;
         this.applyGravity();
-        setInterval(() => {
-            if (!this.hasSplashed) {
-                this.x += 7;  
-            }
-        }, 25);
+        this.intervals.push(
+            setInterval(() => {
+                if (!this.hasSplashed) {
+                    this.x += 7;
+                }
+            }, 25)
+        );
 
         this.animate();
     }
 
     animate() {
-        setInterval(() => {
-            if (!this.hasSplashed) {
-                this.playAnimation(this.IMAGES_ROTATION);
-            }
-        }, 200);
+        this.intervals.push(
+            setInterval(() => {
+                if (!this.hasSplashed) {
+                    this.playAnimation(this.IMAGES_ROTATION);
+                }
+            }, 200)
+        );
     }
 
     animateSplash() {
         this.speedY = 0;
         this.acceleration = 0;
-        this.y += 30; 
+        this.y += 30;
         let i = 0;
         const splashInterval = setInterval(() => {
             if (i < this.IMAGES_SPLASH.length) {
@@ -61,6 +73,7 @@ class ThrowableObject extends MovableObject {
                 clearInterval(splashInterval);
                 this.markForDeletion = true;
             }
-        }, 100); 
+        }, 100);
+        this.intervals.push(splashInterval);
     }
 }

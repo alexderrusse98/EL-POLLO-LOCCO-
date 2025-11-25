@@ -6,26 +6,36 @@ class MovableObject extends DrawableObject {
    energy = 100;
    lastHit = 0;
 
+   intervals = [];
+
+   stopAllIntervals() {
+      this.intervals.forEach(clearInterval);
+      this.intervals = [];
+   }
+
+
    applyGravity() {
-      setInterval(() => {
+      this.intervals.push(
+         setInterval(() => {
 
-         if (this.isDead && this.isDead()) return;
+            if (this.isDead && this.isDead()) return;
 
-         if (!this.isAboveGround()) {
-            if (this instanceof ThrowableObject && !this.hasSplashed) {
-               this.hasSplashed = true;
-               this.animateSplash();
-               return;
+            if (!this.isAboveGround()) {
+               if (this instanceof ThrowableObject && !this.hasSplashed) {
+                  this.hasSplashed = true;
+                  this.animateSplash();
+                  return;
+               }
+
             }
 
-         }
-
-         // Character is above ground
-         if (this.isAboveGround() || this.speedY > 0) {
-            this.y -= this.speedY;
-            this.speedY -= this.acceleration;
-         }
-      }, 1000 / 25);
+            // Character is above ground
+            if (this.isAboveGround() || this.speedY > 0) {
+               this.y -= this.speedY;
+               this.speedY -= this.acceleration;
+            }
+         }, 1000 / 25)
+      );
    }
 
 
@@ -41,6 +51,7 @@ class MovableObject extends DrawableObject {
 
 
    // verbessern und deutlicher machen
+
    playAnimationOnce(images, callback, intervalTime = 100) {
       let i = 0;
 
@@ -55,7 +66,7 @@ class MovableObject extends DrawableObject {
             callback?.();
          }
       }, intervalTime);
-
+      this.intervals.push(interval);
       if (images === this.IMAGES_IDLE) this.idleInterval = interval;
       if (images === this.IMAGES_LONGIDLE) this.longIdleInterval = interval;
    }

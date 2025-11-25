@@ -5,6 +5,7 @@ class ChickenBase extends MovableObject {
     isDead = false;
     wasJumpKilled = false;
 
+    intervals = [];
 
 
     constructor() {
@@ -14,6 +15,11 @@ class ChickenBase extends MovableObject {
         this.speed = 0.15 + Math.random() * 0.25;
 
         this.animate();
+    }
+
+    stopAllIntervals() {
+        this.intervals.forEach(clearInterval);
+        this.intervals = [];
     }
 
     deadChicken() {
@@ -30,17 +36,21 @@ class ChickenBase extends MovableObject {
 
     animate() {
         // Bewegung
+        this.intervals.push(
         setInterval(() => {
             if (!this.isDead) {
                 this.moveLeft();
             }
-        }, 1000 / 60);
+        }, 1000 / 60)
+        );
 
         // Animation
+        this.intervals.push(
         setInterval(() => {
             if (!this.isDead) {
                 this.playAnimation(this.IMAGES_WALKING);
             }
-        }, 100);
+        }, 100)
+        );
     }
 }

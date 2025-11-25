@@ -17,6 +17,9 @@ class World {
     coins = 0;
     bottles = 0;
 
+    intervals = [];
+    gameOver = false;
+
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -35,22 +38,61 @@ class World {
         this.run();
     }
 
+
     setWorld() {
         this.character.world = this;
         this.endBoss.world = this;
     }
 
     run() {
-        setInterval(() => {
-            this.checkCollisions();
-            this.checkEndBossAlert();
-        }, 200);
+        this.intervals.push(
+            setInterval(() => {
+                this.checkCollisions();
+                this.checkEndBossAlert();
+                this.checkGameOver();
+            }, 200)
+        );
 
-        setInterval(() => {
-            this.checkThrowObjects();
-        }, 100);
+        this.intervals.push(
+            setInterval(() => {
+                this.checkThrowObjects();
+            }, 100)
+        );
     }
 
+    // Game Over
+
+    stopGame() {
+        this.intervals.forEach(clearInterval);
+        this.intervals = [];
+
+        this.character.stopAllIntervals();
+
+        this.endBoss?.stopAllIntervals();
+
+        this.level.enemies.forEach(enemy => {
+            enemy.stopAllIntervals();
+        });
+    }
+
+     checkGameOver() {
+        if (this.character.isDead() && !this.gameOver) {
+            this.gameOver = true; 
+            this.stopGame();
+        }
+    }
+
+    showGameOver() {
+        let gameOverImg = new Image();
+        gameOverImg.src = './img/img_pollo_locco/img/9_intro_outro_screens/game_over/game over.png';
+        gameOverImg.onload = () => {
+            this.ctx.drawImage(gameOverImg,
+                this.canvas.width / 2 - 200,
+                this.canvas.height / 2 - 100,
+                400, 200
+            );
+        }
+    }
 
     checkEndBossAlert() {
         if (!this.endBoss || this.endBoss.isDead) return;
@@ -168,8 +210,8 @@ class World {
                     this.statusBarBossHealth.setPercentage(this.endBoss.energy);
                     bottle.hasSplashed = true;
                     bottle.animateSplash();
-                    
-        
+
+
                     if (this.endBoss.energy <= 0 && !this.endBoss.isDead) {
                         this.endBoss.deadChicken();
                     }
@@ -223,7 +265,11 @@ class World {
         } else if (this.endBoss && this.endBoss.markForDeletion) {
             this.endBoss = null;
         }
-
+        // Game Over
+        if (this.gameOver) {
+            this.showGameOver();
+            return;
+        }
 
         this.throwAbleObjects = this.throwAbleObjects.filter(bottle => !bottle.markForDeletion);
         this.addObjectsToMap(this.throwAbleObjects);
