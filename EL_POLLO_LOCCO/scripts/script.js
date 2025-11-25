@@ -28,6 +28,14 @@ window.addEventListener('keydown', (e) => {
   if (e.keyCode == 68 && world.character.bottleCount > 0) {
     keyboard.D = true
   }
+  if (e.keyCode == 82) {
+    keyboard.R = true;
+    if (world && world.gameOver) {
+      console.log('R Taste geht?');
+
+      world.restartGame();
+    }
+  }
 });
 
 window.addEventListener('keyup', (e) => {
@@ -48,5 +56,8 @@ window.addEventListener('keyup', (e) => {
   }
   if (e.keyCode == 68) {
     keyboard.D = false
+  }
+  if (e.keyCode == 82) {
+    keyboard.R = false;
   }
 });

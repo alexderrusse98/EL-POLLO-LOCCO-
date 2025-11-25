@@ -74,7 +74,7 @@ class Endboss extends MovableObject {
         if (!this.isAlerted && !this.isAttackAnimation) {
             this.isAlerted = true;
 
-            console.log('alert + attacke');
+           // console.log('alert + attacke');
 
             this.attack();
 
@@ -201,24 +201,24 @@ class Endboss extends MovableObject {
             this.isAttackAnimation = true;
             this.attackCounter++;
 
-            console.log(`Attack #${this.attackCounter}`);
+           // console.log(`Attack #${this.attackCounter}`);
 
             setTimeout(() => {
                 if (!this.isDead) {
-                    console.log("Springe jetzt!");
+                   // console.log("Springe jetzt!");
 
 
                     if (this.attackCounter % 3 === 0) {
-                        console.log("GROSSER SPRUNG!");
+                       // console.log("GROSSER SPRUNG!");
                         this.bigAttack();
                     } else {
-                        console.log("Normaler Attack");
+                      //  console.log("Normaler Attack");
                         this.normalAttack();
                     }
 
                     setTimeout(() => {
                         this.isAttackAnimation = false;
-                        console.log("Attack beendet");
+                      // console.log("Attack beendet");
                     }, 2000);
                 }
             }, 2000);

@@ -18,7 +18,11 @@ class World {
     bottles = 0;
 
     intervals = [];
+
     gameOver = false;
+    gameWin = false;
+
+    winImage;
     gameOverImage;
 
     constructor(canvas, keyboard) {
@@ -40,6 +44,8 @@ class World {
 
         this.gameOverImage = new Image();
         this.gameOverImage.src = './img/img_pollo_locco/img/9_intro_outro_screens/game_over/game over.png';
+        this.winImage = new Image();
+        this.winImage.src = './img/img_pollo_locco/img/You won, you lost/You Win A.png';
     }
 
 
@@ -83,13 +89,21 @@ class World {
         if (this.character.isDead() && !this.gameOver) {
             this.gameOver = true;
             this.stopGame();
+        } else if (this.endBoss.isDead && !this.gameWin) {
+            this.gameWin = true;
+            this.stopGame();
         }
+
+
+        /* if (this.gameOver && this.keyboard.R) {
+              this.restartGame();
+          }*/
     }
 
-    showGameOver() {
-
+    showEndImg() {
+        const imgToShow = this.gameOver ? this.gameOverImage : this.winImage;
         this.ctx.drawImage(
-            this.gameOverImage,
+            imgToShow,
             0,
             0,
             this.canvas.width,
@@ -105,6 +119,19 @@ class World {
         );
     }
 
+    /* restartGame() {
+         this.gameOver = false;
+         this.character = new Character();
+         this.level = level1;
+         this.endBoss = new Endboss();
+         this.throwAbleObjects = [];
+         this.statusBarHealth.setPercentage(100);
+         this.statusBarCoins.setPercentage(0);
+         this.statusBarBottles.setPercentage(0);
+         this.setWorld();
+         this.run();
+     } */
+
     checkEndBossAlert() {
         if (!this.endBoss || this.endBoss.isDead) return;
 
@@ -113,21 +140,21 @@ class World {
         // Zone 1: Attack-Reichweite
         if (distance < 150) {
             if (!this.endBoss.isAttackAnimation && this.endBoss.isAlerted) {
-                console.log("Character in Attack-Range! Attacke!");
+                // console.log("Character in Attack-Range! Attacke!");
                 this.endBoss.attack();
             }
         }
         // Zone 2: Alert-Reichweite
         else if (distance < 300) {
             if (!this.endBoss.isAlerted && !this.endBoss.isAttackAnimation) {
-                console.log("Character in Alert-Range!");
+                //  console.log("Character in Alert-Range!");
                 this.endBoss.isAlerted = true;
             }
         }
         // Zone 3: Außerhalb (> 300px)
         else {
             if (this.endBoss.isAlerted && !this.endBoss.isAttackAnimation) {
-                console.log("Character zu weit weg - zurück zu Walking");
+                // console.log("Character zu weit weg - zurück zu Walking");
                 this.endBoss.isAlerted = false;
             }
         }
@@ -276,11 +303,12 @@ class World {
         } else if (this.endBoss && this.endBoss.markForDeletion) {
             this.endBoss = null;
         }
+
         // Game Over
-        if (this.gameOver) {
+        if (this.gameOver || this.gameWin) {
             this.ctx.save();
             this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-            this.showGameOver();
+            this.showEndImg();
             this.ctx.restore();
             return;
         }
