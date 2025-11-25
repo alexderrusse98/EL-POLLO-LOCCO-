@@ -41,13 +41,30 @@
     <div id="startScreen" class="start-screen">
         <img src="./img/img_pollo_locco/img/9_intro_outro_screens/start/startscreen_1.png" alt="Start Screen"
             class="start-bg">
-        <div class="start-content">
+
+
+        <div id="startContent" class="start-content">
             <button id="startButton" class="btn-start">Start Game</button>
-            <button id="controllsBtn" class="btn-controlls">Controlls</button>
+            <button id="controllsBtn" class="btn-controlls">Controls</button>
+        </div>
+
+
+        <div id="controllsSection" class="controll-section hidden">
+            <div class="controls-box">
+                <h2>Game Controls</h2>
+                <ul class="controls-list">
+                    <li><span class="key">←</span> Move Left</li>
+                    <li><span class="key">→</span> Move Right</li>
+                    <li><span class="key">SPACE</span> Jump</li>
+                    <li><span class="key">D</span> Throw Bottle</li>
+                    <li><span class="key">R</span> Restart (after Game Over)</li>
+                </ul>
+                <button id="closeControlsBtn" class="btn-close">Close</button>
+            </div>
         </div>
     </div>
 
-<h1>El Pollo Loco</h1>
+    <h1>El Pollo Loco</h1>
     <canvas id="canvas" width="720px" height="480px">
 
     </canvas>

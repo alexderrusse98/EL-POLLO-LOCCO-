@@ -5,14 +5,23 @@ let keyboard = new Keyboard();
 
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('startButton').addEventListener('click', startGame);
-  document.getElementById('controllsBtn').addEventListener('click', () => {
-    alert("Controlls:\n\nArrow Keys: Move\nSpace: Jump\nD: Throw Bottle\nR: Restart Game (after Game Over/Win)");
-  });
+  document.getElementById('controllsBtn').addEventListener('click', showControls);
+  document.getElementById('closeControlsBtn').addEventListener('click', hideControls);
 });
 
 function startGame() {
- document.getElementById('startScreen').classList.add('hidden');
- init();
+  document.getElementById('startScreen').classList.add('hidden');
+  init();
+}
+
+function showControls() {
+    document.getElementById('startContent').classList.add('hidden');
+    document.getElementById('controllsSection').classList.remove('hidden');
+}
+
+function hideControls() {
+    document.getElementById('controllsSection').classList.add('hidden');
+    document.getElementById('startContent').classList.remove('hidden');
 }
 
 function init() {
@@ -40,10 +49,10 @@ window.addEventListener('keydown', (e) => {
   if (e.keyCode == 68 && world.character.bottleCount > 0) {
     keyboard.D = true
   }
- if (e.keyCode == 82 && world && (world.gameOver || world.gameWin)) {
-        world.stopGame();
-        world = new World(canvas, keyboard);
-    }
+  if (e.keyCode == 82 && world && (world.gameOver || world.gameWin)) {
+    world.stopGame();
+    world = new World(canvas, keyboard);
+  }
 });
 
 window.addEventListener('keyup', (e) => {
