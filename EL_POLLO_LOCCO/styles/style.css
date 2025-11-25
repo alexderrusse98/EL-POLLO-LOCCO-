@@ -8,6 +8,61 @@ body {
     font-family: "Oswald", sans-serif;
 }
 
+.start-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.start-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Bild füllt ganzen Screen */
+}
+
+.start-content {
+    position: relative;
+    z-index: 1001;
+    text-align: center;
+}
+
+.start-content h1 {
+    font-size: 64px;
+    color: #fff;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
+    margin-bottom: 40px;
+    font-family: Arial, sans-serif;
+}
+
+.btn-start {
+    padding: 20px 60px;
+    font-size: 32px;
+    background-color: #ff6b35;
+    color: white;
+    border: 4px solid #fff;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.btn-start:hover {
+    background-color: #ff8c42;
+    transform: scale(1.1);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+}
+
+.hidden {
+    display: none !important;
+}
 canvas {
     background-color: black;
 }

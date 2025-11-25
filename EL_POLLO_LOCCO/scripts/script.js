@@ -1,7 +1,16 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let gameStarted = false;
 
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('startButton').addEventListener('click', startGame);
+});
+
+function startGame() {
+ document.getElementById('startScreen').classList.add('hidden');
+ init();
+}
 
 function init() {
   canvas = document.getElementById('canvas');
@@ -28,14 +37,10 @@ window.addEventListener('keydown', (e) => {
   if (e.keyCode == 68 && world.character.bottleCount > 0) {
     keyboard.D = true
   }
-  if (e.keyCode == 82) {
-    keyboard.R = true;
-    if (world && world.gameOver) {
-      console.log('R Taste geht?');
-
-      world.restartGame();
+ if (e.keyCode == 82 && world && (world.gameOver || world.gameWin)) {
+        world.stopGame();
+        world = new World(canvas, keyboard);
     }
-  }
 });
 
 window.addEventListener('keyup', (e) => {
