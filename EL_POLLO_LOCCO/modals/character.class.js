@@ -1,4 +1,5 @@
 class Character extends MovableObject {
+    audios;
     height = 200;
     y = 120;
     speed = 5;
@@ -95,7 +96,7 @@ class Character extends MovableObject {
         this.animate();
     }
 
-    stopAllIntervals(){
+    stopAllIntervals() {
         this.intervals.forEach(clearInterval);
         this.intervals = [];
     }
@@ -216,17 +217,17 @@ class Character extends MovableObject {
 
     animate() {
         this.intervals.push(
-        setInterval(() => {
-            const moved = this.handleMovement();
-            this.updateCamera();
-            this.checkMovementState(moved);
-        }, 1000 / 60)
+            setInterval(() => {
+                const moved = this.handleMovement();
+                this.updateCamera();
+                this.checkMovementState(moved);
+            }, 1000 / 60)
         );
 
         this.intervals.push(
-        setInterval(() => {
-            this.animateCharacter();
-        }, 50)
+            setInterval(() => {
+                this.animateCharacter();
+            }, 50)
         );
     }
 
@@ -271,6 +272,9 @@ class Character extends MovableObject {
     handleJump() {
         if (this.world.keyboard.SPACE && !this.isAboveGround()) {
             this.jump();
+            if (this.world && this.world.audios) {
+                this.world.audios.playSound('jumpSound');
+            }
             return true;
         }
         return false;

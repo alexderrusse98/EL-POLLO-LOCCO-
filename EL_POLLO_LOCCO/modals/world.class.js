@@ -97,6 +97,7 @@ class World {
 
         if (this.character.isDead() && !this.gameOver) {
             this.gameOverTriggered = true;
+            this.audios.playSound('characterDeadSound');
             clearInterval(this.intervals[0]);
             setTimeout(() => {
                 this.gameOver = true;
@@ -160,22 +161,20 @@ class World {
 
         // Zone 1: Attack-Reichweite
         if (distance < 150) {
-            if (!this.endBoss.isAttackAnimation && this.endBoss.isAlerted) {
-                // console.log("Character in Attack-Range! Attacke!");
+            if (!this.endBoss.isAttackAnimation && this.endBoss.isAlerted) { 
                 this.endBoss.attack();
             }
         }
         // Zone 2: Alert-Reichweite
         else if (distance < 300) {
             if (!this.endBoss.isAlerted && !this.endBoss.isAttackAnimation) {
-                //  console.log("Character in Alert-Range!");
+                this.audios.playSound('bossChickenStartSound');
                 this.endBoss.isAlerted = true;
             }
         }
         // Zone 3: Außerhalb (> 300px)
         else {
             if (this.endBoss.isAlerted && !this.endBoss.isAttackAnimation) {
-                // console.log("Character zu weit weg - zurück zu Walking");
                 this.endBoss.isAlerted = false;
             }
         }
@@ -186,7 +185,7 @@ class World {
             let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
             this.throwAbleObjects.push(bottle);
             this.character.bottleCount--;
-            this.audios.plaplaySoundy('throw');
+            this.audios.playSound('throw');
             this.statusBarBottles.setPercentage(
                 Math.max(this.statusBarBottles.percentage - 20, 0)
             );
@@ -211,6 +210,7 @@ class World {
                         enemy.deadChicken();
                         bottle.hasSplashed = true;
                         bottle.animateSplash();
+                        this.audios.playSound('chickenDeadSound');
                     }
                 });
             }
@@ -225,6 +225,7 @@ class World {
                 const wasKilled = this.character.checkJumpOnEnemy(enemy);
                 if (wasKilled) {
                     enemy.wasJumpKilled = true;
+                    this.audios.playSound('chickenDeadSound');
                 }
             }
         });
@@ -243,37 +244,39 @@ class World {
     }
 
 
-    checkAllEnemiesCollisions(allEnemies) {
-        if (this.character.isColliding(allEnemies) && !allEnemies.isDead && !allEnemies.wasJumpKilled) {
+   checkAllEnemiesCollisions(allEnemies) {
+    if (this.character.isColliding(allEnemies) && !allEnemies.isDead && !allEnemies.wasJumpKilled) {
 
-            const playerBottom = this.character.y + this.character.height;
-            const allEnemiesTop = allEnemies.y;
-            const isJumpingOnallEnemies = playerBottom >= allEnemiesTop &&
-                playerBottom <= allEnemiesTop + 40 &&
-                this.character.speedY < 0;
+        const playerBottom = this.character.y + this.character.height;
+        const allEnemiesTop = allEnemies.y;
+        const isJumpingOnallEnemies = playerBottom >= allEnemiesTop &&
+            playerBottom <= allEnemiesTop + 40 &&
+            this.character.speedY < 0;
 
-            if (!isJumpingOnallEnemies) {
-                this.character.hit();
-                this.statusBarHealth.setPercentage(this.character.energy);
-            }
+        if (!isJumpingOnallEnemies) {
+            this.character.hit();
+            this.statusBarHealth.setPercentage(this.character.energy);
+        }
 
-        };
-    }
+    };
+}
 
 
     checkBottleEndBossCollisions() {
         this.throwAbleObjects.forEach((bottle) => {
             if (!bottle.hasSplashed && this.endBoss) {
-
+                
                 if (!this.endBoss.isDead && bottle.isColliding(this.endBoss)) {
                     this.endBoss.hit();
                     this.statusBarBossHealth.setPercentage(this.endBoss.energy);
                     bottle.hasSplashed = true;
                     bottle.animateSplash();
+                    this.audios.playSound('bossChickenHurtSound');
 
 
                     if (this.endBoss.energy <= 0 && !this.endBoss.isDead) {
                         this.endBoss.deadChicken();
+                        this.audios.playSound('chickenDeadSound');
                     }
                 }
             }
@@ -295,6 +298,7 @@ class World {
     checkBottleCollisions() {
         this.level.bottles.forEach((bottle, index) => {
             if (this.character.isColliding(bottle)) {
+                this.audios.playSound('takeBottleSound');
                 this.character.bottleCount++;
                 this.statusBarBottles.setPercentage(
                     Math.min(this.statusBarBottles.percentage + 20, 100)

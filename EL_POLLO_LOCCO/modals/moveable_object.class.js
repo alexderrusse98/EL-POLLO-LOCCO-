@@ -112,6 +112,9 @@ class MovableObject extends DrawableObject {
       } else {
          this.lastHit = new Date().getTime();
       }
+      if (this.energy > 0 && this.world && this.world.audios && this instanceof Character) {
+        this.world.audios.playSound('characterHurtSound');
+    }
    }
 
    isHurt() {

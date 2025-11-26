@@ -1,7 +1,7 @@
 function createLevel1() {
     return new Level(
     [
-        new ChickenNormal(),
+       new ChickenNormal(),
         new ChickenSmall(),
         new ChickenNormal(),
         
