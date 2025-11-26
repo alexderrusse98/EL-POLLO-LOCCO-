@@ -25,6 +25,9 @@ class World {
     gameOver = false;
     gameWin = false;
 
+    gameOverTriggered = false;
+    gameWinTriggered = false;
+
     winImage;
     gameOverImage;
 
@@ -45,8 +48,8 @@ class World {
         this.draw();
         this.setWorld();
         this.run();
-        this.audios.playBackgroundMusic(); 
-        
+        this.audios.playBackgroundMusic();
+
         this.gameOverImage = new Image();
         this.gameOverImage.src = './img/img_pollo_locco/img/9_intro_outro_screens/game_over/game over.png';
         this.winImage = new Image();
@@ -93,6 +96,8 @@ class World {
     checkGameOver() {
 
         if (this.character.isDead() && !this.gameOver) {
+            this.gameOverTriggered = true;
+            clearInterval(this.intervals[0]);
             setTimeout(() => {
                 this.gameOver = true;
                 this.audios.stopBackgroundMusic();
@@ -101,7 +106,8 @@ class World {
             }, 2000);
 
         } else if (this.endBoss && this.endBoss.isDead && !this.gameWin) {
-
+            this.gameWinTriggered = true;
+            clearInterval(this.intervals[0]);
             setTimeout(() => {
                 this.gameWin = true;
                 this.audios.stopBackgroundMusic();
