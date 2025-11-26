@@ -1,9 +1,10 @@
-const level1 = new Level(
+function createLevel1() {
+    return new Level(
     [
-       /* new ChickenNormal(),
+        new ChickenNormal(),
         new ChickenSmall(),
         new ChickenNormal(),
-        */
+        
     ],
 
     [
@@ -64,3 +65,4 @@ const level1 = new Level(
         new CollectableBottle(300),
     ]
 );
+}

@@ -1,34 +1,57 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-
+let level1;
 
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('startButton').addEventListener('click', startGame);
   document.getElementById('controllsBtn').addEventListener('click', showControls);
   document.getElementById('closeControlsBtn').addEventListener('click', hideControls);
+
+  // Character Info Button
+  document.getElementById('characterInfoBtn').addEventListener('click', showCharacterStory);
+  document.getElementById('closeStoryBtn').addEventListener('click', hideCharacterStory);
+
   // close outside click
   document.getElementById('controllsSection').addEventListener('click', (e) => {
-        
-        if (e.target.id === 'controllsSection') {
-            hideControls();
-        }
-    });
+
+    if (e.target.id === 'controllsSection') {
+      hideControls();
+    }
+  });
+  document.getElementById('characterStorySection').addEventListener('click', (e) => {
+    if (e.target.id === 'characterStorySection') {
+      hideCharacterStory();
+    }
+  });
 });
 
 function startGame() {
   document.getElementById('startScreen').classList.add('hidden');
+  level1 = createLevel1();
   init();
 }
 
 function showControls() {
-    document.getElementById('startContent').classList.add('hidden');
-    document.getElementById('controllsSection').classList.remove('hidden');
+  document.getElementById('startContent').classList.add('hidden');
+  document.getElementById('controllsSection').classList.remove('hidden');
 }
 
 function hideControls() {
-    document.getElementById('controllsSection').classList.add('hidden');
-    document.getElementById('startContent').classList.remove('hidden');
+  document.getElementById('controllsSection').classList.add('hidden');
+  document.getElementById('startContent').classList.remove('hidden');
+}
+
+function showCharacterStory() {
+  document.getElementById('startContent').classList.add('hidden');
+  document.getElementById('characterInfoBtn').classList.add('hidden');
+  document.getElementById('characterStorySection').classList.remove('hidden');
+}
+
+function hideCharacterStory() {
+  document.getElementById('characterStorySection').classList.add('hidden');
+  document.getElementById('startContent').classList.remove('hidden');
+  document.getElementById('characterInfoBtn').classList.remove('hidden');
 }
 
 function init() {

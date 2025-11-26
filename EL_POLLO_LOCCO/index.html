@@ -34,7 +34,7 @@
 
 </head>
 
-<body onload="init()" background="./img/img_pollo_locco/img/background_full/desert.jpg">
+<body background="./img/img_pollo_locco/img/background_full/desert.jpg">
 
 
 
@@ -42,6 +42,9 @@
         <img src="./img/img_pollo_locco/img/9_intro_outro_screens/start/startscreen_1.png" alt="Start Screen"
             class="start-bg">
 
+        <button class="btn-audio">Audio</button>
+
+        <button id="characterInfoBtn" class="btn-info">Who is he?</button>
 
         <div id="startContent" class="start-content">
             <button id="startButton" class="btn-start">Start Game</button>
@@ -60,6 +63,20 @@
                     <li><span class="key">R</span> Restart (after Game Over)</li>
                 </ul>
                 <button id="closeControlsBtn" class="btn-close">Close</button>
+            </div>
+        </div>
+
+        <div id="characterStorySection" class="character-story-section hidden">
+            <div class="story-box">
+                <h2>Meet Pepe</h2>
+                <p class="story-text">
+                    Pepe is a brave adventurer from a small Mexican village.
+                    One day, the evil chicken boss "El Pollo Loco" stole all the
+                    precious bottles from his town. Now Pepe must travel through
+                    dangerous lands to defeat El Pollo Loco and bring back peace
+                    to his village!
+                </p>
+                <button id="closeStoryBtn" class="btn-close">Close</button>
             </div>
         </div>
     </div>
