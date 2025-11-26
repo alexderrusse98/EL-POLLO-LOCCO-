@@ -1,3 +1,16 @@
+
+function bottles(minCount, maxCount, minX, maxX) {
+    const bottles = [];
+    const count = minCount + Math.floor(Math.random() * (maxCount - minCount + 1));
+    
+    for (let i = 0; i < count; i++) {
+        const randomX = minX + Math.random() * (maxX - minX);
+        bottles.push(new CollectableBottle(randomX));
+    }
+    
+    return bottles;
+}
+
 function createLevel1() {
     return new Level(
     [
@@ -52,17 +65,6 @@ function createLevel1() {
         new Coin(550, 100),
 
     ],
-    [
-        new CollectableBottle(300),
-        new CollectableBottle(350),
-        new CollectableBottle(400),
-        new CollectableBottle(450),
-        new CollectableBottle(300),
-        new CollectableBottle(300),
-        new CollectableBottle(300),
-        new CollectableBottle(300),
-        new CollectableBottle(300),
-        new CollectableBottle(300),
-    ]
+    bottles(10, 15, 300, 2000)
 );
 }
