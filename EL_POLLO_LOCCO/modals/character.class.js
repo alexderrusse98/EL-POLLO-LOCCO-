@@ -123,6 +123,7 @@ class Character extends MovableObject {
     restingLong(idleTime) {
         if (idleTime >= 8) {
             if (!this.isLongIdleAnimationOn) {
+                this.world.audios.playLoopSound('longIdleSound');
                 this.isIdleAnimationOn = false;
                 this.isLongIdleAnimationOn = true;
                 this.playAnimationOnce(this.IMAGES_LONGIDLE, () => {
@@ -193,6 +194,9 @@ class Character extends MovableObject {
             this.lastMoveTime = new Date().getTime();
             this.isIdleAnimationOn = false;
             this.isLongIdleAnimationOn = false;
+        if (this.world && this.world.audios) {
+            this.world.audios.stopLoopSound();
+        }
 
             if (this.idleInterval) { clearInterval(this.idleInterval); this.idleInterval = null; }
             if (this.longIdleInterval) { clearInterval(this.longIdleInterval); this.longIdleInterval = null; }

@@ -29,6 +29,9 @@ class Audios {
 
     isMuted = false;
 
+
+    currentLoopSound = null;
+
     constructor() {
         // background music
         this.sounds.backgroundMusic.loop = true;
@@ -50,15 +53,42 @@ class Audios {
         }
     }
 
+
+
     playBackgroundMusic() {
         if (!this.isMuted) {
             this.sounds.backgroundMusic.play().catch(e => console.log('Music play failed:', e));
         }
     }
 
+    playLoopSound(soundName) {
+        if (!this.isMuted && this.sounds[soundName]) {
+
+            this.stopLoopSound();
+
+            this.sounds[soundName].play().catch(e => console.warn(`Error playing sound`, e));
+            this.currentLoopSound = soundName;
+        }
+    }
+
     stopBackgroundMusic() {
         this.sounds.backgroundMusic.pause();
         this.sounds.backgroundMusic.currentTime = 0;
+    }
+
+    stopLoopSound() {
+        if (this.currentLoopSound) {
+            this.sounds[this.currentLoopSound].pause();
+            this.sounds[this.currentLoopSound].currentTime = 0;
+            this.currentLoopSound = null;
+        }
+    }
+
+    stop(soundName) {
+        if (this.sounds[soundName]) {
+            this.sounds[soundName].pause();
+            this.sounds[soundName].currentTime = 0;
+        }
     }
 
     toggleMute() {
