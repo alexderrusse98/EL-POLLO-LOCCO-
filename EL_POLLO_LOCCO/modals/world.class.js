@@ -1,5 +1,5 @@
 class World {
-    audios = new Audios();
+    audios;
 
     character = new Character();
     endBoss = new Endboss();
@@ -28,10 +28,11 @@ class World {
     winImage;
     gameOverImage;
 
-    constructor(canvas, keyboard) {
+    constructor(canvas, keyboard, audioManager) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.audios = audioManager;
 
         this.statusBarHealth = new StatusBar('health', 40, 0);
         this.statusBarCoins = new StatusBar('coin', 40, 60);
@@ -94,8 +95,8 @@ class World {
         if (this.character.isDead() && !this.gameOver) {
             setTimeout(() => {
                 this.gameOver = true;
-                this.audioManager.stopBackgroundMusic();
-                this.audioManager.play('gameOverSound');
+                this.audios.stopBackgroundMusic();
+                this.audios.playSound('gameOverSound');
                 this.stopGame();
             }, 2000);
 
@@ -103,8 +104,8 @@ class World {
 
             setTimeout(() => {
                 this.gameWin = true;
-                this.audioManager.stopBackgroundMusic();
-                this.audioManager.play('winSound');
+                this.audios.stopBackgroundMusic();
+                this.audios.playSound('winSound');
                 this.stopGame();
             }, 2000);
         }
@@ -179,7 +180,7 @@ class World {
             let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
             this.throwAbleObjects.push(bottle);
             this.character.bottleCount--;
-            this.audioManager.play('throw');
+            this.audios.plaplaySoundy('throw');
             this.statusBarBottles.setPercentage(
                 Math.max(this.statusBarBottles.percentage - 20, 0)
             );
@@ -276,7 +277,7 @@ class World {
     checkCoinCollisions() {
         this.level.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
-                this.audioManager.play('coinSound');
+                this.audios.playSound('coinSound');
                 this.statusBarCoins.setPercentage(
                     Math.min(this.statusBarCoins.percentage + 20, 100)
                 );

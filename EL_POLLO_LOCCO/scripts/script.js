@@ -3,10 +3,14 @@ let world;
 let keyboard = new Keyboard();
 let level1;
 
+let audios = new Audios();
+
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('startButton').addEventListener('click', startGame);
   document.getElementById('controllsBtn').addEventListener('click', showControls);
   document.getElementById('closeControlsBtn').addEventListener('click', hideControls);
+
+  document.getElementById('audioBtn').addEventListener('click', toggleAudio);
 
   // Character Info Button
   document.getElementById('characterInfoBtn').addEventListener('click', showCharacterStory);
@@ -19,6 +23,8 @@ window.addEventListener('DOMContentLoaded', () => {
       hideControls();
     }
   });
+
+
   document.getElementById('characterStorySection').addEventListener('click', (e) => {
     if (e.target.id === 'characterStorySection') {
       hideCharacterStory();
@@ -56,8 +62,20 @@ function hideCharacterStory() {
 
 function init() {
   canvas = document.getElementById('canvas');
-  world = new World(canvas, keyboard);
+  world = new World(canvas, keyboard, audios);
 }
+
+// audio
+
+function toggleAudio() {
+    const btn = document.getElementById('audioBtn');
+    const isMuted = audios.toggleMute();
+    
+    btn.textContent = isMuted ? '🔇 Audio Off' : '🔊 Audio On';
+    btn.classList.toggle('muted', isMuted);
+}
+
+
 
 window.addEventListener('keydown', (e) => {
 
