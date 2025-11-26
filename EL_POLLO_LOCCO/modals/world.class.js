@@ -1,6 +1,9 @@
 class World {
+    audios = new Audios();
+
     character = new Character();
     endBoss = new Endboss();
+
     level;
     canvas;
     ctx;
@@ -41,7 +44,8 @@ class World {
         this.draw();
         this.setWorld();
         this.run();
-
+        this.audios.playBackgroundMusic(); 
+        
         this.gameOverImage = new Image();
         this.gameOverImage.src = './img/img_pollo_locco/img/9_intro_outro_screens/game_over/game over.png';
         this.winImage = new Image();
@@ -90,6 +94,8 @@ class World {
         if (this.character.isDead() && !this.gameOver) {
             setTimeout(() => {
                 this.gameOver = true;
+                this.audioManager.stopBackgroundMusic();
+                this.audioManager.play('gameOverSound');
                 this.stopGame();
             }, 2000);
 
@@ -97,6 +103,8 @@ class World {
 
             setTimeout(() => {
                 this.gameWin = true;
+                this.audioManager.stopBackgroundMusic();
+                this.audioManager.play('winSound');
                 this.stopGame();
             }, 2000);
         }
@@ -171,6 +179,7 @@ class World {
             let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
             this.throwAbleObjects.push(bottle);
             this.character.bottleCount--;
+            this.audioManager.play('throw');
             this.statusBarBottles.setPercentage(
                 Math.max(this.statusBarBottles.percentage - 20, 0)
             );
@@ -267,6 +276,7 @@ class World {
     checkCoinCollisions() {
         this.level.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
+                this.audioManager.play('coinSound');
                 this.statusBarCoins.setPercentage(
                     Math.min(this.statusBarCoins.percentage + 20, 100)
                 );
