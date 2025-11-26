@@ -1,6 +1,6 @@
 class Audios {
     sounds = {
-
+        // Game
         backgroundMusic: new Audio('./audios/background.mp3'),
         winSound: new Audio('./audios/win.mp3'),
         gameOverSound: new Audio('./audios/gamOover.mp3'),
@@ -12,13 +12,13 @@ class Audios {
         bossChickenAttackSound: new Audio(''),
         chickenDeadSound: new Audio('./audios/chickenDead.mp3'),
 
-        jumpSound: new Audio('./audios/jump.mp3'),
-
+        // Items
         coinSound: new Audio('./audios/collectCoints.mp3'),
         takeBottleSound: new Audio('./audios/pickBottle.mp3'),
         
         brockenBottleSound: new Audio('./audios/brokenBottle.mp3'),
-
+        // Character
+        jumpSound: new Audio('./audios/jump.mp3'),
         longIdleSound: new Audio('./audios/longIdle.mp3'),
         characterHurtSound: new Audio('./audios/cartoonScream.mp3'),
         characterDeadSound: new Audio('./audios/ohYes.mp3'),
