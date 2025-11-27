@@ -13,21 +13,17 @@ class World {
     statusBarHealth;
     statusBarCoins;
     statusBarBottles;
-
     statusBarBossHealth;
 
+    intervals = [];
     throwAbleObjects = [];
     coins = 0;
     bottles = 0;
 
-    intervals = [];
-
     gameOver = false;
     gameWin = false;
-
     gameOverTriggered = false;
     gameWinTriggered = false;
-
     winImage;
     gameOverImage;
 
@@ -60,6 +56,9 @@ class World {
     setWorld() {
         this.character.world = this;
         this.endBoss.world = this;
+       if (this.endBoss) {
+            this.endBoss.world = this;
+        }
     }
 
     run() {
@@ -93,6 +92,8 @@ class World {
         });
     }
 
+
+    // kürze methode in mes..
     checkGameOver() {
 
         if (this.character.isDead() && !this.gameOver) {
@@ -117,9 +118,9 @@ class World {
             }, 2000);
         }
 
-        /* if (this.gameOver && this.keyboard.R) {
+        if (this.gameOver && this.keyboard.R) {
               this.restartGame();
-          }*/
+          }
     }
 
     showEndImg() {
@@ -141,7 +142,7 @@ class World {
         );
     }
 
-    /* restartGame() {
+     restartGame() {
          this.gameOver = false;
          this.character = new Character();
          this.level = level1;
@@ -152,7 +153,7 @@ class World {
          this.statusBarBottles.setPercentage(0);
          this.setWorld();
          this.run();
-     } */
+     } 
 
     checkEndBossAlert() {
         if (!this.endBoss || this.endBoss.isDead) return;
@@ -161,7 +162,7 @@ class World {
 
         // Zone 1: Attack-Reichweite
         if (distance < 150) {
-            if (!this.endBoss.isAttackAnimation && this.endBoss.isAlerted) { 
+            if (!this.endBoss.isAttackAnimation && this.endBoss.isAlerted) {
                 this.endBoss.attack();
             }
         }
@@ -245,8 +246,11 @@ class World {
 
 
    checkAllEnemiesCollisions(allEnemies) {
-    if (this.character.isColliding(allEnemies) && !allEnemies.isDead && !allEnemies.wasJumpKilled) {
-
+    if (this.character.isColliding(allEnemies) && 
+        !allEnemies.isDead && 
+        !allEnemies.wasJumpKilled &&
+        !this.character.isHurt()) {  
+        
         const playerBottom = this.character.y + this.character.height;
         const allEnemiesTop = allEnemies.y;
         const isJumpingOnallEnemies = playerBottom >= allEnemiesTop &&
@@ -257,15 +261,14 @@ class World {
             this.character.hit();
             this.statusBarHealth.setPercentage(this.character.energy);
         }
-
-    };
+    }
 }
 
 
     checkBottleEndBossCollisions() {
         this.throwAbleObjects.forEach((bottle) => {
             if (!bottle.hasSplashed && this.endBoss) {
-                
+
                 if (!this.endBoss.isDead && bottle.isColliding(this.endBoss)) {
                     this.endBoss.hit();
                     this.statusBarBossHealth.setPercentage(this.endBoss.energy);

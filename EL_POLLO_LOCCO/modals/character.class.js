@@ -249,8 +249,8 @@ class Character extends MovableObject {
     checkJumpOnEnemy(enemy) {
         if (this.speedY >= 0 || enemy.isDead) return false;
 
-        const xTolerance = 100;
-        const yTolerance = enemy.height * 0.75;
+        const xTolerance = 60;
+        const yTolerance = 50;
 
         const playerLeft = this.x - xTolerance;
         const playerRight = this.x + this.width + xTolerance;
