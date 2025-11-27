@@ -88,12 +88,19 @@ class MovableObject extends DrawableObject {
       this.x -= this.speed;
    }
 
-
+   // Character hitbox
    isColliding(mo) {
-      const offsetX = 20;
-      const offsetY = 60;
-      const offsetWidth = 40;
-      const offsetHeight = 20;
+      let offsetX = 20;
+      let offsetY = 60;
+      let offsetWidth = 40;
+      let offsetHeight = 20;
+
+      if (this instanceof Character) {
+         offsetX = 20;
+         offsetY = 60;
+         offsetWidth = 80;
+         offsetHeight = 20;
+      }
 
       return (
          this.x + offsetX + (this.width - offsetWidth) > mo.x &&
@@ -113,8 +120,8 @@ class MovableObject extends DrawableObject {
          this.lastHit = new Date().getTime();
       }
       if (this.energy > 0 && this.world && this.world.audios && this instanceof Character) {
-        this.world.audios.playSound('characterHurtSound');
-    }
+         this.world.audios.playSound('characterHurtSound');
+      }
    }
 
    isHurt() {

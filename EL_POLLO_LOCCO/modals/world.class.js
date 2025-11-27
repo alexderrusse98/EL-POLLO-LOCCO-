@@ -2,7 +2,7 @@ class World {
     audios;
 
     character = new Character();
-    endBoss = new Endboss();
+    endBoss = null;//new Endboss();
 
     level;
     canvas;
@@ -55,10 +55,10 @@ class World {
 
     setWorld() {
         this.character.world = this;
-        this.endBoss.world = this;
+       /* this.endBoss.world = this;
        if (this.endBoss) {
             this.endBoss.world = this;
-        }
+        }*/
     }
 
     run() {
