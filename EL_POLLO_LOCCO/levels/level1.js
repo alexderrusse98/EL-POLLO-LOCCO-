@@ -65,6 +65,6 @@ function createLevel1() {
             new Coin(550, 100),
 
         ],
-        bottles(10, 25, 300, 2000)
+        bottles(100, 250, 300, 2000)
     );
 }

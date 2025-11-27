@@ -97,10 +97,9 @@ window.addEventListener('keydown', (e) => {
   if (e.keyCode == 68 && world.character.bottleCount > 0) {
     keyboard.D = true
   }
-  if (e.keyCode == 82 && world && (world.gameOver || world.gameWin)) {
-    world.stopGame();
-    world = new World(canvas, keyboard);
-  }
+  if (e.keyCode == 82) {
+    keyboard.R = true;
+}
 });
 
 window.addEventListener('keyup', (e) => {

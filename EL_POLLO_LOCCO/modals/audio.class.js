@@ -91,6 +91,16 @@ class Audios {
         }
     }
 
+    stopAllSounds() {
+        Object.keys(this.sounds).forEach(soundName => {
+            if (this.sounds[soundName]) {
+                this.sounds[soundName].pause();
+                this.sounds[soundName].currentTime = 0;
+            }
+        });
+        this.currentLoopSound = null;
+    }
+    
     toggleMute() {
         this.isMuted = !this.isMuted;
 
