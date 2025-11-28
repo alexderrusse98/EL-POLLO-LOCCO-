@@ -19,7 +19,8 @@ h1 {
 .game-btns {
     position: fixed;
     top: 20px;
-    right: 20px;
+     right: 50%;
+    transform: translateX(calc(960px - 20px));
     display: flex;
     gap: 15px;
     z-index: 2000;
@@ -49,7 +50,6 @@ h1 {
     background-color: #ff8c42;
     transform: scale(1.1);
 }
-
 
 .btn-audio.muted {
     background-color: #666;
@@ -101,6 +101,8 @@ body:-webkit-full-screen {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    align-items: center;
+    justify-content: center; 
 }
 
 .start-content h1 {
@@ -111,7 +113,8 @@ body:-webkit-full-screen {
 }
 
 .btn-start,
-.btn-controlls {
+.btn-controlls,
+.btn-info {
     padding: 20px 41px;
     font-size: 20px;
     background-color: #ff6b35;
@@ -122,10 +125,13 @@ body:-webkit-full-screen {
     font-weight: bold;
     transition: all 0.3s;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    width: 240px;
+    height: 70px;
 }
 
 .btn-start:hover,
-.btn-controlls:hover {
+.btn-controlls:hover,
+.btn-info:hover {
     background-color: #ff8c42;
     transform: scale(1.1);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
@@ -235,30 +241,6 @@ canvas {
     background-color: black;
 }
 
-/* Info Button Charakter */
-.btn-info {
-    position: fixed;
-    top: 19%;
-    left: 20%;
-    padding: 8px 16px;
-    font-size: 14px;
-    background-color: rgba(255, 107, 53, 0.9);
-    color: white;
-    border: 2px solid #fff;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    z-index: 1001;
-}
-
-.btn-info:hover {
-    background-color: #ff8c42;
-    transform: scale(1.1);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
-}
-
 /* Character Story Overlay */
 .character-story-section {
     position: absolute;
@@ -295,4 +277,26 @@ canvas {
     line-height: 1.8;
     margin-bottom: 30px;
     text-align: left;
+}
+
+@media (min-width: 1921px) {
+    body {
+        max-width: 1920px;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+    
+    .game-btns {
+        right: 50%;
+        transform: translateX(940px); 
+    }
+}
+
+
+@media (max-width: 1920px) {
+    .game-btns {
+        right: 20px;
+        transform: none;
+        right: max(20px, calc(50% - 940px));
+    }
 }
