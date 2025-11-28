@@ -343,7 +343,7 @@ class World {
     }
     checkCoinCollisions() {
         this.level.coins.forEach((coin, index) => {
-            if (this.character.isColliding(coin)) {
+            if (this.character.isColliding(coin) && this.statusBarCoins < 100) {
                 this.audios.playSound('coinSound');
                 this.statusBarCoins.setPercentage(
                     Math.min(this.statusBarCoins.percentage + 20, 100)
@@ -355,7 +355,7 @@ class World {
 
     checkBottleCollisions() {
         this.level.bottles.forEach((bottle, index) => {
-            if (this.character.isColliding(bottle)) {
+            if (this.character.isColliding(bottle) && this.statusBarBottles.percentage < 100) {
                 this.audios.playSound('takeBottleSound');
                 this.character.bottleCount++;
                 this.statusBarBottles.setPercentage(
