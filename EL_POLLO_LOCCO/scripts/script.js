@@ -40,6 +40,12 @@ window.addEventListener('DOMContentLoaded', () => {
 function startGame() {
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('backToMenuBtn').classList.remove('hidden');
+  
+  const mobileControls = document.getElementById('mobileControls');
+  if (mobileControls) {
+    mobileControls.classList.remove('hidden');
+  }
+  
   level1 = createLevel1();
   init();
 }
@@ -51,6 +57,11 @@ function backToMenu() {
   }
 
   document.getElementById('backToMenuBtn').classList.add('hidden');
+
+ const mobileControls = document.getElementById('mobileControls');
+  if (mobileControls) {
+    mobileControls.classList.add('hidden');
+  }
 
   document.getElementById('startScreen').classList.remove('hidden');
   document.getElementById('startContent').classList.remove('hidden');
@@ -129,38 +140,51 @@ function handleFullscreenChange() {
   const canvas = document.getElementById('canvas');
 
   if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-    // Fullscreen BEENDET - Setze Canvas zurück
     btn.textContent = '⛶';
     btn.classList.remove('active');
     btn.title = 'Fullscreen';
 
-    // Canvas-Styles zurücksetzen
     canvas.style.width = '720px';
     canvas.style.height = '480px';
     canvas.style.maxWidth = '';
     canvas.style.maxHeight = '';
 
   } else {
-    // Fullscreen AKTIV - Passe Canvas an
     btn.textContent = '⛶';
     btn.classList.add('active');
     btn.title = 'Exit Fullscreen';
 
-    // Canvas an Bildschirm anpassen
     const aspectRatio = 720 / 480;
     const screenRatio = window.innerWidth / window.innerHeight;
 
     if (screenRatio > aspectRatio) {
-      // Breiter Bildschirm - schwarze Balken links/rechts
       canvas.style.height = '100vh';
       canvas.style.width = (window.innerHeight * aspectRatio) + 'px';
     } else {
-      // Hoher Bildschirm - schwarze Balken oben/unten
       canvas.style.width = '100vw';
       canvas.style.height = (window.innerWidth / aspectRatio) + 'px';
     }
   }
 }
+
+function resizeCanvas() {
+    const canvas = document.getElementById('canvas');
+    const container = canvas.parentElement;
+    
+    const aspectRatio = 720 / 480;
+    
+    let width = window.innerWidth * 0.9; 
+    let height = width / aspectRatio;
+    
+    if (height > window.innerHeight * 0.8) {
+        height = window.innerHeight * 0.8;
+        width = height * aspectRatio;
+    }
+    
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+}
+
 
 // Keyboard Controls
 window.addEventListener('keydown', (e) => {
@@ -210,3 +234,51 @@ window.addEventListener('keyup', (e) => {
     keyboard.R = false;
   }
 });
+
+// Touch 
+if ('ontouchstart' in window) {
+    setTimeout(() => {
+        const leftBtn = document.querySelector('.control-btn.left');
+        const rightBtn = document.querySelector('.control-btn.right');
+        const jumpBtn = document.querySelector('.control-btn.jump');
+        const throwBtn = document.querySelector('.control-btn.throw');
+
+        if (leftBtn && rightBtn && jumpBtn && throwBtn) {
+            leftBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                keyboard.LEFT = true;
+            });
+            leftBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                keyboard.LEFT = false;
+            });
+
+            rightBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                keyboard.RIGHT = true;
+            });
+            rightBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                keyboard.RIGHT = false;
+            });
+
+            jumpBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                keyboard.SPACE = true;
+            });
+            jumpBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                keyboard.SPACE = false;
+            });
+
+            throwBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                keyboard.D = true;
+            });
+            throwBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                keyboard.D = false;
+            });
+        }
+    }, 100);
+}

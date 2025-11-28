@@ -36,57 +36,69 @@
 
 <body background="./img/img_pollo_locco/img/background_full/desert.jpg">
     <div class="wrapper">
-    <div class="game-btns">
-        <button id="fullscreenBtn" class="btn-fullscreen">⛶</button>
-        <button id="audioBtn" class="btn-audio muted">🔇</button>
-        <button id="backToMenuBtn" class="btn-back-menu hidden">⌂</button>
-    </div>
-
-    <div id="startScreen" class="start-screen">
-        <img src="./img/img_pollo_locco/img/9_intro_outro_screens/start/startscreen_1.png" alt="Start Screen"
-            class="start-bg">
-
-        <div id="startContent" class="start-content">
-            <button id="startButton" class="btn-start">Start Game</button>
-            <button id="controllsBtn" class="btn-controlls">Controls</button>
-            <button id="characterInfoBtn" class="btn-info">Who is he?</button>
+        <div class="game-btns">
+            <button id="fullscreenBtn" class="btn-fullscreen">⛶</button>
+            <button id="audioBtn" class="btn-audio muted">🔇</button>
+            <button id="backToMenuBtn" class="btn-back-menu hidden">⌂</button>
         </div>
 
+        <div id="startScreen" class="start-screen">
+            <img src="./img/img_pollo_locco/img/9_intro_outro_screens/start/startscreen_1.png" alt="Start Screen"
+                class="start-bg">
 
-        <div id="controllsSection" class="controll-section hidden">
-            <div class="controls-box">
-                <h2>Game Controls</h2>
-                <ul class="controls-list">
-                    <li><span class="key">←</span> Move Left</li>
-                    <li><span class="key">→</span> Move Right</li>
-                    <li><span class="key">SPACE</span> Jump</li>
-                    <li><span class="key">D</span> Throw Bottle</li>
-                    <li><span class="key">R</span> Restart (after Game Over)</li>
-                </ul>
-                <button id="closeControlsBtn" class="btn-close">Close</button>
+            <div id="startContent" class="start-content">
+                <button id="startButton" class="btn-start">Start Game</button>
+                <button id="controllsBtn" class="btn-controlls">Controls</button>
+                <button id="characterInfoBtn" class="btn-info">Who is he?</button>
+            </div>
+
+
+            <div id="controllsSection" class="controll-section hidden">
+                <div class="controls-box">
+                    <h2>Game Controls</h2>
+                    <ul class="controls-list">
+                        <li><span class="key">←</span> Move Left</li>
+                        <li><span class="key">→</span> Move Right</li>
+                        <li><span class="key">SPACE</span> Jump</li>
+                        <li><span class="key">D</span> Throw Bottle</li>
+                        <li><span class="key">R</span> Restart (after Game Over)</li>
+                    </ul>
+                    <button id="closeControlsBtn" class="btn-close">Close</button>
+                </div>
+            </div>
+
+            <div id="characterStorySection" class="character-story-section hidden">
+                <div class="story-box">
+                    <h2>Meet Pepe</h2>
+                    <p class="story-text">
+                        Pepe is a brave adventurer from a small Mexican village.
+                        One day, the evil chicken boss "El Pollo Loco" stole all the
+                        precious bottles from his town. Now Pepe must travel through
+                        dangerous lands to defeat El Pollo Loco and bring back peace
+                        to his village!
+                    </p>
+                    <button id="closeStoryBtn" class="btn-close">Close</button>
+                </div>
             </div>
         </div>
 
-        <div id="characterStorySection" class="character-story-section hidden">
-            <div class="story-box">
-                <h2>Meet Pepe</h2>
-                <p class="story-text">
-                    Pepe is a brave adventurer from a small Mexican village.
-                    One day, the evil chicken boss "El Pollo Loco" stole all the
-                    precious bottles from his town. Now Pepe must travel through
-                    dangerous lands to defeat El Pollo Loco and bring back peace
-                    to his village!
-                </p>
-                <button id="closeStoryBtn" class="btn-close">Close</button>
-            </div>
-        </div>
+        <h1>El Pollo Loco</h1>
+        <canvas id="canvas" width="720px" height="480px">
+
+        </canvas>
+
     </div>
 
-    <h1>El Pollo Loco</h1>
-    <canvas id="canvas" width="720px" height="480px">
-
-    </canvas>
-</div>
+    <div id="mobileControls" class="mobile-controls hidden">
+        <div class="controls-left">
+            <button class="control-btn left">←</button>
+            <button class="control-btn right">→</button>
+        </div>
+        <div class="controls-right">
+            <button class="control-btn jump">JUMP</button>
+            <button class="control-btn throw">THROW</button>
+        </div>
+    </div>
 
 </body>
 

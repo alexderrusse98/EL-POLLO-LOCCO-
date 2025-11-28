@@ -16,12 +16,15 @@ h1 {
     font-size: 50px;
     margin-top: 0;
     margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .game-btns {
     position: fixed;
     top: 20px;
-     right: 50%;
+    right: 50%;
     transform: translateX(calc(960px - 20px));
     display: flex;
     gap: 15px;
@@ -104,7 +107,7 @@ body:-webkit-full-screen {
     flex-direction: column;
     gap: 20px;
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
 }
 
 .start-content h1 {
@@ -241,6 +244,9 @@ body:-webkit-full-screen {
 
 canvas {
     background-color: black;
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
 
 /* Character Story Overlay */
@@ -281,24 +287,218 @@ canvas {
     text-align: left;
 }
 
+/* Mobile Touch Controls */
+.mobile-controls {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    padding: 0 20px;
+    z-index: 2000;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.mobile-controls > * {
+    pointer-events: all;
+}
+
+.controls-left,
+.controls-right {
+    display: flex;
+    gap: 15px;
+}
+
+.control-btn {
+    width: 70px;
+    height: 70px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: rgba(255, 107, 53, 0.85);
+    color: white;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.control-btn:active {
+    background-color: #ff8c42;
+    transform: scale(0.95);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.control-btn.left,
+.control-btn.right {
+    font-size: 28px;
+}
+
+.control-btn.jump,
+.control-btn.throw {
+    font-size: 14px;
+}
+
 @media (min-width: 1921px) {
     body {
         max-width: 1920px;
         margin: 0 auto;
         box-sizing: border-box;
     }
-    
+
     .game-btns {
         right: 50%;
-        transform: translateX(940px); 
+        transform: translateX(940px);
     }
 }
-
 
 @media (max-width: 1920px) {
     .game-btns {
         right: 20px;
         transform: none;
         right: max(20px, calc(50% - 940px));
+    }
+}
+
+/* Tablets (768px - 1024px) */
+@media (max-width: 1024px) {
+    h1 {
+        font-size: 36px;
+    }
+
+    .btn-start,
+    .btn-controlls,
+    .btn-info {
+        width: 200px;
+        height: 60px;
+        font-size: 18px;
+    }
+
+    canvas {
+        width: 90vw;
+        height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    canvas {
+        width: 100vw;
+        height: auto;
+        max-height: 100vh;
+        object-fit: contain;
+    }
+
+    .mobile-controls {
+        display: flex !important;
+    }
+
+    h1 {
+        font-size: 28px;
+        top: 10px;
+    }
+
+    .game-btns {
+        top: 10px;
+        right: 10px;
+        gap: 8px;
+        transform: none;
+    }
+
+    .btn-audio,
+    .btn-fullscreen,
+    .btn-back-menu {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .btn-start,
+    .btn-controlls,
+    .btn-info {
+        width: 160px;
+        height: 50px;
+        font-size: 16px;
+        padding: 15px 30px;
+    }
+
+    .start-content h1 {
+        font-size: 42px;
+    }
+
+    .controls-box,
+    .story-box {
+        padding: 20px 30px;
+        margin: 20px;
+    }
+
+    .controls-box h2,
+    .story-box h2 {
+        font-size: 28px;
+    }
+
+    .controls-list li {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+    body::after {
+        content: "Please rotate your device for better experience";
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 18px;
+        text-align: center;
+        z-index: 9999;
+    }
+}
+
+/* Sehr kleine Handys (max 480px) */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 24px;
+    }
+
+    .start-content h1 {
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+
+    .btn-start,
+    .btn-controlls,
+    .btn-info {
+        width: 140px;
+        height: 45px;
+        font-size: 14px;
+    }
+
+    canvas {
+        width: 100vw;
+        height: 60vh;
+    }
+
+    .control-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 16px;
+    }
+
+    .control-btn.left,
+    .control-btn.right {
+        font-size: 24px;
+    }
+
+    .control-btn.jump,
+    .control-btn.throw {
+        font-size: 12px;
     }
 }
