@@ -94,6 +94,7 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_LONGIDLE);
         this.applyGravity();
         this.animate();
+        this.previousBottom = this.y + this.height;
     }
 
     stopAllIntervals() {

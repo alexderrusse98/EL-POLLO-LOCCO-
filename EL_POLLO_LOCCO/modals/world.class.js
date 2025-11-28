@@ -67,11 +67,11 @@ class World {
     run() {
         this.intervals.push(
             setInterval(() => {
-                this.checkCollisions();
                 this.checkEndBossAlert();
                 this.checkGameOver();
             }, 200)
         );
+
 
         this.intervals.push(
             setInterval(() => {
@@ -81,7 +81,6 @@ class World {
     }
 
     // Game Over
-
     stopGame() {
         this.intervals.forEach(clearInterval);
         this.intervals = [];
@@ -109,7 +108,7 @@ class World {
                 this.stopGame();
             }, 2000);
 
-        } else if (this.endBoss && this.endBoss.isDead && !this.gameWin) {
+        } else if (this.endBoss && this.endBoss.energy <= 0 && !this.gameWin) {
             this.gameWinTriggered = true;
             clearInterval(this.intervals[0]);
             setTimeout(() => {
@@ -119,7 +118,6 @@ class World {
                 this.stopGame();
             }, 2000);
         }
-
     }
 
     showEndImg() {
@@ -186,7 +184,7 @@ class World {
         this.statusBarBottles.setPercentage(0);
         this.statusBarBossHealth.setPercentage(100);
         this.statusBarBossHealth.visible = false;
-        
+
         this.setWorld();
         this.run();
         this.audios.playBackgroundMusic();
@@ -271,13 +269,33 @@ class World {
         });
     }
 
+    checkJumpOnEnemyCollisions() {
+        this.level.enemies.forEach((enemy) => {
+            if (enemy.isDead) return;
+            const currentBottom = this.character.y + this.character.height;
+            const prevBottom = this.character.previousBottom ?? currentBottom;
+
+            if (this.character.speedY < 0) {
+                const crossedTop = (prevBottom <= enemy.y + 5) && (currentBottom >= enemy.y);
+                const horizOverlap = this.character.getHitbox().x < enemy.getHitbox().x + enemy.getHitbox().width &&
+
+                    this.character.getHitbox().x + this.character.getHitbox().width > enemy.getHitbox().x;
+
+                if (crossedTop && horizOverlap) {
+                    const wasKilled = this.character.checkJumpOnEnemy(enemy);
+                    if (wasKilled) {
+                        enemy.wasJumpKilled = true;
+                        this.audios.playSound('chickenDeadSound');
+                    }
+                }
+            }
+        });
+    }
 
     checkEnemyCollisions() {
-
         this.level.enemies.forEach((enemy) => {
             this.checkAllEnemiesCollisions(enemy);
         });
-
         if (this.endBoss) {
             this.checkAllEnemiesCollisions(this.endBoss);
         }
@@ -308,15 +326,14 @@ class World {
         this.throwAbleObjects.forEach((bottle) => {
             if (!bottle.hasSplashed && this.endBoss) {
 
-                if (!this.endBoss.isDead && bottle.isColliding(this.endBoss)) {
+                if (this.endBoss.energy > 0 && bottle.isColliding(this.endBoss)) {
                     this.endBoss.hit();
                     this.statusBarBossHealth.setPercentage(this.endBoss.energy);
                     bottle.hasSplashed = true;
                     bottle.animateSplash();
                     this.audios.playSound('bossChickenHurtSound');
 
-
-                    if (this.endBoss.energy <= 0 && !this.endBoss.isDead) {
+                    if (this.endBoss.energy <= 0) {
                         this.endBoss.deadChicken();
                         this.audios.playSound('chickenDeadSound');
                     }
@@ -324,7 +341,6 @@ class World {
             }
         });
     }
-
     checkCoinCollisions() {
         this.level.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
@@ -352,6 +368,8 @@ class World {
 
     draw() {
         if (this.handleRestart()) return;
+
+        this.checkCollisions();
 
         this.clearCanvas();
         this.drawGameWorld();
@@ -433,6 +451,7 @@ class World {
             this.ctx.restore();
         }
     }
+
 
     scheduleNextFrame() {
         let self = this;

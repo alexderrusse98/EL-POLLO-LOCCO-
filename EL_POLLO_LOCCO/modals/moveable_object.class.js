@@ -28,7 +28,6 @@ class MovableObject extends DrawableObject {
                }
 
             }
-
             // Character is above ground
             if (this.isAboveGround() || this.speedY > 0) {
                this.y -= this.speedY;
@@ -51,7 +50,6 @@ class MovableObject extends DrawableObject {
 
 
    // verbessern und deutlicher machen
-
    playAnimationOnce(images, callback, intervalTime = 100) {
       let i = 0;
 
@@ -89,24 +87,46 @@ class MovableObject extends DrawableObject {
    }
 
    // Character hitbox
-   isColliding(mo) {
-      let offsetX = 40;
-      let offsetY = 40;
-      let offsetWidth = 40;
-      let offsetHeight = 20;
+   getHitbox() {
+      let offset = {
+         left: 20,
+         right: 20,
+         top: 20,
+         bottom: 20
+      };
 
       if (this instanceof Character) {
-         offsetX = 25;
-         offsetY = 20;
-         offsetWidth = 50;
-         offsetHeight = 0;
+         offset = {
+            left: 25,
+            right: 25,
+            top: 5,
+            bottom: 10
+         };
       }
+      if (this instanceof ChickenBase) {
+         offset = {
+            left: 10,
+            right: 10, 
+            top: 0,
+            bottom: 0,
+         };
+      }
+      return {
+         x: this.x + offset.left,
+         y: this.y + offset.top,
+         width: this.width - offset.left - offset.right,
+         height: this.height - offset.top - offset.bottom
+      };
+   }
+   isColliding(mo) {
+      const a = this.getHitbox();
+      const b = mo.getHitbox();
 
       return (
-         this.x + offsetX + (this.width - offsetWidth) > mo.x &&
-         this.y + offsetY + (this.height - offsetHeight) > mo.y &&
-         this.x + offsetX < mo.x + mo.width &&
-         this.y + offsetY < mo.y + mo.height
+         a.x < b.x + b.width &&
+         a.x + a.width > b.x &&
+         a.y < b.y + b.height &&
+         a.y + a.height > b.y
       );
    }
 

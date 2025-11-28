@@ -26,15 +26,15 @@ class DrawableObject {
 
     drawFrame(ctx) {
         if (this instanceof Character || this instanceof ChickenBase) {
+            const hb = this.getHitbox();
+
             ctx.beginPath();
-            ctx.lineWidth = '5';
-            ctx.strokeStyle = 'blue';
-            ctx.rect(this.x, this.y, this.width, this.height);
+            ctx.lineWidth = '3';
+            ctx.strokeStyle = 'red';   // zeigt echte Hitbox
+            ctx.rect(hb.x, hb.y, hb.width, hb.height);
             ctx.stroke();
         }
-
     }
-
 }
 
 
