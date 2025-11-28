@@ -7,10 +7,14 @@ class ChickenBase extends MovableObject {
 
     intervals = [];
 
+    static lastSpawnX = 300;
+    static minDistance = 200;
 
     constructor() {
         super();
 
+        this.x = ChickenBase.lastSpawnX + ChickenBase.minDistance + Math.random() * 300;
+        ChickenBase.lastSpawnX = this.x;
         this.x = 300 + Math.random() * 2500;
         this.speed = 0.15 + Math.random() * 0.25;
 
@@ -37,20 +41,20 @@ class ChickenBase extends MovableObject {
     animate() {
         // Bewegung
         this.intervals.push(
-        setInterval(() => {
-            if (!this.isDead) {
-                this.moveLeft();
-            }
-        }, 1000 / 60)
+            setInterval(() => {
+                if (!this.isDead) {
+                    this.moveLeft();
+                }
+            }, 1000 / 60)
         );
 
         // Animation
         this.intervals.push(
-        setInterval(() => {
-            if (!this.isDead) {
-                this.playAnimation(this.IMAGES_WALKING);
-            }
-        }, 100)
+            setInterval(() => {
+                if (!this.isDead) {
+                    this.playAnimation(this.IMAGES_WALKING);
+                }
+            }, 100)
         );
     }
 }
