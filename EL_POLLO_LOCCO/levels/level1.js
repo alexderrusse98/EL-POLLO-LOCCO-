@@ -27,7 +27,7 @@ function createLevel1() {
             new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/2.png', 1000),
             new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/1.png', 600),
             new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/2.png', 2000),
-            new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/1.png', 3000),
+            new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/1.png', 3500),
             new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/2.png', 2700),
         ],
 
@@ -57,6 +57,11 @@ function createLevel1() {
             new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/3_third_layer/2.png', 720 * 3),
             new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/2_second_layer/2.png', 720 * 3),
             new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/1_first_layer/2.png', 720 * 3),
+
+            new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/air.png', 720 * 4),
+            new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/3_third_layer/1.png', 720 * 4),
+            new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/2_second_layer/1.png', 720 * 4),
+            new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/1_first_layer/1.png', 720 * 4),
         ],
         [
             new Coin(300, 100),
@@ -67,6 +72,6 @@ function createLevel1() {
             new Coin(550, 100),
 
         ],
-        bottles(5, 10, 300, 2000)
+        bottles(5, 10, 300, 3000)
     );
 }
