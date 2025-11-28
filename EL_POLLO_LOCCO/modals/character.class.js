@@ -194,9 +194,9 @@ class Character extends MovableObject {
             this.lastMoveTime = new Date().getTime();
             this.isIdleAnimationOn = false;
             this.isLongIdleAnimationOn = false;
-        if (this.world && this.world.audios) {
-            this.world.audios.stopLoopSound();
-        }
+            if (this.world && this.world.audios) {
+                this.world.audios.stopLoopSound();
+            }
 
             if (this.idleInterval) { clearInterval(this.idleInterval); this.idleInterval = null; }
             if (this.longIdleInterval) { clearInterval(this.longIdleInterval); this.longIdleInterval = null; }
@@ -325,22 +325,20 @@ class Character extends MovableObject {
         if (frame === 8 || landed) this.isJumpAnimationOn = false;
     }
 
-
     animateCharacter() {
         this.resting();
 
         if (this.isDead()) {
             this.speedY = 0;
             this.animateDeath();
-        } else if (this.isHurt()) {
-            this.animateHurt();
         } else if (this.isAboveGround() && this.isJumpAnimationOn) {
             this.animateJump();
+        } else if (this.isHurt() && !this.isAboveGround()) {
+            this.animateHurt();
         } else if (!this.isAboveGround()) {
             this.animateWalking();
         }
     }
-
 
     // Death Animation
 
