@@ -275,15 +275,15 @@ class Character extends MovableObject {
 
 
     handleJump() {
-        if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-            this.jump();
-            if (this.world && this.world.audios) {
-                this.world.audios.playSound('jumpSound');
-            }
-            return true;
+    if (this.world.keyboard.SPACE && !this.isAboveGround() && !this.isJumpAnimationOn) {
+        this.jump();
+        if (this.world && this.world.audios) {
+            this.world.audios.playSound('jumpSound');
         }
-        return false;
+        return true;
     }
+    return false;
+}
 
 
     isJumpingOnEnemy(enemy) {
