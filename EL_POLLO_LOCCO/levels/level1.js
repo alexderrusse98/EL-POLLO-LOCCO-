@@ -17,7 +17,9 @@ function createLevel1() {
             new ChickenNormal(),
             new ChickenSmall(),
             new ChickenNormal(),
-
+            new ChickenNormal(),
+            new ChickenSmall(),
+            new ChickenNormal(),
         ],
 
         [
@@ -65,6 +67,6 @@ function createLevel1() {
             new Coin(550, 100),
 
         ],
-        bottles(100, 250, 300, 2000)
+        bottles(5, 10, 300, 2000)
     );
 }

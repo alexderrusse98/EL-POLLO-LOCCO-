@@ -90,16 +90,16 @@ class MovableObject extends DrawableObject {
 
    // Character hitbox
    isColliding(mo) {
-      let offsetX = 20;
-      let offsetY = 60;
+      let offsetX = 40;
+      let offsetY = 40;
       let offsetWidth = 40;
       let offsetHeight = 20;
 
       if (this instanceof Character) {
-         offsetX = 20;
-         offsetY = 60;
-         offsetWidth = 80;
-         offsetHeight = 20;
+         offsetX = 25;
+         offsetY = 20;
+         offsetWidth = 50;
+         offsetHeight = 0;
       }
 
       return (
