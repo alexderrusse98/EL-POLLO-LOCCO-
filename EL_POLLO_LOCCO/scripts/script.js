@@ -13,24 +13,24 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
   document.getElementById('audioBtn').addEventListener('click', toggleAudio);
 
-  // Character Info Button
   document.getElementById('characterInfoBtn').addEventListener('click', showCharacterStory);
   document.getElementById('closeStoryBtn').addEventListener('click', hideCharacterStory);
 
-  // close outside click
   document.getElementById('controllsSection').addEventListener('click', (e) => {
-
     if (e.target.id === 'controllsSection') {
       hideControls();
     }
   });
-
 
   document.getElementById('characterStorySection').addEventListener('click', (e) => {
     if (e.target.id === 'characterStorySection') {
       hideCharacterStory();
     }
   });
+
+  // Fullscreen Change Events
+  document.addEventListener('fullscreenchange', handleFullscreenChange);
+  document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 });
 
 function startGame() {
@@ -66,140 +66,127 @@ function init() {
   world = new World(canvas, keyboard, audios);
 }
 
-// audio
+// Audio
 function toggleAudio() {
-    const btn = document.getElementById('audioBtn');
-    const isMuted = audios.toggleMute();
-    
-    if (isMuted) {
-        btn.textContent = '🔇 Audio Off';
-        btn.classList.add('muted');
-    } else {
-        btn.textContent = '🔊 Audio On';
-        btn.classList.remove('muted');
-        audios.playBackgroundMusic();
-    }
+  const btn = document.getElementById('audioBtn');
+  const isMuted = audios.toggleMute();
+
+  if (isMuted) {
+    btn.textContent = '🔇 Audio Off';
+    btn.classList.add('muted');
+  } else {
+    btn.textContent = '🔊 Audio On';
+    btn.classList.remove('muted');
+    audios.playBackgroundMusic();
+  }
 }
 
-// fullscreen
+// Fullscreen
 function toggleFullscreen() {
-    const btn = document.getElementById('fullscreenBtn');
-    
-    if (!document.fullscreenElement) {
-        // In Fullscreen gehen
-        if (document.body.requestFullscreen) {
-            document.body.requestFullscreen();
-        } else if (document.body.webkitRequestFullscreen) {
-            document.body.webkitRequestFullscreen();
-        } else if (document.body.msRequestFullscreen) {
-            document.body.msRequestFullscreen();
-        }
-        btn.textContent = '⛶';
-        btn.classList.add('active');
-        btn.title = 'Exit Fullscreen';
-    } else {
-        // Fullscreen beenden
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
-        }
-        btn.textContent = '⛶';
-        btn.classList.remove('active');
-        btn.title = 'Fullscreen';
+  const btn = document.getElementById('fullscreenBtn');
+
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    // In Fullscreen gehen
+    if (document.body.requestFullscreen) {
+      document.body.requestFullscreen();
+    } else if (document.body.webkitRequestFullscreen) {
+      document.body.webkitRequestFullscreen();
+    } else if (document.body.msRequestFullscreen) {
+      document.body.msRequestFullscreen();
     }
+  } else {
+    // Fullscreen beenden
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  }
 }
 
-// Button automatisch updaten wenn ESC gedrückt wird
-document.addEventListener('fullscreenchange', () => {
-    const btn = document.getElementById('fullscreenBtn');
-    if (!document.fullscreenElement) {
-        btn.textContent = '⛶';
-        btn.classList.remove('active');
-        btn.title = 'Fullscreen';
-    }
-});
+function handleFullscreenChange() {
+  const btn = document.getElementById('fullscreenBtn');
+  const canvas = document.getElementById('canvas');
 
-document.addEventListener('webkitfullscreenchange', () => {
-    const btn = document.getElementById('fullscreenBtn');
-    if (!document.webkitFullscreenElement) {
-        btn.textContent = '⛶';
-        btn.classList.remove('active');
-        btn.title = 'Fullscreen';
-    }
-});
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    // Fullscreen BEENDET - Setze Canvas zurück
+    btn.textContent = '⛶';
+    btn.classList.remove('active');
+    btn.title = 'Fullscreen';
 
-document.addEventListener('fullscreenchange', () => {
-    const btn = document.getElementById('fullscreenBtn');
-    const canvas = document.getElementById('canvas');
-    
-    if (!document.fullscreenElement) {
-        btn.textContent = '⛶';
-        btn.classList.remove('active');
+    // Canvas-Styles zurücksetzen
+    canvas.style.width = '720px';
+    canvas.style.height = '480px';
+    canvas.style.maxWidth = '';
+    canvas.style.maxHeight = '';
+
+  } else {
+    // Fullscreen AKTIV - Passe Canvas an
+    btn.textContent = '⛶';
+    btn.classList.add('active');
+    btn.title = 'Exit Fullscreen';
+
+    // Canvas an Bildschirm anpassen
+    const aspectRatio = 720 / 480;
+    const screenRatio = window.innerWidth / window.innerHeight;
+
+    if (screenRatio > aspectRatio) {
+      // Breiter Bildschirm - schwarze Balken links/rechts
+      canvas.style.height = '100vh';
+      canvas.style.width = (window.innerHeight * aspectRatio) + 'px';
     } else {
-        // Canvas an Bildschirmgröße anpassen
-        const aspectRatio = 720 / 480;
-        const screenRatio = window.innerWidth / window.innerHeight;
-        
-        if (screenRatio > aspectRatio) {
-            // Breiter Bildschirm
-            canvas.style.height = '100vh';
-            canvas.style.width = 'auto';
-        } else {
-            // Hoher Bildschirm
-            canvas.style.width = '100vw';
-            canvas.style.height = 'auto';
-        }
+      // Hoher Bildschirm - schwarze Balken oben/unten
+      canvas.style.width = '100vw';
+      canvas.style.height = (window.innerWidth / aspectRatio) + 'px';
     }
-});
+  }
+}
 
-
-
+// Keyboard Controls
 window.addEventListener('keydown', (e) => {
-
   if (e.keyCode == 39) {
-    keyboard.RIGHT = true
+    keyboard.RIGHT = true;
   }
   if (e.keyCode == 37) {
-    keyboard.LEFT = true
+    keyboard.LEFT = true;
   }
   if (e.keyCode == 38) {
-    keyboard.UP = true
+    keyboard.UP = true;
   }
   if (e.keyCode == 40) {
-    keyboard.DOWN = true
+    keyboard.DOWN = true;
   }
   if (e.keyCode == 32) {
-    keyboard.SPACE = true
+    keyboard.SPACE = true;
   }
-  if (e.keyCode == 68 && world.character.bottleCount > 0) {
-    keyboard.D = true
+  if (e.keyCode == 68 && world && world.character.bottleCount > 0) {
+    keyboard.D = true;
   }
   if (e.keyCode == 82) {
     keyboard.R = true;
-}
+  }
 });
 
 window.addEventListener('keyup', (e) => {
   if (e.keyCode == 39) {
-    keyboard.RIGHT = false
+    keyboard.RIGHT = false;
   }
   if (e.keyCode == 37) {
-    keyboard.LEFT = false
+    keyboard.LEFT = false;
   }
   if (e.keyCode == 38) {
-    keyboard.UP = false
+    keyboard.UP = false;
   }
   if (e.keyCode == 40) {
-    keyboard.DOWN = false
+    keyboard.DOWN = false;
   }
   if (e.keyCode == 32) {
-    keyboard.SPACE = false
+    keyboard.SPACE = false;
   }
   if (e.keyCode == 68) {
-    keyboard.D = false
+    keyboard.D = false;
   }
   if (e.keyCode == 82) {
     keyboard.R = false;

@@ -100,7 +100,7 @@ class Audios {
         });
         this.currentLoopSound = null;
     }
-    
+
     toggleMute() {
         this.isMuted = !this.isMuted;
 

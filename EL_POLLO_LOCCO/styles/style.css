@@ -164,12 +164,6 @@ body {
     background: #ff8c42;
 }
 
-/* Firefox Scrollbar */
-.controls-box {
-    scrollbar-width: thin;
-    scrollbar-color: #ff6b35 #1a1a1a;
-}
-
 canvas {
     background-color: black;
 }
@@ -238,7 +232,7 @@ canvas {
 
 /* Audio Button */
 .btn-audio {
-    position: fixed; 
+    position: fixed;
     top: 20px;
     right: 90px;
     padding: 10px 20px;
@@ -291,20 +285,17 @@ canvas {
     background-color: #4CAF50;
 }
 
-/* Canvas im Fullscreen größer machen */
-body:fullscreen canvas {
-    width: 100vw !important;
-    height: 100vh !important;
-    max-width: 100vw;
-    max-height: 100vh;
+body:fullscreen canvas,
+body:-webkit-full-screen canvas {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     object-fit: contain;
 }
 
-/* Body im Fullscreen */
-body:fullscreen {
-    background-color: black;
-}
-
+body:fullscreen,
 body:-webkit-full-screen {
     background-color: black;
+    overflow: hidden;
 }
