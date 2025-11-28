@@ -232,6 +232,7 @@ canvas {
 
 /* Audio Button */
 .btn-audio {
+    height: 48px;
     position: fixed;
     top: 20px;
     right: 90px;
@@ -261,7 +262,7 @@ canvas {
     top: 20px;
     right: 20px;
     width: 50px;
-    height: 50px;
+    height: 48px;
     padding: 0;
     font-size: 24px;
     background-color: #ff6b35;
@@ -298,4 +299,27 @@ body:fullscreen,
 body:-webkit-full-screen {
     background-color: black;
     overflow: hidden;
+}
+
+/*back to Startscreen*/
+.btn-back-menu {
+    position: fixed;
+    top: 20px;
+    right: 170px;
+    height: 48px;
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #ff6b35;
+    color: white;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 2000;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.btn-back-menu:hover {
+    background-color: #ff8c42;
+    transform: scale(1.05);
 }

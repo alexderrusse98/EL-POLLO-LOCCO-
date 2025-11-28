@@ -47,7 +47,7 @@ class World {
         this.audios.playBackgroundMusic();
 
         this.gameOverImage = new Image();
-        this.gameOverImage.src = './img/img_pollo_locco/img/9_intro_outro_screens/game_over/game over.png';
+        this.gameOverImage.src = './img/img_pollo_locco/img/You won, you lost/Game Over.png';
         this.winImage = new Image();
         this.winImage.src = './img/img_pollo_locco/img/You won, you lost/You Win A.png';
     }

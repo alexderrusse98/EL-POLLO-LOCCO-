@@ -6,6 +6,8 @@ let level1;
 let audios = new Audios();
 
 window.addEventListener('DOMContentLoaded', () => {
+
+
   document.getElementById('startButton').addEventListener('click', startGame);
   document.getElementById('controllsBtn').addEventListener('click', showControls);
   document.getElementById('closeControlsBtn').addEventListener('click', hideControls);
@@ -15,6 +17,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('characterInfoBtn').addEventListener('click', showCharacterStory);
   document.getElementById('closeStoryBtn').addEventListener('click', hideCharacterStory);
+
+  document.getElementById('backToMenuBtn').addEventListener('click', backToMenu);
 
   document.getElementById('controllsSection').addEventListener('click', (e) => {
     if (e.target.id === 'controllsSection') {
@@ -35,8 +39,22 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function startGame() {
   document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('backToMenuBtn').classList.remove('hidden');
   level1 = createLevel1();
   init();
+}
+
+function backToMenu() {
+  if (world) {
+    world.cleanup();
+    world = null;
+  }
+
+  document.getElementById('backToMenuBtn').classList.add('hidden');
+
+  document.getElementById('startScreen').classList.remove('hidden');
+  document.getElementById('startContent').classList.remove('hidden');
+  document.getElementById('characterInfoBtn').classList.remove('hidden');
 }
 
 function showControls() {
