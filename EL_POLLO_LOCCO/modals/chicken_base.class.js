@@ -11,7 +11,7 @@ class ChickenBase extends MovableObject {
     constructor() {
         super();
 
-        this.x = 200 + Math.random() * 700;
+        this.x = 300 + Math.random() * 2500;
         this.speed = 0.15 + Math.random() * 0.25;
 
         this.animate();

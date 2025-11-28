@@ -20,6 +20,12 @@ function createLevel1() {
             new ChickenNormal(),
             new ChickenSmall(),
             new ChickenNormal(),
+            new ChickenNormal(),
+            new ChickenSmall(),
+            new ChickenNormal(),
+            new ChickenNormal(),
+            new ChickenSmall(),
+            new ChickenNormal(),
         ],
 
         [
@@ -64,12 +70,18 @@ function createLevel1() {
             new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/1_first_layer/1.png', 720 * 4),
         ],
         [
-            new Coin(300, 100),
-            new Coin(350, 100),
-            new Coin(400, 100),
-            new Coin(450, 100),
-            new Coin(500, 100),
-            new Coin(550, 100),
+            new Coin(278, 73),
+            new Coin(642, 112),
+            new Coin(1034, 58),
+            new Coin(1588, 169),
+            new Coin(834, 144),
+            new Coin(2476, 92),
+            new Coin(1320, 198),
+            new Coin(415, 151),
+            new Coin(990, 67),
+            new Coin(2104, 132),
+            new Coin(2670, 88),
+            new Coin(1856, 175),
 
         ],
         bottles(5, 10, 300, 3000)

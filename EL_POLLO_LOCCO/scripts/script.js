@@ -90,10 +90,10 @@ function toggleAudio() {
   const isMuted = audios.toggleMute();
 
   if (isMuted) {
-    btn.textContent = '🔇 Audio Off';
+    btn.textContent = '🔇';
     btn.classList.add('muted');
   } else {
-    btn.textContent = '🔊 Audio On';
+    btn.textContent = '🔊';
     btn.classList.remove('muted');
     audios.playBackgroundMusic();
   }
