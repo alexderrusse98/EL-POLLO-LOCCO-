@@ -10,6 +10,7 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('controllsBtn').addEventListener('click', showControls);
   document.getElementById('closeControlsBtn').addEventListener('click', hideControls);
 
+  document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
   document.getElementById('audioBtn').addEventListener('click', toggleAudio);
 
   // Character Info Button
@@ -66,7 +67,6 @@ function init() {
 }
 
 // audio
-
 function toggleAudio() {
     const btn = document.getElementById('audioBtn');
     const isMuted = audios.toggleMute();
@@ -80,6 +80,81 @@ function toggleAudio() {
         audios.playBackgroundMusic();
     }
 }
+
+// fullscreen
+function toggleFullscreen() {
+    const btn = document.getElementById('fullscreenBtn');
+    
+    if (!document.fullscreenElement) {
+        // In Fullscreen gehen
+        if (document.body.requestFullscreen) {
+            document.body.requestFullscreen();
+        } else if (document.body.webkitRequestFullscreen) {
+            document.body.webkitRequestFullscreen();
+        } else if (document.body.msRequestFullscreen) {
+            document.body.msRequestFullscreen();
+        }
+        btn.textContent = '⛶';
+        btn.classList.add('active');
+        btn.title = 'Exit Fullscreen';
+    } else {
+        // Fullscreen beenden
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+        btn.textContent = '⛶';
+        btn.classList.remove('active');
+        btn.title = 'Fullscreen';
+    }
+}
+
+// Button automatisch updaten wenn ESC gedrückt wird
+document.addEventListener('fullscreenchange', () => {
+    const btn = document.getElementById('fullscreenBtn');
+    if (!document.fullscreenElement) {
+        btn.textContent = '⛶';
+        btn.classList.remove('active');
+        btn.title = 'Fullscreen';
+    }
+});
+
+document.addEventListener('webkitfullscreenchange', () => {
+    const btn = document.getElementById('fullscreenBtn');
+    if (!document.webkitFullscreenElement) {
+        btn.textContent = '⛶';
+        btn.classList.remove('active');
+        btn.title = 'Fullscreen';
+    }
+});
+
+document.addEventListener('fullscreenchange', () => {
+    const btn = document.getElementById('fullscreenBtn');
+    const canvas = document.getElementById('canvas');
+    
+    if (!document.fullscreenElement) {
+        btn.textContent = '⛶';
+        btn.classList.remove('active');
+    } else {
+        // Canvas an Bildschirmgröße anpassen
+        const aspectRatio = 720 / 480;
+        const screenRatio = window.innerWidth / window.innerHeight;
+        
+        if (screenRatio > aspectRatio) {
+            // Breiter Bildschirm
+            canvas.style.height = '100vh';
+            canvas.style.width = 'auto';
+        } else {
+            // Hoher Bildschirm
+            canvas.style.width = '100vw';
+            canvas.style.height = 'auto';
+        }
+    }
+});
+
 
 
 window.addEventListener('keydown', (e) => {

@@ -238,9 +238,9 @@ canvas {
 
 /* Audio Button */
 .btn-audio {
-    position: absolute;
+    position: fixed; 
     top: 20px;
-    right: 20px;
+    right: 90px;
     padding: 10px 20px;
     font-size: 18px;
     background-color: #ff6b35;
@@ -248,7 +248,7 @@ canvas {
     border: 2px solid #fff;
     border-radius: 10px;
     cursor: pointer;
-    z-index: 1001;
+    z-index: 2000;
     transition: all 0.3s;
 }
 
@@ -259,4 +259,52 @@ canvas {
 
 .btn-audio.muted {
     background-color: #666;
+}
+
+/* Fullscreen Button */
+.btn-fullscreen {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    font-size: 24px;
+    background-color: #ff6b35;
+    color: white;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 2000;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-fullscreen:hover {
+    background-color: #ff8c42;
+    transform: scale(1.1);
+}
+
+.btn-fullscreen.active {
+    background-color: #4CAF50;
+}
+
+/* Canvas im Fullscreen größer machen */
+body:fullscreen canvas {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw;
+    max-height: 100vh;
+    object-fit: contain;
+}
+
+/* Body im Fullscreen */
+body:fullscreen {
+    background-color: black;
+}
+
+body:-webkit-full-screen {
+    background-color: black;
 }
