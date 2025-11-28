@@ -27,7 +27,7 @@ class Audios {
     };
 
 
-    isMuted = false;
+    isMuted = true;
 
 
     currentLoopSound = null;

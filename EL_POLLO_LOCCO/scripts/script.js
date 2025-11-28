@@ -71,10 +71,15 @@ function toggleAudio() {
     const btn = document.getElementById('audioBtn');
     const isMuted = audios.toggleMute();
     
-    btn.textContent = isMuted ? '🔇 Audio Off' : '🔊 Audio On';
-    btn.classList.toggle('muted', isMuted);
+    if (isMuted) {
+        btn.textContent = '🔇 Audio Off';
+        btn.classList.add('muted');
+    } else {
+        btn.textContent = '🔊 Audio On';
+        btn.classList.remove('muted');
+        audios.playBackgroundMusic();
+    }
 }
-
 
 
 window.addEventListener('keydown', (e) => {

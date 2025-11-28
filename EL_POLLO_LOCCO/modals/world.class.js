@@ -120,34 +120,28 @@ class World {
     }
 
     showEndImg() {
-    // Dunkler Overlay über dem Spiel (halbtransparent)
-    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    
-    // Bild KLEINER und ZENTRIERT statt fullscreen
-    const imgToShow = this.gameOver ? this.gameOverImage : this.winImage;
-    const imgWidth = 400;
-    const imgHeight = 300;
-    const imgX = (this.canvas.width - imgWidth) / 2;
-    const imgY = (this.canvas.height - imgHeight) / 2 - 30;
-    
-    this.ctx.drawImage(
-        imgToShow,
-        imgX,
-        imgY,
-        imgWidth,
-        imgHeight
-    );
-    
-    this.ctx.font = '30px Arial';
-    this.ctx.fillStyle = 'white';
-    this.ctx.textAlign = 'center';
-    this.ctx.fillText(
-        'Press R to restart',
-        this.canvas.width / 2,
-        this.canvas.height - 50
-    );
-}
+        const imgToShow = this.gameOver ? this.gameOverImage : this.winImage;
+
+        // Bild über das GANZE Canvas zeichnen
+        this.ctx.drawImage(
+            imgToShow,
+            0,
+            0,
+            this.canvas.width,
+            this.canvas.height
+        );
+
+        // Text darüber
+        this.ctx.font = 'bold 30px Arial';
+        this.ctx.fillStyle = 'white';
+        this.ctx.strokeStyle = 'black';
+        this.ctx.lineWidth = 3;
+        this.ctx.textAlign = 'center';
+
+        // Text mit Umrandung
+        this.ctx.strokeText('Press R to restart', this.canvas.width / 2, this.canvas.height - 50);
+        this.ctx.fillText('Press R to restart', this.canvas.width / 2, this.canvas.height - 50);
+    }
 
     // Game Restart
 
@@ -351,94 +345,94 @@ class World {
         });
     }
 
- draw() {
-    if (this.handleRestart()) return;
-    
-    this.clearCanvas();
-    this.drawGameWorld();
-    this.drawEndScreen();
-    this.scheduleNextFrame();
-}
+    draw() {
+        if (this.handleRestart()) return;
 
-handleRestart() {
-    if ((this.gameOver || this.gameWin) && this.keyboard.R) {
-        this.restartGame();
-        return true;
+        this.clearCanvas();
+        this.drawGameWorld();
+        this.drawEndScreen();
+        this.scheduleNextFrame();
     }
-    return false;
-}
 
-clearCanvas() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-}
-
-drawGameWorld() {
-    this.drawBackground();
-    this.drawCharacterAndEnemies();
-    this.drawCollectables();
-    this.drawStatusBars();
-}
-
-drawBackground() {
-    this.ctx.translate(this.camera_x, 0);
-    this.addObjectsToMap(this.level.backgroundObjects);
-    this.ctx.translate(-this.camera_x, 0);
-}
-
-drawCharacterAndEnemies() {
-    this.ctx.translate(this.camera_x, 0);
-    
-    this.addToMap(this.character);
-    this.addObjectsToMap(this.level.cloud);
-    
-    this.drawEnemies();
-    this.drawEndboss();
-}
-
-drawEnemies() {
-    this.level.enemies = this.level.enemies.filter(enemy => !enemy.markForDeletion);
-    this.addObjectsToMap(this.level.enemies);
-}
-
-drawEndboss() {
-    if (this.endBoss && !this.endBoss.markForDeletion) {
-        this.addToMap(this.endBoss);
-    } else if (this.endBoss && this.endBoss.markForDeletion) {
-        this.endBoss = null;
+    handleRestart() {
+        if ((this.gameOver || this.gameWin) && this.keyboard.R) {
+            this.restartGame();
+            return true;
+        }
+        return false;
     }
-}
 
-drawCollectables() {
-    this.throwAbleObjects = this.throwAbleObjects.filter(bottle => !bottle.markForDeletion);
-    this.addObjectsToMap(this.throwAbleObjects);
-    this.addObjectsToMap(this.level.coins);
-    this.addObjectsToMap(this.level.bottles);
-    
-    this.ctx.translate(-this.camera_x, 0);
-}
-
-drawStatusBars() {
-    this.addToMap(this.statusBarHealth);
-    this.addToMap(this.statusBarCoins);
-    this.addToMap(this.statusBarBottles);
-    this.addToMap(this.statusBarBossHealth);
-}
-
-drawEndScreen() {
-    if (this.gameOver || this.gameWin) {
-        this.ctx.save();
-        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-        this.showEndImg();
-        this.ctx.restore();
+    clearCanvas() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
-}
 
-scheduleNextFrame() {
-    let self = this;
-    requestAnimationFrame(function () {
-        self.draw();
-    });
-}
+    drawGameWorld() {
+        this.drawBackground();
+        this.drawCharacterAndEnemies();
+        this.drawCollectables();
+        this.drawStatusBars();
+    }
+
+    drawBackground() {
+        this.ctx.translate(this.camera_x, 0);
+        this.addObjectsToMap(this.level.backgroundObjects);
+        this.ctx.translate(-this.camera_x, 0);
+    }
+
+    drawCharacterAndEnemies() {
+        this.ctx.translate(this.camera_x, 0);
+
+        this.addToMap(this.character);
+        this.addObjectsToMap(this.level.cloud);
+
+        this.drawEnemies();
+        this.drawEndboss();
+    }
+
+    drawEnemies() {
+        this.level.enemies = this.level.enemies.filter(enemy => !enemy.markForDeletion);
+        this.addObjectsToMap(this.level.enemies);
+    }
+
+    drawEndboss() {
+        if (this.endBoss && !this.endBoss.markForDeletion) {
+            this.addToMap(this.endBoss);
+        } else if (this.endBoss && this.endBoss.markForDeletion) {
+            this.endBoss = null;
+        }
+    }
+
+    drawCollectables() {
+        this.throwAbleObjects = this.throwAbleObjects.filter(bottle => !bottle.markForDeletion);
+        this.addObjectsToMap(this.throwAbleObjects);
+        this.addObjectsToMap(this.level.coins);
+        this.addObjectsToMap(this.level.bottles);
+
+        this.ctx.translate(-this.camera_x, 0);
+    }
+
+    drawStatusBars() {
+        this.addToMap(this.statusBarHealth);
+        this.addToMap(this.statusBarCoins);
+        this.addToMap(this.statusBarBottles);
+        this.addToMap(this.statusBarBossHealth);
+    }
+
+    drawEndScreen() {
+        if (this.gameOver || this.gameWin) {
+            this.ctx.save();
+            this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+            this.showEndImg();
+            this.ctx.restore();
+        }
+    }
+
+    scheduleNextFrame() {
+        let self = this;
+        requestAnimationFrame(function () {
+            self.draw();
+        });
+    }
     addObjectsToMap(objects) {
         objects.forEach(o => {
             this.addToMap(o);
