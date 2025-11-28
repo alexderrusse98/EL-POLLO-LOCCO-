@@ -8,6 +8,10 @@ class Character extends MovableObject {
     isThrowingBottle = false;
     isDeadAnimationOn = false;
 
+
+    lastThrowTime = 0;
+    throwCooldown = 500;
+
     intervals = [];
 
     lastMoveTime = new Date().getTime();
@@ -166,13 +170,20 @@ class Character extends MovableObject {
     }
 
 
-    handleThrow() {
-        if (this.world.keyboard.D && this.bottleCount > 0) {
-            this.isThrowingBottle = true;
-            return true;
-        }
-        return false;
+   handleThrow() {
+    const now = new Date().getTime();
+    const timeSinceLastThrow = now - this.lastThrowTime;
+    
+    if (this.world.keyboard.D && 
+        this.bottleCount > 0 && 
+        timeSinceLastThrow >= this.throwCooldown) {
+        
+        this.isThrowingBottle = true;
+        this.lastThrowTime = now; 
+        return true;
     }
+    return false;
+}
 
 
     updateCamera() {

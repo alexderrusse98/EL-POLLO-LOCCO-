@@ -341,9 +341,10 @@ class World {
             }
         });
     }
+
     checkCoinCollisions() {
         this.level.coins.forEach((coin, index) => {
-            if (this.character.isColliding(coin) && this.statusBarCoins < 100) {
+            if (this.character.isColliding(coin) && this.statusBarCoins.percentage < 100) {
                 this.audios.playSound('coinSound');
                 this.statusBarCoins.setPercentage(
                     Math.min(this.statusBarCoins.percentage + 20, 100)
