@@ -2,7 +2,7 @@ class World {
     audios;
 
     character = new Character();
-    endBoss = null;  // new Endboss();
+    endBoss = new Endboss();
 
     level;
     canvas;
@@ -36,7 +36,10 @@ class World {
         this.statusBarHealth = new StatusBar('health', 40, 0);
         this.statusBarCoins = new StatusBar('coin', 40, 60);
         this.statusBarBottles = new StatusBar('bottle', 40, 120);
-        this.statusBarBossHealth = new StatusBar('endbossHealth', 40, 180);
+
+
+        this.statusBarBossHealth = new StatusBar('endbossHealth', 480, 0);
+        this.statusBarBossHealth.visible = false;
 
         this.statusBarCoins.setPercentage(0);
         this.statusBarBottles.setPercentage(0);
@@ -55,10 +58,10 @@ class World {
 
     setWorld() {
         this.character.world = this;
-       /* this.endBoss.world = this;
+        this.endBoss.world = this;
         if (this.endBoss) {
             this.endBoss.world = this;
-        }*/
+        }
     }
 
     run() {
@@ -182,7 +185,8 @@ class World {
         this.statusBarCoins.setPercentage(0);
         this.statusBarBottles.setPercentage(0);
         this.statusBarBossHealth.setPercentage(100);
-
+        this.statusBarBossHealth.visible = false;
+        
         this.setWorld();
         this.run();
         this.audios.playBackgroundMusic();
@@ -205,6 +209,7 @@ class World {
             if (!this.endBoss.isAlerted && !this.endBoss.isAttackAnimation) {
                 this.audios.playSound('bossChickenStartSound');
                 this.endBoss.isAlerted = true;
+                this.statusBarBossHealth.visible = true;
             }
         }
         // Zone 3: Außerhalb (> 300px)
@@ -415,7 +420,9 @@ class World {
         this.addToMap(this.statusBarHealth);
         this.addToMap(this.statusBarCoins);
         this.addToMap(this.statusBarBottles);
-        this.addToMap(this.statusBarBossHealth);
+        if (this.statusBarBossHealth.visible) {
+            this.addToMap(this.statusBarBossHealth);
+        }
     }
 
     drawEndScreen() {

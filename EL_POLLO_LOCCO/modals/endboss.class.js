@@ -6,7 +6,7 @@ class Endboss extends MovableObject {
 
     isAttackAnimation = false;
 
-     intervals = [];
+    intervals = [];
 
     IMAGES_ALERT = [
         ' ./img/img_pollo_locco/img/4_enemie_boss_chicken/2_alert/G5.png',
@@ -56,7 +56,7 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_ATTACK);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
-        this.x = 400;
+        this.x = 2500;
         this.speed = 0.15 + Math.random() * 0.25;
         this.animate();
         this.movingRight = true;
@@ -73,9 +73,6 @@ class Endboss extends MovableObject {
     playAlertAnimation() {
         if (!this.isAlerted && !this.isAttackAnimation) {
             this.isAlerted = true;
-
-           // console.log('alert + attacke');
-
             this.attack();
 
         }
@@ -97,7 +94,7 @@ class Endboss extends MovableObject {
         this.moveRight();
         this.otherDirection = true;
 
-        if (this.x >= 1500) {
+        if (this.x >= 2700) {
             this.movingRight = false;
         }
     }
@@ -106,23 +103,23 @@ class Endboss extends MovableObject {
         this.moveLeft();
         this.otherDirection = false;
 
-        if (this.x <= 500) {
+        if (this.x <= 2000) {
             this.movingRight = true;
         }
     }
 
     animate() {
-        
+
         this.intervals.push(
-        setInterval(() => {
-            this.handleMovement();
-        }, 1000 / 60)
+            setInterval(() => {
+                this.handleMovement();
+            }, 1000 / 60)
         );
 
         this.intervals.push(
-        setInterval(() => {
-            this.animateCharacter();
-        }, 100)
+            setInterval(() => {
+                this.animateCharacter();
+            }, 100)
         );
     }
 
@@ -195,30 +192,20 @@ class Endboss extends MovableObject {
         }
     }
 
-    // attack   
     attack() {
         if (!this.isAttackAnimation) {
             this.isAttackAnimation = true;
             this.attackCounter++;
 
-           // console.log(`Attack #${this.attackCounter}`);
-
             setTimeout(() => {
                 if (!this.isDead) {
-                   // console.log("Springe jetzt!");
-
-
                     if (this.attackCounter % 3 === 0) {
-                       // console.log("GROSSER SPRUNG!");
                         this.bigAttack();
                     } else {
-                      //  console.log("Normaler Attack");
                         this.normalAttack();
                     }
-
                     setTimeout(() => {
                         this.isAttackAnimation = false;
-                      // console.log("Attack beendet");
                     }, 2000);
                 }
             }, 2000);
