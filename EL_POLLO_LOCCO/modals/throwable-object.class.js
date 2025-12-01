@@ -1,14 +1,20 @@
+/**
+ * Represents a throwable bottle object with rotation and splash animations.
+ * @extends MovableObject
+ */
 class ThrowableObject extends MovableObject {
 
+    /** @type {number[]} Array of active interval IDs for cleanup */
     intervals = [];
 
-
+    /** @type {string[]} Bottle rotation animation images */
     IMAGES_ROTATION = [
         './img/img_pollo_locco/img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png',
         './img/img_pollo_locco/img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png',
         './img/img_pollo_locco/img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png',
     ];
 
+    /** @type {string[]} Bottle splash animation images */
     IMAGES_SPLASH = [
         './img/img_pollo_locco/img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png',
         './img/img_pollo_locco/img/6_salsa_bottle/bottle_rotation/bottle_splash/2_bottle_splash.png',
@@ -18,6 +24,12 @@ class ThrowableObject extends MovableObject {
         './img/img_pollo_locco/img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png'
     ];
 
+    /**
+     * Creates a ThrowableObject instance at the specified position.
+     * Automatically initiates the throw animation.
+     * @param {number} x - The x-coordinate position of the bottle.
+     * @param {number} y - The y-coordinate position of the bottle.
+     */
     constructor(x, y) {
         super();
         this.loadImage('./img/img_pollo_locco/img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png');
@@ -31,11 +43,18 @@ class ThrowableObject extends MovableObject {
         this.throw();
     }
 
+    /**
+     * Stops and clears all active intervals.
+     */
     stopAllIntervals() {
         this.intervals.forEach(clearInterval);
         this.intervals = [];
     }
 
+    /**
+     * Initiates the throw action with upward velocity and horizontal movement.
+     * Applies gravity and starts animation intervals.
+     */
     throw() {
         this.speedY = 30;
         this.applyGravity();
@@ -50,6 +69,9 @@ class ThrowableObject extends MovableObject {
         this.animate();
     }
 
+    /**
+     * Starts the rotation animation while the bottle is in flight.
+     */
     animate() {
         this.intervals.push(
             setInterval(() => {
@@ -60,6 +82,10 @@ class ThrowableObject extends MovableObject {
         );
     }
 
+    /**
+     * Plays the splash animation when the bottle hits the ground.
+     * Stops all movement and marks the object for deletion after animation completes.
+     */
     animateSplash() {
         this.speedY = 0;
         this.acceleration = 0;
