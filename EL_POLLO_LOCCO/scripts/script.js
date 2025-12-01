@@ -88,17 +88,13 @@ function detectTouchDevice() {
   );
 
   const isSmallScreen = window.innerWidth <= 1000;
-
-  // Gibt nur zurück ob Touch-Device, zeigt aber nichts an
   return isTouchDevice && isSmallScreen;
 }
 
 function autoFullscreenForMobile() {
   if (window.innerWidth <= 1000) {
-    // Fullscreen Button verstecken
     document.getElementById('fullscreenBtn').style.display = 'none';
 
-    // Automatisch in Fullscreen gehen wenn Spiel startet
     if (!document.fullscreenElement && !document.webkitFullscreenElement) {
       if (document.body.requestFullscreen) {
         document.body.requestFullscreen();
@@ -109,7 +105,6 @@ function autoFullscreenForMobile() {
       }
     }
   } else {
-    // Fullscreen Button wieder anzeigen auf großen Bildschirmen
     document.getElementById('fullscreenBtn').style.display = 'flex';
   }
 }

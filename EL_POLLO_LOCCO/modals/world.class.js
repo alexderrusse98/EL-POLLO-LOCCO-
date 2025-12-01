@@ -3,7 +3,7 @@ class World {
 
     character = new Character();
     endBoss = null;
-    bossSpawned = false; 
+    bossSpawned = false;
 
     level;
     canvas;
@@ -34,6 +34,12 @@ class World {
         this.keyboard = keyboard;
         this.audios = audioManager;
 
+        this.canvas.addEventListener('touchstart', () => {
+            if ((this.gameOver || this.gameWin) && window.innerWidth <= 1000) {
+                this.restartGame();
+            }
+        });
+
         this.statusBarHealth = new StatusBar('health', 40, 0);
         this.statusBarCoins = new StatusBar('coin', 40, 60);
         this.statusBarBottles = new StatusBar('bottle', 40, 120);
@@ -62,7 +68,7 @@ class World {
         }
     }
 
-   
+
     spawnEndboss() {
         if (!this.bossSpawned) {
             console.log('⚠️ Spawning Endboss...');
@@ -150,8 +156,12 @@ class World {
         this.ctx.lineWidth = 3;
         this.ctx.textAlign = 'center';
 
-        this.ctx.strokeText('Press R to restart', this.canvas.width / 2, this.canvas.height - 50);
-        this.ctx.fillText('Press R to restart', this.canvas.width / 2, this.canvas.height - 50);
+        const isMobile = window.innerWidth <= 1000;
+        const restartMessage = isMobile ? 'Tap screen to restart' : 'Press R to restart';
+
+        // Text mit Umrandung
+        this.ctx.strokeText(restartMessage, this.canvas.width / 2, this.canvas.height - 50);
+        this.ctx.fillText(restartMessage, this.canvas.width / 2, this.canvas.height - 50);
     }
 
     cleanup() {
@@ -226,11 +236,11 @@ class World {
     checkThrowObjects() {
         const now = new Date().getTime();
         const timeSinceLastThrow = now - (this.lastThrowTime || 0);
-        
-        if (this.keyboard.D && 
-            this.character.bottleCount > 0 && 
+
+        if (this.keyboard.D &&
+            this.character.bottleCount > 0 &&
             timeSinceLastThrow >= 500) {
-            
+
             let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
             this.throwAbleObjects.push(bottle);
             this.character.bottleCount--;
@@ -299,7 +309,7 @@ class World {
 
     checkAllEnemiesCollisions(allEnemies) {
         if (this.character.isColliding(allEnemies) &&
-            allEnemies.energy > 0 && 
+            allEnemies.energy > 0 &&
             !allEnemies.wasJumpKilled &&
             !this.character.isHurt()) {
 
