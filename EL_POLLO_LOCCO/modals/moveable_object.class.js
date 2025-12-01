@@ -143,21 +143,23 @@ class MovableObject extends DrawableObject {
    }
 
    /**
-    * Creates an interval for playing animation frames sequentially.
-    * @param {string[]} images - Array of image paths for the animation.
-    * @param {Function} [callback] - Optional callback function to execute after animation.
-    * @param {number} intervalTime - Time between frames in milliseconds.
-    * @returns {number} The interval ID.
-    */
+ * Creates an interval for playing animation frames sequentially.
+ * @param {string[]} images - Array of image paths for the animation.
+ * @param {Function} [callback] - Optional callback function to execute after animation.
+ * @param {number} intervalTime - Time between frames in milliseconds.
+ * @returns {number} The interval ID.
+ */
    createAnimationInterval(images, callback, intervalTime) {
       let i = 0;
-      return setInterval(() => {
+      const interval = setInterval(() => {
          this.updateAnimationFrame(images, i);
          i++;
          if (this.isAnimationComplete(i, images.length)) {
-            this.finishAnimation(callback);
+            clearInterval(interval);  // ✅ Interval direkt hier clearen
+            callback?.();
          }
       }, intervalTime);
+      return interval;
    }
 
    /**

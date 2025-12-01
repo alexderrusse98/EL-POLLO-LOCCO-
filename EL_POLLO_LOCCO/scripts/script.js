@@ -65,7 +65,7 @@ function startGame() {
 
 function backToMenu() {
   if (world) {
-    world.cleanup();
+    world.gameStateManager.cleanup();
     world = null;
   }
 

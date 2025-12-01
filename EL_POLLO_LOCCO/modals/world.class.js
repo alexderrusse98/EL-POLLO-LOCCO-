@@ -1,66 +1,151 @@
+/**
+ * Main game world class that coordinates all game systems.
+ */
 class World {
+    /** @type {AudioManager} Audio manager instance */
     audios;
 
+    /** @type {Character} Player character */
     character = new Character();
+
+    /** @type {Endboss} End boss enemy */
     endBoss = null;
+
+    /** @type {boolean} Whether boss has been spawned */
     bossSpawned = false;
 
+    /** @type {Level} Current game level */
     level;
+
+    /** @type {HTMLCanvasElement} Canvas element */
     canvas;
+
+    /** @type {CanvasRenderingContext2D} Canvas context */
     ctx;
+
+    /** @type {Keyboard} Keyboard input handler */
     keyboard;
+
+    /** @type {number} Camera x position */
     camera_x = 0;
 
+    /** @type {StatusBar} Health status bar */
     statusBarHealth;
+
+    /** @type {StatusBar} Coins status bar */
     statusBarCoins;
+
+    /** @type {StatusBar} Bottles status bar */
     statusBarBottles;
+
+    /** @type {StatusBar} Boss health status bar */
     statusBarBossHealth;
 
+    /** @type {number[]} Array of active interval IDs */
     intervals = [];
+
+    /** @type {Array} Array of thrown bottle objects */
     throwAbleObjects = [];
+
+    /** @type {number} Number of collected coins */
     coins = 0;
+
+    /** @type {number} Number of collected bottles */
     bottles = 0;
 
-    gameOver = false;
-    gameWin = false;
-    gameOverTriggered = false;
-    gameWinTriggered = false;
-    winImage;
-    gameOverImage;
+    /** @type {number} Timestamp of last throw action */
+    lastThrowTime = 0;
 
+    /**
+     * Creates a World instance and initializes all game systems.
+     * @param {HTMLCanvasElement} canvas - Canvas element for rendering.
+     * @param {Keyboard} keyboard - Keyboard input handler.
+     * @param {AudioManager} audioManager - Audio manager instance.
+     */
     constructor(canvas, keyboard, audioManager) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.audios = audioManager;
 
-        this.canvas.addEventListener('touchstart', () => {
-            if ((this.gameOver || this.gameWin) && window.innerWidth <= 1000) {
-                this.restartGame();
-            }
-        });
+        this.initializeManagers();
+        this.initializeStatusBars();
+        this.initializeTouchControls();
+        this.startGame();
+    }
 
+    /**
+     * Initializes all manager instances.
+     */
+    initializeManagers() {
+        this.collisionManager = new CollisionManager(this);
+        this.gameStateManager = new GameStateManager(this);
+        this.renderer = new WorldRenderer(this);
+    }
+
+    /**
+     * Initializes all status bars.
+     */
+    initializeStatusBars() {
         this.statusBarHealth = new StatusBar('health', 40, 0);
         this.statusBarCoins = new StatusBar('coin', 40, 60);
         this.statusBarBottles = new StatusBar('bottle', 40, 120);
-
         this.statusBarBossHealth = new StatusBar('endbossHealth', 480, 0);
-        this.statusBarBossHealth.visible = false;
 
+        this.statusBarBossHealth.visible = false;
         this.statusBarCoins.setPercentage(0);
         this.statusBarBottles.setPercentage(0);
+    }
+
+    /**
+     * Cleans up game resources (delegates to GameStateManager).
+     */
+    cleanup() {
+        this.gameStateManager.cleanup();
+    }
+
+    /**
+     * Restarts the game (delegates to GameStateManager).
+     */
+    restartGame() {
+        this.gameStateManager.restartGame();
+    }
+
+    /**
+     * Initializes touch controls for mobile devices.
+     */
+    initializeTouchControls() {
+        this.canvas.addEventListener('touchstart', () => {
+            if (this.isMobileRestartCondition()) {
+                this.gameStateManager.restartGame();
+            }
+        });
+    }
+
+    /**
+     * Checks if mobile restart condition is met.
+     * @returns {boolean} True if should restart on mobile.
+     */
+    isMobileRestartCondition() {
+        return (this.gameStateManager.gameOver ||
+            this.gameStateManager.gameWin) &&
+            window.innerWidth <= 1000;
+    }
+
+    /**
+     * Starts the game by initializing level and systems.
+     */
+    startGame() {
         this.level = level1;
-        this.draw();
         this.setWorld();
         this.run();
         this.audios.playBackgroundMusic();
-
-        this.gameOverImage = new Image();
-        this.gameOverImage.src = './img/img_pollo_locco/img/You won, you lost/Game Over.png';
-        this.winImage = new Image();
-        this.winImage.src = './img/img_pollo_locco/img/You won, you lost/You Win A.png';
+        this.renderer.draw();
     }
 
+    /**
+     * Sets world reference in character and boss.
+     */
     setWorld() {
         this.character.world = this;
         if (this.endBoss) {
@@ -68,7 +153,9 @@ class World {
         }
     }
 
-
+    /**
+     * Spawns the endboss if not already spawned.
+     */
     spawnEndboss() {
         if (!this.bossSpawned) {
             console.log('⚠️ Spawning Endboss...');
@@ -78,18 +165,24 @@ class World {
         }
     }
 
+    /**
+     * Checks if endboss should spawn based on character position.
+     */
     checkEndBossSpawn() {
         if (this.character.x >= 2000 && !this.bossSpawned) {
             this.spawnEndboss();
         }
     }
 
+    /**
+     * Starts the main game loop intervals.
+     */
     run() {
         this.intervals.push(
             setInterval(() => {
                 this.checkEndBossSpawn();
                 this.checkEndBossAlert();
-                this.checkGameOver();
+                this.gameStateManager.checkGameOver();
             }, 200)
         );
 
@@ -100,6 +193,9 @@ class World {
         );
     }
 
+    /**
+     * Stops all game intervals and clears them.
+     */
     stopGame() {
         this.intervals.forEach(clearInterval);
         this.intervals = [];
@@ -115,389 +211,96 @@ class World {
         });
     }
 
-    checkGameOver() {
-        if (this.character.isDead() && !this.gameOver) {
-            this.gameOverTriggered = true;
-            this.audios.playSound('characterDeadSound');
-            clearInterval(this.intervals[0]);
-            setTimeout(() => {
-                this.gameOver = true;
-                this.audios.stopBackgroundMusic();
-                this.audios.playSound('gameOverSound');
-                this.stopGame();
-            }, 2000);
-
-        } else if (this.endBoss && this.endBoss.energy <= 0 && !this.gameWin) {
-            this.gameWinTriggered = true;
-            clearInterval(this.intervals[0]);
-            setTimeout(() => {
-                this.gameWin = true;
-                this.audios.stopBackgroundMusic();
-                this.audios.playSound('winSound');
-                this.stopGame();
-            }, 2000);
-        }
-    }
-
-   showEndImg() {
-    const imgToShow = this.gameOver ? this.gameOverImage : this.winImage;
-    const scaleFactor = 0.6; 
-    const imgWidth = this.canvas.width * scaleFactor;
-    const imgHeight = this.canvas.height * scaleFactor;
-
-   
-    const offsetY = -40;
-    const imgX = (this.canvas.width - imgWidth) / 2;
-    const imgY = (this.canvas.height - imgHeight) / 2 + offsetY;
-
-
-    this.ctx.drawImage(imgToShow, imgX, imgY, imgWidth, imgHeight);
-
- 
-    this.ctx.font = 'bold 30px Arial';
-    this.ctx.fillStyle = 'white';
-    this.ctx.strokeStyle = 'black';
-    this.ctx.lineWidth = 3;
-    this.ctx.textAlign = 'center';
-
-    const isMobile = window.innerWidth <= 1000;
-    const restartMessage = isMobile ? 'Tap screen to restart' : 'Press R to restart';
-
-    const textY = imgY + imgHeight + 50;
-
-    this.ctx.strokeText(restartMessage, this.canvas.width / 2, textY);
-    this.ctx.fillText(restartMessage, this.canvas.width / 2, textY);
-}
-
-
-    cleanup() {
-        this.stopGame();
-        if (this.animationFrameId) {
-            cancelAnimationFrame(this.animationFrameId);
-            this.animationFrameId = null;
-        }
-        this.audios.stopBackgroundMusic();
-        this.audios.stopAllSounds();
-        this.throwAbleObjects = [];
-        this.level.enemies = [];
-        this.level.coins = [];
-        this.level.bottles = [];
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-
-    restartGame() {
-        this.cleanup();
-
-        this.gameOver = false;
-        this.gameWin = false;
-        this.gameOverTriggered = false;
-        this.gameWinTriggered = false;
-        this.camera_x = 0;
-        this.bossSpawned = false;
-
-        this.level = createLevel1();
-
-        this.character = new Character();
-        this.character.x = 120;
-
-        this.endBoss = null;
-        this.throwAbleObjects = [];
-
-        this.statusBarHealth.setPercentage(100);
-        this.statusBarCoins.setPercentage(0);
-        this.statusBarBottles.setPercentage(0);
-        this.statusBarBossHealth.setPercentage(100);
-        this.statusBarBossHealth.visible = false;
-
-        this.setWorld();
-        this.run();
-        this.audios.playBackgroundMusic();
-        this.draw();
-    }
-
+    /**
+     * Checks endboss alert state based on distance to character.
+     */
     checkEndBossAlert() {
         if (!this.endBoss || this.endBoss.energy <= 0) return;
 
         const distance = Math.abs(this.character.x - this.endBoss.x);
 
         if (distance < 150) {
-            if (!this.endBoss.isAttackAnimation && this.endBoss.isAlerted) {
-                this.endBoss.attack();
-            }
-        }
-        else if (distance < 300) {
-            if (!this.endBoss.isAlerted && !this.endBoss.isAttackAnimation) {
-                this.audios.playSound('bossChickenStartSound');
-                this.endBoss.isAlerted = true;
-                this.statusBarBossHealth.visible = true;
-            }
-        }
-        else {
-            if (this.endBoss.isAlerted && !this.endBoss.isAttackAnimation) {
-                this.endBoss.isAlerted = false;
-            }
+            this.handleCloseRange();
+        } else if (distance < 300) {
+            this.handleMediumRange();
+        } else {
+            this.handleFarRange();
         }
     }
 
+    /**
+     * Handles boss behavior when character is very close.
+     */
+    handleCloseRange() {
+        if (!this.endBoss.isAttackAnimation && this.endBoss.isAlerted) {
+            this.endBoss.attack();
+        }
+    }
+
+    /**
+     * Handles boss behavior when character is at medium distance.
+     */
+    handleMediumRange() {
+        if (!this.endBoss.isAlerted && !this.endBoss.isAttackAnimation) {
+            this.audios.playSound('bossChickenStartSound');
+            this.endBoss.isAlerted = true;
+            this.statusBarBossHealth.visible = true;
+        }
+    }
+
+    /**
+     * Handles boss behavior when character is far away.
+     */
+    handleFarRange() {
+        if (this.endBoss.isAlerted && !this.endBoss.isAttackAnimation) {
+            this.endBoss.isAlerted = false;
+        }
+    }
+
+    /**
+     * Checks if character should throw a bottle.
+     */
     checkThrowObjects() {
         const now = new Date().getTime();
-        const timeSinceLastThrow = now - (this.lastThrowTime || 0);
+        const timeSinceLastThrow = now - this.lastThrowTime;
 
-        if (this.keyboard.D &&
+        if (this.canThrowBottle(timeSinceLastThrow)) {
+            this.throwBottle();
+        }
+    }
+
+    /**
+     * Checks if character can throw a bottle.
+     * @param {number} timeSinceLastThrow - Time since last throw in ms.
+     * @returns {boolean} True if can throw.
+     */
+    canThrowBottle(timeSinceLastThrow) {
+        return this.keyboard.D &&
             this.character.bottleCount > 0 &&
-            timeSinceLastThrow >= 500) {
-
-            let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
-            this.throwAbleObjects.push(bottle);
-            this.character.bottleCount--;
-            this.audios.playSound('throw');
-            this.statusBarBottles.setPercentage(
-                Math.max(this.statusBarBottles.percentage - 20, 0)
-            );
-            this.lastThrowTime = now;
-        }
+            timeSinceLastThrow >= 500;
     }
 
-    checkCollisions() {
-        this.checkJumpOnEnemyCollisions();
-        this.checkEnemyCollisions();
-        this.checkBottleEnemyCollisions();
-        this.checkBottleEndBossCollisions();
-        this.checkCoinCollisions();
-        this.checkBottleCollisions();
+    /**
+     * Throws a bottle and updates game state.
+     */
+    throwBottle() {
+        const bottle = new ThrowableObject(
+            this.character.x + 100,
+            this.character.y + 100
+        );
+        this.throwAbleObjects.push(bottle);
+        this.character.bottleCount--;
+        this.audios.playSound('throw');
+        this.statusBarBottles.setPercentage(
+            Math.max(this.statusBarBottles.percentage - 20, 0)
+        );
+        this.lastThrowTime = new Date().getTime();
     }
 
-    checkBottleEnemyCollisions() {
-        this.throwAbleObjects.forEach((bottle) => {
-            if (!bottle.hasSplashed) {
-                this.level.enemies.forEach((enemy) => {
-                    if (!enemy.isDead && bottle.isColliding(enemy)) {
-                        enemy.deadChicken();
-                        bottle.hasSplashed = true;
-                        bottle.animateSplash();
-                        this.audios.playSound('chickenDeadSound');
-                    }
-                });
-            }
-        });
-    }
-
-    checkJumpOnEnemyCollisions() {
-        this.level.enemies.forEach((enemy) => {
-            if (enemy.isDead) return;
-            const currentBottom = this.character.y + this.character.height;
-            const prevBottom = this.character.previousBottom ?? currentBottom;
-
-            if (this.character.speedY < 0) {
-                const crossedTop = (prevBottom <= enemy.y + 5) && (currentBottom >= enemy.y);
-                const horizOverlap = this.character.getHitbox().x < enemy.getHitbox().x + enemy.getHitbox().width &&
-                    this.character.getHitbox().x + this.character.getHitbox().width > enemy.getHitbox().x;
-
-                if (crossedTop && horizOverlap) {
-                    const wasKilled = this.character.checkJumpOnEnemy(enemy);
-                    if (wasKilled) {
-                        enemy.wasJumpKilled = true;
-                        this.audios.playSound('chickenDeadSound');
-                    }
-                }
-            }
-        });
-    }
-
-    checkEnemyCollisions() {
-        this.level.enemies.forEach((enemy) => {
-            this.checkAllEnemiesCollisions(enemy);
-        });
-        if (this.endBoss) {
-            this.checkAllEnemiesCollisions(this.endBoss);
-        }
-    }
-
-    checkAllEnemiesCollisions(allEnemies) {
-        if (this.character.isColliding(allEnemies) &&
-            allEnemies.energy > 0 &&
-            !allEnemies.wasJumpKilled &&
-            !this.character.isHurt()) {
-
-            const playerBottom = this.character.y + this.character.height;
-            const allEnemiesTop = allEnemies.y;
-            const isJumpingOnallEnemies = playerBottom >= allEnemiesTop &&
-                playerBottom <= allEnemiesTop + 40 &&
-                this.character.speedY < 0;
-
-            if (!isJumpingOnallEnemies) {
-                this.character.hit();
-                this.statusBarHealth.setPercentage(this.character.energy);
-            }
-        }
-    }
-
-    checkBottleEndBossCollisions() {
-        this.throwAbleObjects.forEach((bottle) => {
-            if (!bottle.hasSplashed && this.endBoss) {
-
-                if (this.endBoss.energy > 0 && bottle.isColliding(this.endBoss)) {
-                    this.endBoss.hit();
-                    this.statusBarBossHealth.setPercentage(this.endBoss.energy);
-                    bottle.hasSplashed = true;
-                    bottle.animateSplash();
-                    this.audios.playSound('bossChickenHurtSound');
-
-                    if (this.endBoss.energy <= 0) {
-                        this.endBoss.deadChicken();
-                        this.audios.playSound('chickenDeadSound');
-                    }
-                }
-            }
-        });
-    }
-
-    checkCoinCollisions() {
-        this.level.coins.forEach((coin, index) => {
-            if (this.character.isColliding(coin) && this.statusBarCoins.percentage < 100) {
-                this.audios.playSound('coinSound');
-                this.statusBarCoins.setPercentage(
-                    Math.min(this.statusBarCoins.percentage + 20, 100)
-                );
-                this.level.coins.splice(index, 1);
-            }
-        });
-    }
-
-    checkBottleCollisions() {
-        this.level.bottles.forEach((bottle, index) => {
-            if (this.character.isColliding(bottle) && this.statusBarBottles.percentage < 100) {
-                this.audios.playSound('takeBottleSound');
-                this.character.bottleCount++;
-                this.statusBarBottles.setPercentage(
-                    Math.min(this.statusBarBottles.percentage + 20, 100)
-                );
-                this.level.bottles.splice(index, 1);
-            }
-        });
-    }
-
+    /**
+     * Main draw method delegated to renderer.
+     */
     draw() {
-        if (this.handleRestart()) return;
-
-        this.checkCollisions();
-
-        this.clearCanvas();
-        this.drawGameWorld();
-        this.drawEndScreen();
-        this.scheduleNextFrame();
-    }
-
-    handleRestart() {
-        if ((this.gameOver || this.gameWin) && this.keyboard.R) {
-            this.restartGame();
-            return true;
-        }
-        return false;
-    }
-
-    clearCanvas() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-
-    drawGameWorld() {
-        this.drawBackground();
-        this.drawCharacterAndEnemies();
-        this.drawCollectables();
-        this.drawStatusBars();
-    }
-
-    drawBackground() {
-        this.ctx.translate(this.camera_x, 0);
-        this.addObjectsToMap(this.level.backgroundObjects);
-        this.ctx.translate(-this.camera_x, 0);
-    }
-
-    drawCharacterAndEnemies() {
-        this.ctx.translate(this.camera_x, 0);
-
-        this.addToMap(this.character);
-        this.addObjectsToMap(this.level.cloud);
-
-        this.drawEnemies();
-        this.drawEndboss();
-    }
-
-    drawEnemies() {
-        this.level.enemies = this.level.enemies.filter(enemy => !enemy.markForDeletion);
-        this.addObjectsToMap(this.level.enemies);
-    }
-
-    drawEndboss() {
-        if (this.endBoss && !this.endBoss.markForDeletion) {
-            this.addToMap(this.endBoss);
-        } else if (this.endBoss && this.endBoss.markForDeletion) {
-            this.endBoss = null;
-        }
-    }
-
-    drawCollectables() {
-        this.throwAbleObjects = this.throwAbleObjects.filter(bottle => !bottle.markForDeletion);
-        this.addObjectsToMap(this.throwAbleObjects);
-        this.addObjectsToMap(this.level.coins);
-        this.addObjectsToMap(this.level.bottles);
-
-        this.ctx.translate(-this.camera_x, 0);
-    }
-
-    drawStatusBars() {
-        this.addToMap(this.statusBarHealth);
-        this.addToMap(this.statusBarCoins);
-        this.addToMap(this.statusBarBottles);
-        if (this.statusBarBossHealth.visible) {
-            this.addToMap(this.statusBarBossHealth);
-        }
-    }
-
-    drawEndScreen() {
-        if (this.gameOver || this.gameWin) {
-            this.ctx.save();
-            this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-            this.showEndImg();
-            this.ctx.restore();
-        }
-    }
-
-    scheduleNextFrame() {
-        let self = this;
-        requestAnimationFrame(function () {
-            self.draw();
-        });
-    }
-
-    addObjectsToMap(objects) {
-        objects.forEach(o => {
-            this.addToMap(o);
-        });
-    }
-
-    addToMap(mo) {
-        if (mo.otherDirection) {
-            this.flippImage(mo);
-        }
-
-        mo.draw(this.ctx);
-        mo.drawFrame?.(this.ctx);
-
-        if (mo.otherDirection) {
-            this.flippImageBack(mo);
-        }
-    }
-
-    flippImage(mo) {
-        this.ctx.save();
-        this.ctx.translate(mo.width, 0);
-        this.ctx.scale(-1, 1);
-        mo.x = mo.x * -1;
-    }
-
-    flippImageBack(mo) {
-        mo.x = mo.x * -1;
-        this.ctx.restore();
+        this.renderer.draw();
     }
 }
