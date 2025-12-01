@@ -59,14 +59,6 @@ class DrawableObject {
      * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
      */
     drawFrame(ctx) {
-        if (this instanceof Character || this instanceof ChickenBase) {
-            const hb = this.getHitbox();
-
-            ctx.beginPath();
-            ctx.lineWidth = '3';
-            ctx.strokeStyle = 'red';
-            ctx.rect(hb.x, hb.y, hb.width, hb.height);
-            ctx.stroke();
-        }
+        // debug
     }
 }

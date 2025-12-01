@@ -158,7 +158,6 @@ class World {
      */
     spawnEndboss() {
         if (!this.bossSpawned) {
-            console.log('⚠️ Spawning Endboss...');
             this.endBoss = new Endboss();
             this.endBoss.world = this;
             this.bossSpawned = true;
