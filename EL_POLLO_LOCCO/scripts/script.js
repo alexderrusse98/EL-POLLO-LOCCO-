@@ -66,6 +66,10 @@ function backToMenu() {
   document.getElementById('startScreen').classList.remove('hidden');
   document.getElementById('startContent').classList.remove('hidden');
   document.getElementById('characterInfoBtn').classList.remove('hidden');
+
+  if (!audios.isMuted) {
+    audios.playBackgroundMusic();
+  }
 }
 
 window.addEventListener('resize', () => {
@@ -115,7 +119,7 @@ function setupTouchControls() {
   const jumpBtn = document.querySelector('.control-btn.jump');
   const throwBtn = document.querySelector('.control-btn.throw');
 
- 
+
   leftBtn.addEventListener('touchstart', (e) => {
     e.preventDefault();
     keyboard.LEFT = true;
