@@ -133,13 +133,11 @@ body:-webkit-full-screen {
     height: 70px;
 }
 
-/* Hover-Effekt für alle */
 .menu-btn:hover {
     background-color: #ff8c42;
     transform: scale(1.1);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
 }
-
 
 .btn-start,
 .btn-controlls,
@@ -172,6 +170,9 @@ body:-webkit-full-screen {
     display: none !important;
 }
 
+/* ============================================
+   CONTROLS OVERLAY
+   ============================================ */
 .controll-section {
     position: absolute;
     width: 100%;
@@ -181,6 +182,9 @@ body:-webkit-full-screen {
     justify-content: center;
     align-items: center;
     z-index: 1002;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .controls-box {
@@ -188,12 +192,13 @@ body:-webkit-full-screen {
     padding: 40px 60px;
     border-radius: 20px;
     max-width: 600px;
-    max-height: 80vh;
+    width: 100%;
+    max-height: 90vh;
     border: 4px solid #ff6b35;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     text-align: center;
     overflow-y: auto;
-    margin: 50px;
+    box-sizing: border-box;
 }
 
 .controls-box h2 {
@@ -248,7 +253,7 @@ body:-webkit-full-screen {
     transform: scale(1.05);
 }
 
-/* Scrollbar */
+/* Scrollbar für Controls */
 .controls-box::-webkit-scrollbar {
     width: 12px;
 }
@@ -268,14 +273,9 @@ body:-webkit-full-screen {
     background: #ff8c42;
 }
 
-canvas {
-    background-color: black;
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* Character Story Overlay */
+/* ============================================
+   CHARACTER STORY OVERLAY
+   ============================================ */
 .character-story-section {
     position: absolute;
     width: 100%;
@@ -285,6 +285,9 @@ canvas {
     justify-content: center;
     align-items: center;
     z-index: 1002;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .story-box {
@@ -295,7 +298,10 @@ canvas {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     text-align: center;
     max-width: 500px;
-    margin: 50px;
+    width: 100%;
+    max-height: 90vh;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .story-box h2 {
@@ -313,7 +319,114 @@ canvas {
     text-align: left;
 }
 
-/* Mobile Touch Controls */
+.story-box::-webkit-scrollbar {
+    width: 12px;
+}
+
+.story-box::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 10px;
+}
+
+.story-box::-webkit-scrollbar-thumb {
+    background: #ff6b35;
+    border-radius: 10px;
+    border: 2px solid #2c2c2c;
+}
+
+.story-box::-webkit-scrollbar-thumb:hover {
+    background: #ff8c42;
+}
+
+/* ============================================
+   IMPRESSUM OVERLAY
+   ============================================ */
+.impressum-section {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1002;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.impressum-box {
+    background-color: #2c2c2c;
+    padding: 40px 50px;
+    border-radius: 20px;
+    border: 4px solid #ff6b35;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.impressum-box h2 {
+    color: #ff6b35;
+    font-size: 36px;
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.impressum-text {
+    color: white;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.impressum-text h3 {
+    color: #ff6b35;
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.impressum-text p {
+    margin: 8px 0;
+}
+
+.impressum-box::-webkit-scrollbar {
+    width: 12px;
+}
+
+.impressum-box::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 10px;
+}
+
+.impressum-box::-webkit-scrollbar-thumb {
+    background: #ff6b35;
+    border-radius: 10px;
+    border: 2px solid #2c2c2c;
+}
+
+.impressum-box::-webkit-scrollbar-thumb:hover {
+    background: #ff8c42;
+}
+
+/* ============================================
+   CANVAS
+   ============================================ */
+canvas {
+    background-color: black;
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ============================================
+   MOBILE TOUCH CONTROLS
+   ============================================ */
 .mobile-controls {
     display: none;
     position: fixed;
@@ -328,7 +441,7 @@ canvas {
     pointer-events: none;
 }
 
-.mobile-controls>* {
+.mobile-controls > * {
     pointer-events: all;
 }
 
@@ -371,77 +484,9 @@ canvas {
     font-size: 12px;
 }
 
-/* Impressum Overlay */
-.impressum-section {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1002;
-}
-
-.impressum-box {
-    background-color: #2c2c2c;
-    padding: 40px 50px;
-    border-radius: 20px;
-    border: 4px solid #ff6b35;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    text-align: center;
-    max-width: 600px;
-    max-height: 80vh;
-    margin: 50px;
-    overflow-y: auto;
-}
-
-.impressum-box h2 {
-    color: #ff6b35;
-    font-size: 36px;
-    margin-bottom: 25px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.impressum-text {
-    color: white;
-    font-size: 16px;
-    line-height: 1.8;
-    margin-bottom: 30px;
-    text-align: left;
-}
-
-.impressum-text h3 {
-    color: #ff6b35;
-    font-size: 20px;
-    margin-top: 20px;
-    margin-bottom: 10px;
-}
-
-.impressum-text p {
-    margin: 8px 0;
-}
-
-/* Scrollbar für Impressum */
-.impressum-box::-webkit-scrollbar {
-    width: 12px;
-}
-
-.impressum-box::-webkit-scrollbar-track {
-    background: #1a1a1a;
-    border-radius: 10px;
-}
-
-.impressum-box::-webkit-scrollbar-thumb {
-    background: #ff6b35;
-    border-radius: 10px;
-    border: 2px solid #2c2c2c;
-}
-
-.impressum-box::-webkit-scrollbar-thumb:hover {
-    background: #ff8c42;
-}
-
+/* ============================================
+   RESPONSIVE: 1920px+
+   ============================================ */
 @media (min-width: 1921px) {
     body {
         max-width: 1920px;
@@ -455,6 +500,9 @@ canvas {
     }
 }
 
+/* ============================================
+   RESPONSIVE: bis 1920px
+   ============================================ */
 @media (max-width: 1920px) {
     .game-btns {
         right: 20px;
@@ -463,7 +511,9 @@ canvas {
     }
 }
 
-/* Tablets (768px - 1024px) */
+/* ============================================
+   RESPONSIVE: TABLETS (bis 1024px)
+   ============================================ */
 @media (max-width: 1024px) {
     h1 {
         font-size: 36px;
@@ -483,8 +533,49 @@ canvas {
     .mobile-controls:not(.hidden) {
         display: flex;
     }
+
+    /* Overlays */
+    .controls-box,
+    .story-box,
+    .impressum-box {
+        padding: 30px 40px;
+        max-width: 90%;
+        border: 3px solid #ff6b35;
+    }
+
+    .controls-box h2,
+    .story-box h2,
+    .impressum-box h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+
+    .controls-list li {
+        font-size: 20px;
+        margin: 12px 0;
+    }
+
+    .key {
+        padding: 8px 16px;
+        min-width: 70px;
+        font-size: 16px;
+    }
+
+    .story-text,
+    .impressum-text {
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+    .btn-close {
+        padding: 12px 40px;
+        font-size: 20px;
+    }
 }
 
+/* ============================================
+   RESPONSIVE: bis 768px
+   ============================================ */
 @media (max-width: 768px) {
     canvas {
         width: 100vw;
@@ -524,53 +615,69 @@ canvas {
         font-size: 42px;
     }
 
+    /* Overlays */
+    .controll-section,
+    .character-story-section,
+    .impressum-section {
+        padding: 15px;
+    }
+
     .controls-box,
-    .story-box {
-        padding: 20px 30px;
-        margin: 20px;
+    .story-box,
+    .impressum-box {
+        padding: 25px 20px;
+        max-width: 95%;
+        max-height: 85vh;
+        border-radius: 15px;
+        border: 3px solid #ff6b35;
     }
 
     .controls-box h2,
-    .story-box h2 {
+    .story-box h2,
+    .impressum-box h2 {
         font-size: 28px;
+        margin-bottom: 15px;
     }
 
     .controls-list li {
         font-size: 18px;
+        margin: 10px 0;
+        flex-direction: column;
+        gap: 8px;
     }
 
-    .impressum-box {
-        padding: 20px 30px;
-        margin: 20px;
+    .key {
+        padding: 8px 14px;
+        min-width: 60px;
+        font-size: 14px;
     }
 
-    .impressum-box h2 {
-        font-size: 28px;
+    .story-text {
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 20px;
     }
 
     .impressum-text {
         font-size: 14px;
+        line-height: 1.6;
     }
-}
 
-@media (max-width: 1024px) and (orientation: portrait) {
-    body::after {
-        content: "Please rotate your device for better experience";
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.9);
-        color: white;
-        padding: 20px;
-        border-radius: 10px;
+    .impressum-text h3 {
         font-size: 18px;
-        text-align: center;
-        z-index: 9999;
+        margin-top: 15px;
+    }
+
+    .btn-close {
+        padding: 12px 35px;
+        font-size: 18px;
+        margin-top: 15px;
     }
 }
 
-/* Sehr kleine Handys (max 480px) */
+/* ============================================
+   RESPONSIVE: bis 480px
+   ============================================ */
 @media (max-width: 480px) {
     h1 {
         font-size: 24px;
@@ -611,5 +718,413 @@ canvas {
     .control-btn.jump,
     .control-btn.throw {
         font-size: 10px;
+    }
+
+    /* Overlays */
+    .controll-section,
+    .character-story-section,
+    .impressum-section {
+        padding: 10px;
+    }
+
+    .controls-box,
+    .story-box,
+    .impressum-box {
+        padding: 20px 15px;
+        max-width: 98%;
+        max-height: 80vh;
+        border-radius: 12px;
+        border: 2px solid #ff6b35;
+    }
+
+    .controls-box h2,
+    .story-box h2,
+    .impressum-box h2 {
+        font-size: 24px;
+        margin-bottom: 12px;
+    }
+
+    .controls-list {
+        margin: 20px 0;
+    }
+
+    .controls-list li {
+        font-size: 16px;
+        margin: 8px 0;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .key {
+        padding: 6px 12px;
+        min-width: 50px;
+        font-size: 13px;
+    }
+
+    .story-text {
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    .impressum-text {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .impressum-text h3 {
+        font-size: 16px;
+        margin-top: 12px;
+    }
+
+    .impressum-text p {
+        margin: 6px 0;
+    }
+
+    .btn-close {
+        padding: 10px 30px;
+        font-size: 16px;
+        margin-top: 12px;
+        width: 100%;
+        max-width: 200px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 360px
+   ============================================ */
+@media (max-width: 360px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    .start-content h1 {
+        font-size: 28px;
+        margin-bottom: 15px;
+    }
+
+    .menu-btn {
+        width: 130px;
+        height: 42px;
+        font-size: 13px;
+        padding: 12px 25px;
+    }
+
+    .game-btns {
+        gap: 6px;
+        top: 8px;
+        right: 8px;
+    }
+
+    .btn-audio,
+    .btn-fullscreen,
+    .btn-back-menu {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+
+    .mobile-controls {
+        width: 98%;
+        bottom: 8px;
+    }
+
+    .control-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 14px;
+    }
+
+    .control-btn.left,
+    .control-btn.right {
+        font-size: 18px;
+    }
+
+    .control-btn.jump,
+    .control-btn.throw {
+        font-size: 9px;
+    }
+
+    /* Overlays */
+    .controll-section,
+    .character-story-section,
+    .impressum-section {
+        padding: 8px;
+    }
+
+    .controls-box,
+    .story-box,
+    .impressum-box {
+        padding: 15px 12px;
+        max-width: 98%;
+        max-height: 78vh;
+        border-radius: 10px;
+    }
+
+    .controls-box h2,
+    .story-box h2,
+    .impressum-box h2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .controls-list {
+        margin: 15px 0;
+    }
+
+    .controls-list li {
+        font-size: 14px;
+        margin: 6px 0;
+    }
+
+    .key {
+        padding: 5px 10px;
+        min-width: 45px;
+        font-size: 12px;
+    }
+
+    .story-text {
+        font-size: 13px;
+        line-height: 1.5;
+        margin-bottom: 12px;
+    }
+
+    .impressum-text {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .impressum-text h3 {
+        font-size: 15px;
+        margin-top: 10px;
+    }
+
+    .btn-close {
+        padding: 8px 25px;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    .controls-box::-webkit-scrollbar,
+    .story-box::-webkit-scrollbar,
+    .impressum-box::-webkit-scrollbar {
+        width: 6px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 320px (Extra Klein)
+   ============================================ */
+@media (max-width: 320px) {
+    h1 {
+        font-size: 18px;
+    }
+
+    .start-content h1 {
+        font-size: 24px;
+        margin-bottom: 12px;
+    }
+
+    .start-content {
+        gap: 12px;
+    }
+
+    .menu-btn {
+        width: 120px;
+        height: 38px;
+        font-size: 12px;
+        padding: 10px 20px;
+        border: 2px solid #fff;
+    }
+
+    .game-btns {
+        gap: 5px;
+        top: 5px;
+        right: 5px;
+    }
+
+    .btn-audio,
+    .btn-fullscreen,
+    .btn-back-menu {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+        border: 1px solid #fff;
+    }
+
+    .mobile-controls {
+        width: 98%;
+        bottom: 5px;
+        padding: 0 10px;
+    }
+
+    .controls-left,
+    .controls-right {
+        gap: 8px;
+    }
+
+    .control-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 12px;
+        border: 2px solid #fff;
+    }
+
+    .control-btn.left,
+    .control-btn.right {
+        font-size: 16px;
+    }
+
+    .control-btn.jump,
+    .control-btn.throw {
+        font-size: 8px;
+    }
+
+    /* Overlays */
+    .controll-section,
+    .character-story-section,
+    .impressum-section {
+        padding: 5px;
+    }
+
+    .controls-box,
+    .story-box,
+    .impressum-box {
+        padding: 12px 10px;
+        max-width: 98%;
+        max-height: 75vh;
+        border-radius: 8px;
+        border: 2px solid #ff6b35;
+    }
+
+    .controls-box h2,
+    .story-box h2,
+    .impressum-box h2 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    .controls-list {
+        margin: 12px 0;
+    }
+
+    .controls-list li {
+        font-size: 13px;
+        margin: 5px 0;
+        gap: 5px;
+    }
+
+    .key {
+        padding: 4px 8px;
+        min-width: 40px;
+        font-size: 11px;
+    }
+
+    .story-text {
+        font-size: 12px;
+        line-height: 1.4;
+        margin-bottom: 10px;
+    }
+
+    .impressum-text {
+        font-size: 11px;
+        line-height: 1.4;
+    }
+
+    .impressum-text h3 {
+        font-size: 14px;
+        margin-top: 8px;
+        margin-bottom: 6px;
+    }
+
+    .impressum-text p {
+        margin: 5px 0;
+    }
+
+    .btn-close {
+        padding: 8px 20px;
+        font-size: 13px;
+        margin-top: 8px;
+        width: 100%;
+        max-width: 150px;
+        border: 2px solid #fff;
+    }
+
+    .controls-box::-webkit-scrollbar,
+    .story-box::-webkit-scrollbar,
+    .impressum-box::-webkit-scrollbar {
+        width: 5px;
+    }
+}
+
+/* ============================================
+   LANDSCAPE ORIENTATION für Mobile
+   ============================================ */
+@media (max-width: 768px) and (orientation: landscape) {
+    .controls-box,
+    .story-box,
+    .impressum-box {
+        max-height: 80vh;
+        padding: 15px 20px;
+    }
+
+    .controls-box h2,
+    .story-box h2,
+    .impressum-box h2 {
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+
+    .controls-list li {
+        font-size: 14px;
+        margin: 6px 0;
+    }
+
+    .story-text,
+    .impressum-text {
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+
+    .btn-close {
+        padding: 8px 25px;
+        font-size: 14px;
+        margin-top: 8px;
+    }
+}
+
+@media (max-width: 1024px) and (orientation: portrait) {
+    body::after {
+        content: "Please rotate your device for better experience";
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 18px;
+        text-align: center;
+        z-index: 9999;
+    }
+}
+
+/* ============================================
+   TOUCH-OPTIMIERUNG
+   ============================================ */
+@media (hover: none) and (pointer: coarse) {
+    .btn-close,
+    .menu-btn {
+        min-height: 44px;
+    }
+    
+    .controls-list li {
+        padding: 8px 0;
+    }
+
+    .control-btn {
+        min-width: 44px;
+        min-height: 44px;
     }
 }
