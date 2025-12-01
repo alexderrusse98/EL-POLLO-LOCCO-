@@ -47,6 +47,8 @@ function startGame() {
     setupTouchControls();
   }
 
+  autoFullscreenForMobile();
+
   level1 = createLevel1();
   init();
 }
@@ -68,6 +70,12 @@ function backToMenu() {
 
 window.addEventListener('resize', () => {
   detectTouchDevice();
+
+  if (window.innerWidth <= 1000) {
+    document.getElementById('fullscreenBtn').style.display = 'none';
+  } else {
+    document.getElementById('fullscreenBtn').style.display = 'flex';
+  }
 });
 
 // Touch
@@ -85,6 +93,26 @@ function detectTouchDevice() {
   return isTouchDevice && isSmallScreen;
 }
 
+function autoFullscreenForMobile() {
+  if (window.innerWidth <= 1000) {
+    // Fullscreen Button verstecken
+    document.getElementById('fullscreenBtn').style.display = 'none';
+
+    // Automatisch in Fullscreen gehen wenn Spiel startet
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      if (document.body.requestFullscreen) {
+        document.body.requestFullscreen();
+      } else if (document.body.webkitRequestFullscreen) {
+        document.body.webkitRequestFullscreen();
+      } else if (document.body.msRequestFullscreen) {
+        document.body.msRequestFullscreen();
+      }
+    }
+  } else {
+    // Fullscreen Button wieder anzeigen auf großen Bildschirmen
+    document.getElementById('fullscreenBtn').style.display = 'flex';
+  }
+}
 
 function setupTouchControls() {
   const leftBtn = document.querySelector('.control-btn.left');
