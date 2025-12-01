@@ -19,6 +19,10 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('characterInfoBtn').addEventListener('click', showCharacterStory);
   document.getElementById('closeStoryBtn').addEventListener('click', hideCharacterStory);
 
+  document.getElementById('impressumBtn').addEventListener('click', showImpressum);
+  document.getElementById('closeImpressumBtn').addEventListener('click', hideImpressum);
+
+
   document.getElementById('backToMenuBtn').addEventListener('click', backToMenu);
 
   document.getElementById('controllsSection').addEventListener('click', (e) => {
@@ -30,6 +34,12 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('characterStorySection').addEventListener('click', (e) => {
     if (e.target.id === 'characterStorySection') {
       hideCharacterStory();
+    }
+  });
+
+  document.getElementById('impressumSection').addEventListener('click', (e) => {
+    if (e.target.id === 'impressumSection') {
+      hideImpressum();
     }
   });
 
@@ -321,3 +331,16 @@ window.addEventListener('keyup', (e) => {
     keyboard.R = false;
   }
 });
+
+
+function showImpressum() {
+  document.getElementById('startContent').classList.add('hidden');
+  document.getElementById('characterInfoBtn').classList.add('hidden');
+  document.getElementById('impressumSection').classList.remove('hidden');
+}
+
+function hideImpressum() {
+  document.getElementById('impressumSection').classList.add('hidden');
+  document.getElementById('startContent').classList.remove('hidden');
+  document.getElementById('characterInfoBtn').classList.remove('hidden');
+}
