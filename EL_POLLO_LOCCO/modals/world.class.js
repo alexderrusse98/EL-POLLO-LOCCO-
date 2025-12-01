@@ -139,30 +139,36 @@ class World {
         }
     }
 
-    showEndImg() {
-        const imgToShow = this.gameOver ? this.gameOverImage : this.winImage;
+   showEndImg() {
+    const imgToShow = this.gameOver ? this.gameOverImage : this.winImage;
+    const scaleFactor = 0.6; 
+    const imgWidth = this.canvas.width * scaleFactor;
+    const imgHeight = this.canvas.height * scaleFactor;
 
-        this.ctx.drawImage(
-            imgToShow,
-            0,
-            0,
-            this.canvas.width,
-            this.canvas.height
-        );
+   
+    const offsetY = -40;
+    const imgX = (this.canvas.width - imgWidth) / 2;
+    const imgY = (this.canvas.height - imgHeight) / 2 + offsetY;
 
-        this.ctx.font = 'bold 30px Arial';
-        this.ctx.fillStyle = 'white';
-        this.ctx.strokeStyle = 'black';
-        this.ctx.lineWidth = 3;
-        this.ctx.textAlign = 'center';
 
-        const isMobile = window.innerWidth <= 1000;
-        const restartMessage = isMobile ? 'Tap screen to restart' : 'Press R to restart';
+    this.ctx.drawImage(imgToShow, imgX, imgY, imgWidth, imgHeight);
 
-        // Text mit Umrandung
-        this.ctx.strokeText(restartMessage, this.canvas.width / 2, this.canvas.height - 50);
-        this.ctx.fillText(restartMessage, this.canvas.width / 2, this.canvas.height - 50);
-    }
+ 
+    this.ctx.font = 'bold 30px Arial';
+    this.ctx.fillStyle = 'white';
+    this.ctx.strokeStyle = 'black';
+    this.ctx.lineWidth = 3;
+    this.ctx.textAlign = 'center';
+
+    const isMobile = window.innerWidth <= 1000;
+    const restartMessage = isMobile ? 'Tap screen to restart' : 'Press R to restart';
+
+    const textY = imgY + imgHeight + 50;
+
+    this.ctx.strokeText(restartMessage, this.canvas.width / 2, textY);
+    this.ctx.fillText(restartMessage, this.canvas.width / 2, textY);
+}
+
 
     cleanup() {
         this.stopGame();

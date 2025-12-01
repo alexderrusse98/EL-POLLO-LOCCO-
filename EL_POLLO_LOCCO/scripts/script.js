@@ -115,7 +115,7 @@ function setupTouchControls() {
   const jumpBtn = document.querySelector('.control-btn.jump');
   const throwBtn = document.querySelector('.control-btn.throw');
 
-  // LEFT Button
+ 
   leftBtn.addEventListener('touchstart', (e) => {
     e.preventDefault();
     keyboard.LEFT = true;
@@ -125,7 +125,6 @@ function setupTouchControls() {
     keyboard.LEFT = false;
   });
 
-  // RIGHT Button
   rightBtn.addEventListener('touchstart', (e) => {
     e.preventDefault();
     keyboard.RIGHT = true;
@@ -135,7 +134,6 @@ function setupTouchControls() {
     keyboard.RIGHT = false;
   });
 
-  // JUMP Button
   jumpBtn.addEventListener('touchstart', (e) => {
     e.preventDefault();
     keyboard.SPACE = true;
@@ -145,7 +143,6 @@ function setupTouchControls() {
     keyboard.SPACE = false;
   });
 
-  // THROW Button
   throwBtn.addEventListener('touchstart', (e) => {
     e.preventDefault();
     keyboard.D = true;
@@ -203,7 +200,6 @@ function toggleFullscreen() {
   const btn = document.getElementById('fullscreenBtn');
 
   if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-    // In Fullscreen gehen
     if (document.body.requestFullscreen) {
       document.body.requestFullscreen();
     } else if (document.body.webkitRequestFullscreen) {
@@ -212,7 +208,6 @@ function toggleFullscreen() {
       document.body.msRequestFullscreen();
     }
   } else {
-    // Fullscreen beenden
     if (document.exitFullscreen) {
       document.exitFullscreen();
     } else if (document.webkitExitFullscreen) {
@@ -322,51 +317,3 @@ window.addEventListener('keyup', (e) => {
     keyboard.R = false;
   }
 });
-
-// Touch 
-if ('ontouchstart' in window) {
-  setTimeout(() => {
-    const leftBtn = document.querySelector('.control-btn.left');
-    const rightBtn = document.querySelector('.control-btn.right');
-    const jumpBtn = document.querySelector('.control-btn.jump');
-    const throwBtn = document.querySelector('.control-btn.throw');
-
-    if (leftBtn && rightBtn && jumpBtn && throwBtn) {
-      leftBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        keyboard.LEFT = true;
-      });
-      leftBtn.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        keyboard.LEFT = false;
-      });
-
-      rightBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        keyboard.RIGHT = true;
-      });
-      rightBtn.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        keyboard.RIGHT = false;
-      });
-
-      jumpBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        keyboard.SPACE = true;
-      });
-      jumpBtn.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        keyboard.SPACE = false;
-      });
-
-      throwBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        keyboard.D = true;
-      });
-      throwBtn.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        keyboard.D = false;
-      });
-    }
-  }, 100);
-}
