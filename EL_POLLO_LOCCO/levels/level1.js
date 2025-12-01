@@ -1,4 +1,12 @@
-
+/**
+ * Generates an array of collectible bottles with random positions.
+ *
+ * @param {number} minCount - Minimum number of bottles to generate.
+ * @param {number} maxCount - Maximum number of bottles to generate.
+ * @param {number} minX - Minimum X position for the bottles.
+ * @param {number} maxX - Maximum X position for the bottles.
+ * @returns {CollectableBottle[]} Array of CollectableBottle objects.
+ */
 function bottles(minCount, maxCount, minX, maxX) {
     const bottles = [];
     const count = minCount + Math.floor(Math.random() * (maxCount - minCount + 1));
@@ -11,8 +19,15 @@ function bottles(minCount, maxCount, minX, maxX) {
     return bottles;
 }
 
+/**
+ * Creates and returns the first level of the game with enemies, clouds,
+ * background objects, coins, and collectible bottles.
+ *
+ * @returns {Level} Instance of the Level class populated with level elements.
+ */
 function createLevel1() {
     return new Level(
+        // Enemies
         [
             new ChickenNormal(),
             new ChickenSmall(),
@@ -28,6 +43,7 @@ function createLevel1() {
             new ChickenNormal(),
         ],
 
+        // Clouds
         [
             new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/1.png', 0),
             new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/2.png', 1000),
@@ -37,12 +53,12 @@ function createLevel1() {
             new Cloud('./img/img_pollo_locco/img/5_background/layers/4_clouds/2.png', 2700),
         ],
 
+        // Background objects
         [
             new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/air.png', -720),
             new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/3_third_layer/2.png', -720),
             new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/2_second_layer/2.png', -720),
             new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/1_first_layer/2.png', -720),
-
 
             new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/air.png', 0),
             new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/3_third_layer/1.png', 0),
@@ -69,6 +85,8 @@ function createLevel1() {
             new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/2_second_layer/1.png', 720 * 4),
             new BackgroundObject('./img/img_pollo_locco/img/5_background/layers/1_first_layer/1.png', 720 * 4),
         ],
+
+        // Coins
         [
             new Coin(278, 73),
             new Coin(642, 112),
@@ -82,8 +100,9 @@ function createLevel1() {
             new Coin(2104, 132),
             new Coin(2670, 88),
             new Coin(1856, 175),
-
         ],
+
+        // Collectable bottles
         bottles(5, 10, 300, 3000)
     );
 }
