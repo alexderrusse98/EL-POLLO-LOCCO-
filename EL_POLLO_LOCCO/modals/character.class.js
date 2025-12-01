@@ -8,7 +8,6 @@ class Character extends MovableObject {
     isThrowingBottle = false;
     isDeadAnimationOn = false;
 
-
     lastThrowTime = 0;
     throwCooldown = 500;
 
@@ -111,7 +110,6 @@ class Character extends MovableObject {
         const now = new Date().getTime();
         const idleTime = (now - this.lastMoveTime) / 1000;
 
-
         if (idleTime >= 0, 1 && idleTime < 8) {
             if (!this.isIdleAnimationOn) {
                 this.isIdleAnimationOn = true;
@@ -170,20 +168,20 @@ class Character extends MovableObject {
     }
 
 
-   handleThrow() {
-    const now = new Date().getTime();
-    const timeSinceLastThrow = now - this.lastThrowTime;
-    
-    if (this.world.keyboard.D && 
-        this.bottleCount > 0 && 
-        timeSinceLastThrow >= this.throwCooldown) {
-        
-        this.isThrowingBottle = true;
-        this.lastThrowTime = now; 
-        return true;
+    handleThrow() {
+        const now = new Date().getTime();
+        const timeSinceLastThrow = now - this.lastThrowTime;
+
+        if (this.world.keyboard.D &&
+            this.bottleCount > 0 &&
+            timeSinceLastThrow >= this.throwCooldown) {
+
+            this.isThrowingBottle = true;
+            this.lastThrowTime = now;
+            return true;
+        }
+        return false;
     }
-    return false;
-}
 
 
     updateCamera() {
@@ -257,44 +255,61 @@ class Character extends MovableObject {
         }
     }
 
-    // kürzen und verbessern
     checkJumpOnEnemy(enemy) {
         if (this.speedY >= 0 || enemy.isDead) return false;
 
-        const xTolerance = 60;
-        const yTolerance = 50;
+        const playerBounds = this.getPlayerJumpBounds();
+        const enemyBounds = this.getEnemyBounds(enemy);
 
-        const playerLeft = this.x - xTolerance;
-        const playerRight = this.x + this.width + xTolerance;
-        const playerBottom = this.y + this.height;
-
-        const enemyLeft = enemy.x;
-        const enemyRight = enemy.x + enemy.width;
-        const enemyTop = enemy.y;
-
-        const horizontalHit = playerRight > enemyLeft && playerLeft < enemyRight;
-        const verticalHit = playerBottom >= enemyTop &&
-            playerBottom <= enemyTop + yTolerance;
-
-        if (horizontalHit && verticalHit) {
-            enemy.deadChicken();
-            this.speedY = 15;
+        if (this.isJumpHit(playerBounds, enemyBounds)) {
+            this.executeJumpKill(enemy);
             return true;
         }
         return false;
     }
 
+    getPlayerJumpBounds() {
+        const xTolerance = 60;
+        return {
+            left: this.x - xTolerance,
+            right: this.x + this.width + xTolerance,
+            bottom: this.y + this.height
+        };
+    }
+
+    getEnemyBounds(enemy) {
+        return {
+            left: enemy.x,
+            right: enemy.x + enemy.width,
+            top: enemy.y
+        };
+    }
+
+    isJumpHit(playerBounds, enemyBounds) {
+        const yTolerance = 50;
+        const horizontalHit = playerBounds.right > enemyBounds.left &&
+            playerBounds.left < enemyBounds.right;
+        const verticalHit = playerBounds.bottom >= enemyBounds.top &&
+            playerBounds.bottom <= enemyBounds.top + yTolerance;
+        return horizontalHit && verticalHit;
+    }
+
+    executeJumpKill(enemy) {
+        enemy.deadChicken();
+        this.speedY = 15;
+    }
+
 
     handleJump() {
-    if (this.world.keyboard.SPACE && !this.isAboveGround() && !this.isJumpAnimationOn) {
-        this.jump();
-        if (this.world && this.world.audios) {
-            this.world.audios.playSound('jumpSound');
+        if (this.world.keyboard.SPACE && !this.isAboveGround() && !this.isJumpAnimationOn) {
+            this.jump();
+            if (this.world && this.world.audios) {
+                this.world.audios.playSound('jumpSound');
+            }
+            return true;
         }
-        return true;
+        return false;
     }
-    return false;
-}
 
 
     isJumpingOnEnemy(enemy) {
@@ -351,8 +366,6 @@ class Character extends MovableObject {
             this.animateWalking();
         }
     }
-
-    // Death Animation
 
     animateDeath() {
         this.setDeathImage();
