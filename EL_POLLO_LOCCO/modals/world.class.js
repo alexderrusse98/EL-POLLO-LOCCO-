@@ -2,7 +2,8 @@ class World {
     audios;
 
     character = new Character();
-    endBoss = new Endboss();
+    endBoss = null;
+    bossSpawned = false; 
 
     level;
     canvas;
@@ -37,7 +38,6 @@ class World {
         this.statusBarCoins = new StatusBar('coin', 40, 60);
         this.statusBarBottles = new StatusBar('bottle', 40, 120);
 
-
         this.statusBarBossHealth = new StatusBar('endbossHealth', 480, 0);
         this.statusBarBossHealth.visible = false;
 
@@ -55,23 +55,37 @@ class World {
         this.winImage.src = './img/img_pollo_locco/img/You won, you lost/You Win A.png';
     }
 
-
     setWorld() {
         this.character.world = this;
-        this.endBoss.world = this;
         if (this.endBoss) {
             this.endBoss.world = this;
+        }
+    }
+
+   
+    spawnEndboss() {
+        if (!this.bossSpawned) {
+            console.log('⚠️ Spawning Endboss...');
+            this.endBoss = new Endboss();
+            this.endBoss.world = this;
+            this.bossSpawned = true;
+        }
+    }
+
+    checkEndBossSpawn() {
+        if (this.character.x >= 2000 && !this.bossSpawned) {
+            this.spawnEndboss();
         }
     }
 
     run() {
         this.intervals.push(
             setInterval(() => {
+                this.checkEndBossSpawn();
                 this.checkEndBossAlert();
                 this.checkGameOver();
             }, 200)
         );
-
 
         this.intervals.push(
             setInterval(() => {
@@ -80,22 +94,21 @@ class World {
         );
     }
 
-    // Game Over
     stopGame() {
         this.intervals.forEach(clearInterval);
         this.intervals = [];
 
         this.character.stopAllIntervals();
 
-        this.endBoss?.stopAllIntervals();
+        if (this.endBoss) {
+            this.endBoss.stopAllIntervals();
+        }
 
         this.level.enemies.forEach(enemy => {
             enemy.stopAllIntervals();
         });
     }
 
-
-    // kürze methode in mes..
     checkGameOver() {
         if (this.character.isDead() && !this.gameOver) {
             this.gameOverTriggered = true;
@@ -123,7 +136,6 @@ class World {
     showEndImg() {
         const imgToShow = this.gameOver ? this.gameOverImage : this.winImage;
 
-        // Bild über das GANZE Canvas zeichnen
         this.ctx.drawImage(
             imgToShow,
             0,
@@ -132,19 +144,15 @@ class World {
             this.canvas.height
         );
 
-        // Text darüber
         this.ctx.font = 'bold 30px Arial';
         this.ctx.fillStyle = 'white';
         this.ctx.strokeStyle = 'black';
         this.ctx.lineWidth = 3;
         this.ctx.textAlign = 'center';
 
-        // Text mit Umrandung
         this.ctx.strokeText('Press R to restart', this.canvas.width / 2, this.canvas.height - 50);
         this.ctx.fillText('Press R to restart', this.canvas.width / 2, this.canvas.height - 50);
     }
-
-    // Game Restart
 
     cleanup() {
         this.stopGame();
@@ -161,7 +169,6 @@ class World {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-
     restartGame() {
         this.cleanup();
 
@@ -170,13 +177,14 @@ class World {
         this.gameOverTriggered = false;
         this.gameWinTriggered = false;
         this.camera_x = 0;
+        this.bossSpawned = false;
 
         this.level = createLevel1();
 
         this.character = new Character();
         this.character.x = 120;
 
-        this.endBoss = new Endboss();
+        this.endBoss = null;
         this.throwAbleObjects = [];
 
         this.statusBarHealth.setPercentage(100);
@@ -192,17 +200,15 @@ class World {
     }
 
     checkEndBossAlert() {
-        if (!this.endBoss || this.endBoss.isDead) return;
+        if (!this.endBoss || this.endBoss.energy <= 0) return;
 
         const distance = Math.abs(this.character.x - this.endBoss.x);
 
-        // Zone 1: Attack-Reichweite
         if (distance < 150) {
             if (!this.endBoss.isAttackAnimation && this.endBoss.isAlerted) {
                 this.endBoss.attack();
             }
         }
-        // Zone 2: Alert-Reichweite
         else if (distance < 300) {
             if (!this.endBoss.isAlerted && !this.endBoss.isAttackAnimation) {
                 this.audios.playSound('bossChickenStartSound');
@@ -210,7 +216,6 @@ class World {
                 this.statusBarBossHealth.visible = true;
             }
         }
-        // Zone 3: Außerhalb (> 300px)
         else {
             if (this.endBoss.isAlerted && !this.endBoss.isAttackAnimation) {
                 this.endBoss.isAlerted = false;
@@ -219,7 +224,13 @@ class World {
     }
 
     checkThrowObjects() {
-        if (this.keyboard.D && this.character.bottleCount > 0) {
+        const now = new Date().getTime();
+        const timeSinceLastThrow = now - (this.lastThrowTime || 0);
+        
+        if (this.keyboard.D && 
+            this.character.bottleCount > 0 && 
+            timeSinceLastThrow >= 500) {
+            
             let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
             this.throwAbleObjects.push(bottle);
             this.character.bottleCount--;
@@ -227,6 +238,7 @@ class World {
             this.statusBarBottles.setPercentage(
                 Math.max(this.statusBarBottles.percentage - 20, 0)
             );
+            this.lastThrowTime = now;
         }
     }
 
@@ -238,7 +250,6 @@ class World {
         this.checkCoinCollisions();
         this.checkBottleCollisions();
     }
-
 
     checkBottleEnemyCollisions() {
         this.throwAbleObjects.forEach((bottle) => {
@@ -255,20 +266,6 @@ class World {
         });
     }
 
-
-    // Jump-Kollision
-    checkJumpOnEnemyCollisions() {
-        this.level.enemies.forEach((enemy) => {
-            if (!enemy.isDead && this.character.speedY < 0) {
-                const wasKilled = this.character.checkJumpOnEnemy(enemy);
-                if (wasKilled) {
-                    enemy.wasJumpKilled = true;
-                    this.audios.playSound('chickenDeadSound');
-                }
-            }
-        });
-    }
-
     checkJumpOnEnemyCollisions() {
         this.level.enemies.forEach((enemy) => {
             if (enemy.isDead) return;
@@ -278,7 +275,6 @@ class World {
             if (this.character.speedY < 0) {
                 const crossedTop = (prevBottom <= enemy.y + 5) && (currentBottom >= enemy.y);
                 const horizOverlap = this.character.getHitbox().x < enemy.getHitbox().x + enemy.getHitbox().width &&
-
                     this.character.getHitbox().x + this.character.getHitbox().width > enemy.getHitbox().x;
 
                 if (crossedTop && horizOverlap) {
@@ -301,10 +297,9 @@ class World {
         }
     }
 
-
     checkAllEnemiesCollisions(allEnemies) {
         if (this.character.isColliding(allEnemies) &&
-            !allEnemies.isDead &&
+            allEnemies.energy > 0 && 
             !allEnemies.wasJumpKilled &&
             !this.character.isHurt()) {
 
@@ -320,7 +315,6 @@ class World {
             }
         }
     }
-
 
     checkBottleEndBossCollisions() {
         this.throwAbleObjects.forEach((bottle) => {
@@ -453,13 +447,13 @@ class World {
         }
     }
 
-
     scheduleNextFrame() {
         let self = this;
         requestAnimationFrame(function () {
             self.draw();
         });
     }
+
     addObjectsToMap(objects) {
         objects.forEach(o => {
             this.addToMap(o);

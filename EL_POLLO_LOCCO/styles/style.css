@@ -292,8 +292,10 @@ canvas {
     display: none;
     position: fixed;
     bottom: 20px;
-    left: 0;
-    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
     padding: 0 20px;
     z-index: 2000;
     justify-content: space-between;
@@ -307,13 +309,13 @@ canvas {
 .controls-left,
 .controls-right {
     display: flex;
-    gap: 15px;
+    gap: 10px;
 }
 
 .control-btn {
-    width: 70px;
-    height: 70px;
-    font-size: 20px;
+    width: 60px;
+    height: 60px;
+    font-size: 18px;
     font-weight: bold;
     background-color: rgba(255, 107, 53, 0.85);
     color: white;
@@ -335,12 +337,12 @@ canvas {
 
 .control-btn.left,
 .control-btn.right {
-    font-size: 28px;
+    font-size: 24px;
 }
 
 .control-btn.jump,
 .control-btn.throw {
-    font-size: 14px;
+    font-size: 12px;
 }
 
 @media (min-width: 1921px) {
@@ -382,6 +384,9 @@ canvas {
         width: 90vw;
         height: auto;
     }
+    .mobile-controls:not(.hidden) {
+        display: flex;
+    }
 }
 
 @media (max-width: 768px) {
@@ -390,10 +395,6 @@ canvas {
         height: auto;
         max-height: 100vh;
         object-fit: contain;
-    }
-
-    .mobile-controls {
-        display: flex !important;
     }
 
     h1 {
@@ -445,7 +446,7 @@ canvas {
     }
 }
 
-@media (max-width: 768px) and (orientation: portrait) {
+@media (max-width: 1024px) and (orientation: portrait) {
     body::after {
         content: "Please rotate your device for better experience";
         position: fixed;
@@ -486,19 +487,24 @@ canvas {
         height: 60vh;
     }
 
+    .mobile-controls {
+        width: 95%;
+        bottom: 10px;
+    }
+
     .control-btn {
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
         font-size: 16px;
     }
 
     .control-btn.left,
     .control-btn.right {
-        font-size: 24px;
+        font-size: 20px;
     }
 
     .control-btn.jump,
     .control-btn.throw {
-        font-size: 12px;
+        font-size: 10px;
     }
 }
