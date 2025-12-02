@@ -49,13 +49,10 @@
 }
 
 .control-btn.left,
-.control-btn.right {
-    font-size: 24px;
-}
-
+.control-btn.right,
 .control-btn.jump,
 .control-btn.throw {
-    font-size: 16px;
+    font-size: 24px;
 }
 
 /* ============================================
@@ -283,13 +280,10 @@
     }
 
     .control-btn.left,
-    .control-btn.right {
-        font-size: 20px;
-    }
-
+    .control-btn.right,
     .control-btn.jump,
     .control-btn.throw {
-        font-size: 16px;
+        font-size: 20px;
     }
 
     .controll-section,
@@ -407,13 +401,10 @@
     }
 
     .control-btn.left,
-    .control-btn.right {
-        font-size: 18px;
-    }
-
+    .control-btn.right,
     .control-btn.jump,
     .control-btn.throw {
-        font-size: 9px;
+        font-size: 18px;
     }
 
     .controll-section,
@@ -541,13 +532,10 @@
     }
 
     .control-btn.left,
-    .control-btn.right {
-        font-size: 16px;
-    }
-
+    .control-btn.right,
     .control-btn.jump,
-    .control-btn.throw {
-        font-size: 8px;
+    .control-btn.throw  {
+        font-size: 16px;
     }
 
     .controll-section,
