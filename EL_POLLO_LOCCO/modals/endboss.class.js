@@ -283,17 +283,20 @@ class Endboss extends MovableObject {
     scheduleAttackEnd() {
         setTimeout(() => { this.isAttackAnimation = false; }, 1500);
     }
+
     /**
      * Performs a normal attack with moderate jump and horizontal movement.
      */
     normalAttack() {
         this.speedY = 30;
-        this.otherDirection ? this.x += 150 : this.x -= 150;
+        const direction = this.otherDirection ? 1 : -1;
+        this.x += 150 * direction;
     }
 
     bigAttack() {
         this.speedY = 40;
-        this.otherDirection ? this.x += 300 : this.x -= 300;
+        const direction = this.otherDirection ? 1 : -1;
+        this.x += 300 * direction;
     }
 
     /**
@@ -301,13 +304,14 @@ class Endboss extends MovableObject {
      * @returns {boolean} True if movement occurred, false otherwise.
      */
     handleMovement() {
-        if (this.isDead || this.isAlerted) {
+        if (this.isDead) {
             return false;
         }
-
-        if (!this.isAttackAnimation) {
-            this.movingRight ? this.moveRightDirection() : this.moveLeftDirection();
+        if (this.isAlerted || this.isAttackAnimation) {
+            this.followCharacter();
+            return true;
         }
+        this.movingRight ? this.moveRightDirection() : this.moveLeftDirection();
         return true;
     }
 
@@ -316,5 +320,26 @@ class Endboss extends MovableObject {
      */
     animateAttack() {
         this.playAnimation(this.IMAGES_ATTACK);
+    }
+
+    /**
+     * Folgt dem Character und passt die Richtung an
+     */
+    followCharacter() {
+        if (!this.world || !this.world.character) return;
+
+        const characterX = this.world.character.x;
+        const bossX = this.x;
+        if (characterX < bossX) {
+            this.otherDirection = false;
+            if (!this.isAttackAnimation) {
+                this.x -= this.speed * 3;
+            }
+        } else {
+            this.otherDirection = true;
+            if (!this.isAttackAnimation) {
+                this.x += this.speed * 3;
+            }
+        }
     }
 }
