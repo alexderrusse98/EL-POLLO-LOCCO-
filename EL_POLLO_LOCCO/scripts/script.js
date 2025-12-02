@@ -110,7 +110,7 @@ function showFullscreenButton() {
 
 function updateStartScreenImage() {
   const startScreenImg = document.getElementById('startScreenImg');
-  if (window.innerWidth >= 800) {
+  if (window.innerWidth >= 900) {
     startScreenImg.src = './img/img_pollo_locco/img/9_intro_outro_screens/start/startscreen_2.png';
   } else {
     startScreenImg.src = './img/img_pollo_locco/img/background_full/desert.jpg';
