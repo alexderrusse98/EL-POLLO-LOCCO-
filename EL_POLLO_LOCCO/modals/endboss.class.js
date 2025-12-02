@@ -11,7 +11,7 @@ class Endboss extends MovableObject {
 
     /** @type {boolean} Tracks if attack animation is currently playing */
     isAttackAnimation = false;
-    
+
     /** @type {number[]} Holds all setIntervals for movement and animation */
     intervals = [];
 
@@ -205,22 +205,22 @@ class Endboss extends MovableObject {
     /**
      * Plays the alert animation frames.
      */
-    animateAlert() { 
-        this.playAnimation(this.IMAGES_ALERT); 
+    animateAlert() {
+        this.playAnimation(this.IMAGES_ALERT);
     }
 
     /**
      * Plays the hurt animation frames.
      */
-    animateHurt() { 
-        this.playAnimation(this.IMAGES_HURT); 
+    animateHurt() {
+        this.playAnimation(this.IMAGES_HURT);
     }
 
     /**
      * Plays the walking animation frames.
      */
-    animateWalking() { 
-        this.playAnimation(this.IMAGES_WALKING); 
+    animateWalking() {
+        this.playAnimation(this.IMAGES_WALKING);
     }
 
     /**
@@ -230,8 +230,8 @@ class Endboss extends MovableObject {
         this.speedY = 0;
         if (!this.deathAnimationStarted) {
             this.deathAnimationStarted = true;
-            this.playAnimationOnce(this.IMAGES_DEAD, () => { 
-                this.markForDeletion = true; 
+            this.playAnimationOnce(this.IMAGES_DEAD, () => {
+                this.markForDeletion = true;
             }, 150);
         }
     }
@@ -257,7 +257,7 @@ class Endboss extends MovableObject {
      * Schedules the attack execution after a delay.
      */
     scheduleAttackExecution() {
-        setTimeout(() => { this.executeAttack(); }, 2000);
+        setTimeout(() => { this.executeAttack(); }, 1000);
     }
 
     /**
@@ -281,23 +281,19 @@ class Endboss extends MovableObject {
      * Schedules the end of attack animation after delay.
      */
     scheduleAttackEnd() {
-        setTimeout(() => { this.isAttackAnimation = false; }, 2000);
+        setTimeout(() => { this.isAttackAnimation = false; }, 1500);
     }
-
     /**
      * Performs a normal attack with moderate jump and horizontal movement.
      */
     normalAttack() {
-        this.speedY = 20;
-        this.otherDirection ? this.x += 100 : this.x -= 100;
+        this.speedY = 30;
+        this.otherDirection ? this.x += 150 : this.x -= 150;
     }
 
-    /**
-     * Performs a big attack with high jump and extended horizontal movement.
-     */
     bigAttack() {
-        this.speedY = 30;
-        this.otherDirection ? this.x += 200 : this.x -= 200;
+        this.speedY = 40;
+        this.otherDirection ? this.x += 300 : this.x -= 300;
     }
 
     /**
@@ -305,17 +301,20 @@ class Endboss extends MovableObject {
      * @returns {boolean} True if movement occurred, false otherwise.
      */
     handleMovement() {
-        if (this.isDead || this.isAlerted || this.isAttackAnimation || this.isHurt()) {
+        if (this.isDead || this.isAlerted) {
             return false;
         }
-        this.movingRight ? this.moveRightDirection() : this.moveLeftDirection();
+
+        if (!this.isAttackAnimation) {
+            this.movingRight ? this.moveRightDirection() : this.moveLeftDirection();
+        }
         return true;
     }
 
     /**
      * Plays the attack animation frames.
      */
-    animateAttack() { 
-        this.playAnimation(this.IMAGES_ATTACK); 
+    animateAttack() {
+        this.playAnimation(this.IMAGES_ATTACK);
     }
 }

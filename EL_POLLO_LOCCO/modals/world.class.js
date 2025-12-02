@@ -182,7 +182,7 @@ class World {
                 this.checkEndBossSpawn();
                 this.checkEndBossAlert();
                 this.gameStateManager.checkGameOver();
-            }, 200)
+            }, 100)
         );
 
         this.intervals.push(
@@ -191,7 +191,6 @@ class World {
             }, 100)
         );
     }
-
     /**
      * Stops all game intervals and clears them.
      */
@@ -218,9 +217,9 @@ class World {
 
         const distance = Math.abs(this.character.x - this.endBoss.x);
 
-        if (distance < 150) {
+        if (distance < 400) {
             this.handleCloseRange();
-        } else if (distance < 300) {
+        } else if (distance < 1000) {
             this.handleMediumRange();
         } else {
             this.handleFarRange();
@@ -231,7 +230,7 @@ class World {
      * Handles boss behavior when character is very close.
      */
     handleCloseRange() {
-        if (!this.endBoss.isAttackAnimation && this.endBoss.isAlerted) {
+        if (!this.endBoss.isAttackAnimation) {
             this.endBoss.attack();
         }
     }
