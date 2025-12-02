@@ -283,10 +283,11 @@ class World {
      * Throws a bottle and updates game state.
      */
     throwBottle() {
-        const bottle = new ThrowableObject(
-            this.character.x + 100,
-            this.character.y + 100
-        );
+        const bottleX = this.character.x + (this.character.otherDirection ? 0 : this.character.width - 50);
+        const bottleY = this.character.y + 100;
+        const direction = this.character.otherDirection ? -1 : 1;
+
+        const bottle = new ThrowableObject(bottleX, bottleY, direction);
         this.throwAbleObjects.push(bottle);
         this.character.bottleCount--;
         this.audios.playSound('throw');

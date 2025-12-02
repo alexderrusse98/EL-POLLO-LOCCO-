@@ -30,7 +30,7 @@ class ThrowableObject extends MovableObject {
      * @param {number} x - The x-coordinate position of the bottle.
      * @param {number} y - The y-coordinate position of the bottle.
      */
-    constructor(x, y) {
+    constructor(x, y, throwDirection) {
         super();
         this.loadImage('./img/img_pollo_locco/img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png');
         this.loadImages(this.IMAGES_ROTATION);
@@ -40,6 +40,7 @@ class ThrowableObject extends MovableObject {
         this.width = 50;
         this.height = 60;
         this.hasSplashed = false;
+        this.throwDirection = throwDirection;
         this.throw();
     }
 
@@ -61,7 +62,7 @@ class ThrowableObject extends MovableObject {
         this.intervals.push(
             setInterval(() => {
                 if (!this.hasSplashed) {
-                    this.x += 7;
+                    this.x += 7 * this.throwDirection;
                 }
             }, 25)
         );
