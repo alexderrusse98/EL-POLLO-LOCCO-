@@ -6,7 +6,7 @@ class ChickenBase extends MovableObject {
     // Chicken size and position
     height = 55;
     width = 70;
-    y = 365;
+    y = 375;
 
     // Status flags
     isDead = false;        // Whether the chicken is dead

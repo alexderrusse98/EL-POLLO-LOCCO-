@@ -72,37 +72,46 @@ class WorldRenderer {
     }
 
     /**
-     * Draws character, clouds, and enemies.
+     * Draws character, clouds, and enemies with proper depth sorting.
+     * Objects are sorted by their bottom Y position (y + height).
+     * Objects further down (higher Y value) are drawn later = appear in front.
      */
     drawCharacterAndEnemies() {
         this.world.ctx.translate(this.world.camera_x, 0);
 
-        this.addToMap(this.world.character);
+        // Clouds zeichnen (immer im Hintergrund)
         this.addObjectsToMap(this.world.level.cloud);
 
-        this.drawEnemies();
-        this.drawEndboss();
-    }
+        // Alle zu sortierenden Objekte sammeln
+        const objectsToSort = [];
 
-    /**
-     * Draws all regular enemies and removes marked ones.
-     */
-    drawEnemies() {
+        // Character hinzufügen
+        objectsToSort.push(this.world.character);
+
+        // Enemies hinzufügen (vorher filtern)
         this.world.level.enemies = this.world.level.enemies.filter(
             enemy => !enemy.markForDeletion
         );
-        this.addObjectsToMap(this.world.level.enemies);
-    }
+        objectsToSort.push(...this.world.level.enemies);
 
-    /**
-     * Draws the endboss if it exists and not marked for deletion.
-     */
-    drawEndboss() {
+        // Endboss hinzufügen wenn vorhanden
         if (this.world.endBoss && !this.world.endBoss.markForDeletion) {
-            this.addToMap(this.world.endBoss);
+            objectsToSort.push(this.world.endBoss);
         } else if (this.world.endBoss && this.world.endBoss.markForDeletion) {
             this.world.endBoss = null;
         }
+
+        // Nach Y-Position sortieren (Objekte weiter unten werden später gezeichnet)
+        objectsToSort.sort((a, b) => {
+            const aBottom = a.y + a.height;
+            const bBottom = b.y + b.height;
+            return aBottom - bBottom;
+        });
+
+        // Sortierte Objekte zeichnen
+        objectsToSort.forEach(obj => {
+            this.addToMap(obj);
+        });
     }
 
     /**
