@@ -4,7 +4,11 @@ let keyboard = new Keyboard();
 let level1;
 let audios = new Audios();
 
-/** Initializes app and sets up all event listeners. */
+/**
+ * Initializes the application once the DOM is fully loaded.
+ * Sets up touch detection, UI event listeners and updates the start screen image.
+ * @event DOMContentLoaded
+ */
 window.addEventListener('DOMContentLoaded', () => {
   detectTouchDevice();
 
@@ -19,7 +23,7 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('closeImpressumBtn').addEventListener('click', hideImpressum);
   document.getElementById('backToMenuBtn').addEventListener('click', backToMenu);
 
-  // Click outside to close
+  // Close overlays when clicking outside
   document.getElementById('controllsSection').addEventListener('click', (e) => {
     if (e.target.id === 'controllsSection') hideControls();
   });
@@ -36,7 +40,10 @@ window.addEventListener('DOMContentLoaded', () => {
   updateStartScreenImage();
 });
 
-/** Starts game, initializes level and world. */
+/**
+ * Starts the game by hiding the start menu, initializing the level and creating the game world.
+ * Also activates mobile controls when available.
+ */
 function startGame() {
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('backToMenuBtn').classList.remove('hidden');
@@ -51,7 +58,10 @@ function startGame() {
   init();
 }
 
-/** Returns to main menu and cleans up game world. */
+/**
+ * Returns to the main menu and cleans up the active game world.
+ * Restores menu UI elements.
+ */
 function backToMenu() {
   if (world) {
     world.gameStateManager.cleanup();
@@ -66,7 +76,10 @@ function backToMenu() {
   if (!audios.isMuted) audios.playBackgroundMusic();
 }
 
-/** Adjusts UI on window resize. */
+/**
+ * Handles window resize events to adjust layout and UI visibility.
+ * @event resize
+ */
 window.addEventListener('resize', () => {
   detectTouchDevice();
   document.getElementById('fullscreenBtn').style.display =
@@ -74,14 +87,19 @@ window.addEventListener('resize', () => {
   updateStartScreenImage();
 });
 
-/** @returns {boolean} True if touch device with small screen. */
+/**
+ * Detects whether the device supports touch input and has a small screen.
+ * @returns {boolean} True if touch device with small resolution.
+ */
 function detectTouchDevice() {
   const isTouchDevice = ('ontouchstart' in window) ||
     (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
   return isTouchDevice && window.innerWidth <= 1000;
 }
 
-/** Enters fullscreen on mobile devices. */
+/**
+ * Automatically activates fullscreen mode on mobile devices.
+ */
 function autoFullscreenForMobile() {
   if (isMobileDevice()) {
     handleMobileFullscreen();
@@ -90,24 +108,39 @@ function autoFullscreenForMobile() {
   }
 }
 
-/** @returns {boolean} True if mobile screen size. */
+/**
+ * Checks if the screen size qualifies as mobile.
+ * @returns {boolean} True if width is ≤ 1000px.
+ */
 function isMobileDevice() {
   return window.innerWidth <= 1000;
 }
 
+/**
+ * Enables fullscreen on mobile and hides the fullscreen button.
+ */
 function handleMobileFullscreen() {
   hideFullscreenButton();
   if (!isInFullscreen()) requestFullscreen();
 }
 
+/**
+ * Hides the fullscreen toggle button.
+ */
 function hideFullscreenButton() {
   document.getElementById('fullscreenBtn').style.display = 'none';
 }
 
+/**
+ * Shows the fullscreen toggle button.
+ */
 function showFullscreenButton() {
   document.getElementById('fullscreenBtn').style.display = 'flex';
 }
 
+/**
+ * Updates the start screen background image depending on screen size.
+ */
 function updateStartScreenImage() {
   const startScreenImg = document.getElementById('startScreenImg');
   if (window.innerWidth >= 900) {
@@ -117,12 +150,17 @@ function updateStartScreenImage() {
   }
 }
 
-/** @returns {boolean} True if in fullscreen. */
+/**
+ * Checks if the browser is currently displaying fullscreen.
+ * @returns {boolean} True if fullscreen active.
+ */
 function isInFullscreen() {
   return document.fullscreenElement || document.webkitFullscreenElement;
 }
 
-/** Requests fullscreen with browser compatibility. */
+/**
+ * Requests fullscreen mode using cross-browser methods.
+ */
 function requestFullscreen() {
   if (document.body.requestFullscreen) {
     document.body.requestFullscreen();
@@ -133,7 +171,9 @@ function requestFullscreen() {
   }
 }
 
-/** Sets up touch controls for mobile. */
+/**
+ * Initializes touch controls for mobile gameplay.
+ */
 function setupTouchControls() {
   const leftBtn = document.querySelector('.control-btn.left');
   const rightBtn = document.querySelector('.control-btn.right');
@@ -147,8 +187,9 @@ function setupTouchControls() {
 }
 
 /**
- * @param {HTMLElement} button - Control button element.
- * @param {string} key - Keyboard property to control.
+ * Registers touch events on a control button that map to keyboard actions.
+ * @param {HTMLElement} button - Visual touch button.
+ * @param {string} key - Keyboard property to toggle.
  */
 function addTouchControl(button, key) {
   button.addEventListener('touchstart', (e) => {
@@ -161,35 +202,51 @@ function addTouchControl(button, key) {
   });
 }
 
+/**
+ * Shows the controls section in the start menu.
+ */
 function showControls() {
   document.getElementById('startContent').classList.add('hidden');
   document.getElementById('controllsSection').classList.remove('hidden');
 }
 
+/**
+ * Hides the controls section.
+ */
 function hideControls() {
   document.getElementById('controllsSection').classList.add('hidden');
   document.getElementById('startContent').classList.remove('hidden');
 }
 
+/**
+ * Displays the character story screen.
+ */
 function showCharacterStory() {
   document.getElementById('startContent').classList.add('hidden');
   document.getElementById('characterInfoBtn').classList.add('hidden');
   document.getElementById('characterStorySection').classList.remove('hidden');
 }
 
+/**
+ * Hides the character story screen.
+ */
 function hideCharacterStory() {
   document.getElementById('characterStorySection').classList.add('hidden');
   document.getElementById('startContent').classList.remove('hidden');
   document.getElementById('characterInfoBtn').classList.remove('hidden');
 }
 
-/** Initializes canvas and game world. */
+/**
+ * Initializes the canvas and creates a new game world instance.
+ */
 function init() {
   canvas = document.getElementById('canvas');
   world = new World(canvas, keyboard, audios);
 }
 
-/** Toggles audio mute/unmute. */
+/**
+ * Toggles game audio mute/unmute and updates the audio button state.
+ */
 function toggleAudio() {
   const btn = document.getElementById('audioBtn');
   const isMuted = audios.toggleMute();
@@ -204,7 +261,9 @@ function toggleAudio() {
   }
 }
 
-/** Toggles fullscreen mode. */
+/**
+ * Toggles between fullscreen and windowed mode.
+ */
 function toggleFullscreen() {
   const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
   if (!isFullscreen) {
@@ -214,7 +273,9 @@ function toggleFullscreen() {
   }
 }
 
-/** Enters fullscreen with cross-browser support. */
+/**
+ * Requests fullscreen using cross-browser compatibility methods.
+ */
 function enterFullscreen() {
   const methods = ['requestFullscreen', 'webkitRequestFullscreen', 'msRequestFullscreen'];
   methods.forEach(method => {
@@ -222,7 +283,9 @@ function enterFullscreen() {
   });
 }
 
-/** Exits fullscreen with cross-browser support. */
+/**
+ * Exits fullscreen mode using cross-browser compatibility.
+ */
 function exitFullscreen() {
   const methods = ['exitFullscreen', 'webkitExitFullscreen', 'msExitFullscreen'];
   methods.forEach(method => {
@@ -230,7 +293,9 @@ function exitFullscreen() {
   });
 }
 
-/** Handles fullscreen state changes. */
+/**
+ * Handles updates to UI when fullscreen mode changes.
+ */
 function handleFullscreenChange() {
   const btn = document.getElementById('fullscreenBtn');
   const canvas = document.getElementById('canvas');
@@ -241,8 +306,9 @@ function handleFullscreenChange() {
 }
 
 /**
- * @param {HTMLElement} btn - Fullscreen button.
- * @param {boolean} isFullscreen - Current fullscreen state.
+ * Updates fullscreen button visuals.
+ * @param {HTMLElement} btn - Fullscreen toggle button.
+ * @param {boolean} isFullscreen - Fullscreen state.
  */
 function updateFullscreenButton(btn, isFullscreen) {
   btn.textContent = '⛶';
@@ -251,7 +317,8 @@ function updateFullscreenButton(btn, isFullscreen) {
 }
 
 /**
- * @param {HTMLElement} canvas - Canvas element.
+ * Adjusts the canvas display size based on fullscreen mode and aspect ratio.
+ * @param {HTMLElement} canvas - Canvas DOM element.
  * @param {boolean} isFullscreen - Current fullscreen state.
  */
 function updateCanvasSize(canvas, isFullscreen) {
@@ -273,21 +340,30 @@ function updateCanvasSize(canvas, isFullscreen) {
   }
 }
 
+/**
+ * Dynamically resizes the canvas to fit within the screen while maintaining aspect ratio.
+ */
 function resizeCanvas() {
   const canvas = document.getElementById('canvas');
   const container = canvas.parentElement;
   const aspectRatio = 720 / 480;
   let width = window.innerWidth * 0.9;
   let height = width / aspectRatio;
+
   if (height > window.innerHeight * 0.8) {
     height = window.innerHeight * 0.8;
     width = height * aspectRatio;
   }
+
   canvas.style.width = width + 'px';
   canvas.style.height = height + 'px';
 }
 
-/** Handles keydown events for game controls. */
+/**
+ * Handles keyboard keydown events and maps them to game controls.
+ * @event keydown
+ * @param {KeyboardEvent} e
+ */
 window.addEventListener('keydown', (e) => {
   if (e.keyCode == 39) keyboard.RIGHT = true;
   if (e.keyCode == 37) keyboard.LEFT = true;
@@ -298,7 +374,11 @@ window.addEventListener('keydown', (e) => {
   if (e.keyCode == 82) keyboard.R = true;
 });
 
-/** Handles keyup events for game controls. */
+/**
+ * Handles keyboard keyup events and deactivates game control actions.
+ * @event keyup
+ * @param {KeyboardEvent} e
+ */
 window.addEventListener('keyup', (e) => {
   if (e.keyCode == 39) keyboard.RIGHT = false;
   if (e.keyCode == 37) keyboard.LEFT = false;
@@ -309,12 +389,18 @@ window.addEventListener('keyup', (e) => {
   if (e.keyCode == 82) keyboard.R = false;
 });
 
+/**
+ * Shows the "Impressum" section.
+ */
 function showImpressum() {
   document.getElementById('startContent').classList.add('hidden');
   document.getElementById('characterInfoBtn').classList.add('hidden');
   document.getElementById('impressumSection').classList.remove('hidden');
 }
 
+/**
+ * Hides the "Impressum" section.
+ */
 function hideImpressum() {
   document.getElementById('impressumSection').classList.add('hidden');
   document.getElementById('startContent').classList.remove('hidden');

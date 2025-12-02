@@ -3,36 +3,23 @@
  * Handles movement, animations, and death behavior.
  */
 class ChickenBase extends MovableObject {
-    // Chicken size and position
     height = 55;
     width = 70;
     y = 375;
+    isDead = false;
+    wasJumpKilled = false;
 
-    // Status flags
-    isDead = false;        // Whether the chicken is dead
-    wasJumpKilled = false; // If chicken was killed by player jumping on it
-
-    // Holds references to all intervals for animations and movement
     intervals = [];
-
-    // Static properties to control spawn positions and spacing between chickens
-    static lastSpawnX = 300;     // X-coordinate of the last spawned chicken
-    static minDistance = 200;    // Minimum distance between consecutive chickens
+    static lastSpawnX = 300;
+    static minDistance = 200;
 
     constructor() {
         super();
-
-        // Calculate a random X position based on last spawn position and random offset
         this.x = ChickenBase.lastSpawnX + ChickenBase.minDistance + Math.random() * 300;
         ChickenBase.lastSpawnX = this.x;
-
-        // Optional random positioning override
         this.x = 300 + Math.random() * 2500;
 
-        // Set a random movement speed
         this.speed = 0.15 + Math.random() * 0.25;
-
-        // Start movement and animation loops
         this.animate();
     }
 
@@ -56,10 +43,8 @@ class ChickenBase extends MovableObject {
      * Displays the dead chicken image and marks it for deletion after 1 second
      */
     showDeadAnimation() {
-        // Set image to the first frame of the dead animation
         this.img = this.imageCache[this.IMAGES_DEAD[0]];
 
-        // Remove chicken from game after 1 second
         setTimeout(() => {
             this.markForDeletion = true;
         }, 1000);
@@ -69,22 +54,19 @@ class ChickenBase extends MovableObject {
      * Starts movement and walking animation loops
      */
     animate() {
-        // Movement loop: moves the chicken left if not dead
         this.intervals.push(
             setInterval(() => {
                 if (!this.isDead) {
                     this.moveLeft();
                 }
-            }, 1000 / 60) // ~60 FPS
+            }, 1000 / 60)
         );
-
-        // Animation loop: cycles through walking images if not dead
         this.intervals.push(
             setInterval(() => {
                 if (!this.isDead) {
                     this.playAnimation(this.IMAGES_WALKING);
                 }
-            }, 100) // Every 100 ms
+            }, 100)
         );
     }
 }

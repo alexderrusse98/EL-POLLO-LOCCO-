@@ -3,43 +3,20 @@
  * Extends MovableObject to use physics, movement, and collisions.
  */
 class Character extends MovableObject {
-    /** Reference to the game's audio manager */
     audios;
-
-    /** Character's height in pixels */
     height = 200;
-
-    /** Character's vertical position */
     y = 120;
-
-    /** Horizontal movement speed */
     speed = 5;
-
-    /** Number of bottles the character currently has */
     bottleCount = 0;
-
-    /** Whether the character is currently throwing a bottle */
     isThrowingBottle = false;
-
-    /** Timestamp of last bottle throw */
     lastThrowTime = 0;
-
-    /** Minimum cooldown between throws in milliseconds */
     throwCooldown = 500;
-
-    /** Holds all active intervals for animations and logic updates */
     intervals = [];
 
-    /** Timestamp of the last movement for idle animations */
     lastMoveTime = new Date().getTime();
-    
-    /** Flag for bounce animation after killing enemy */
     isBouncing = false;
-    
-    /** Current frame of bounce animation */
-    bounceFrame = 0;
 
-    /** Arrays of image paths for character animations */
+    bounceFrame = 0;
     IMAGES_WALKING = [
         './img/img_pollo_locco/img/2_character_pepe/2_walk/W-21.png',
         './img/img_pollo_locco/img/2_character_pepe/2_walk/W-22.png',
@@ -60,7 +37,7 @@ class Character extends MovableObject {
         './img/img_pollo_locco/img/2_character_pepe/3_jump/J-38.png',
         './img/img_pollo_locco/img/2_character_pepe/3_jump/J-39.png',
     ];
-    
+
     IMAGES_DEAD = [
         './img/img_pollo_locco/img/2_character_pepe/5_dead/D-51.png',
         './img/img_pollo_locco/img/2_character_pepe/5_dead/D-52.png',
@@ -103,29 +80,17 @@ class Character extends MovableObject {
         './img/img_pollo_locco/img/2_character_pepe/1_idle/long_idle/I-20.png'
     ];
 
-    /** Reference to the game world */
     world;
 
     /**
      * Constructor loads images, applies gravity, and initializes the animator.
      */
     constructor() {
-        // Load default walking image
         super().loadImage('./img/img_pollo_locco/img/2_character_pepe/2_walk/W-21.png');
-
-        // Load all animation images
         this.loadAllImages();
-
-        // Enable gravity for the character
         this.applyGravity();
-
-        // Create a CharacterAnimator to handle animations
         this.animator = new CharacterAnimator(this);
-
-        // Start game logic and animation intervals
         this.animate();
-
-        // Store initial bottom position
         this.previousBottom = this.y + this.height;
     }
 
@@ -322,35 +287,31 @@ class Character extends MovableObject {
     executeJumpKill(enemy) {
         enemy.deadChicken();
         this.speedY = 15;
-        
-        // Aktiviere Bounce-Animation
         this.isBouncing = true;
         this.bounceFrame = 0;
-        
-        // Spiele die letzten 3 Jump-Bilder ab (Frame 6, 7, 8)
         this.playBounceAnimation();
     }
 
     /**
      * Plays the bounce animation (last 3 frames of jump animation)
      */
-   playBounceAnimation() {
-    const bounceFrames = [6, 7, 8];
-    const frameDelay = 100;
-    
-    bounceFrames.forEach((frameIndex, i) => {
-        setTimeout(() => {
-            if (this.isBouncing) {
-                this.img = this.imageCache[this.IMAGES_JUMPING[frameIndex]];
-                if (i === bounceFrames.length - 1) {
-                    setTimeout(() => {
-                        this.isBouncing = false;
-                    }, frameDelay);
+    playBounceAnimation() {
+        const bounceFrames = [6, 7, 8];
+        const frameDelay = 100;
+
+        bounceFrames.forEach((frameIndex, i) => {
+            setTimeout(() => {
+                if (this.isBouncing) {
+                    this.img = this.imageCache[this.IMAGES_JUMPING[frameIndex]];
+                    if (i === bounceFrames.length - 1) {
+                        setTimeout(() => {
+                            this.isBouncing = false;
+                        }, frameDelay);
+                    }
                 }
-            }
-        }, i * frameDelay);
-    });
-}
+            }, i * frameDelay);
+        });
+    }
 
     /**
      * Handles jump input and initiates jump animation

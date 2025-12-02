@@ -9,7 +9,6 @@ class CharacterAnimator {
     constructor(character) {
         this.character = character;
 
-        // Flags to control different animation states
         this.isJumpAnimationOn = false;
         this.isDeadAnimationOn = false;
         this.isIdleAnimationOn = false;
@@ -21,34 +20,29 @@ class CharacterAnimator {
      * Determines which animation to play based on character state.
      */
     animateCharacter() {
-    this.handleResting();
-
-    if (this.character.isBouncing) {
-        // Wichtig: Erlaube handleJumpEnd(), damit isJumpAnimationOn zurückgesetzt wird
-        if (this.isJumpAnimationOn) {
-            this.handleJumpEnd();
-        }
-        return;
+        this.handleResting();
+        if (this.character.isBouncing) {
+            if (this.isJumpAnimationOn) {
+                this.handleJumpEnd();
+            }
+            return;}
+        if (this.character.isDead()) {
+            this.character.speedY = 0;
+            this.animateDeath();
+        } else if (this.character.isAboveGround() && this.isJumpAnimationOn) {
+            this.animateJump();
+        } else if (this.character.isHurt() && !this.character.isAboveGround()) {
+            this.animateHurt();
+        } else if (!this.character.isAboveGround()) {
+            this.animateWalking(); }
     }
-
-    if (this.character.isDead()) {
-        this.character.speedY = 0;
-        this.animateDeath();
-    } else if (this.character.isAboveGround() && this.isJumpAnimationOn) {
-        this.animateJump();
-    } else if (this.character.isHurt() && !this.character.isAboveGround()) {
-        this.animateHurt();
-    } else if (!this.character.isAboveGround()) {
-        this.animateWalking();
-    }
-}
 
     /**
      * Handles the jump animation sequence
      */
     animateJump() {
-        this.setJumpImage();      // Set image according to vertical speed
-        this.handleJumpEnd();     // Check if jump animation should stop
+        this.setJumpImage();
+        this.handleJumpEnd();
     }
 
     /**
@@ -75,7 +69,7 @@ class CharacterAnimator {
         if (speed > -15) return 5;
         if (speed > -20) return 6;
         if (speed > -25) return 7;
-        return 8; // Falling / landing frame
+        return 8;
     }
 
     /**
@@ -119,7 +113,7 @@ class CharacterAnimator {
         if (fallDown < 100) return 3;
         if (fallDown < 150) return 4;
         if (fallDown < 300) return 5;
-        return 6; // Final death frame on the ground
+        return 6;
     }
 
     /**
@@ -130,10 +124,10 @@ class CharacterAnimator {
 
         if (this.character.y < 500) {
             this.character.y += this.character.speedY;
-            this.character.speedY += 0.8; // gravity effect
-            this.character.x += 10;       // sliding forward
+            this.character.speedY += 0.8;
+            this.character.x += 10;
         } else {
-            this.character.y = 500;       // stop at ground
+            this.character.y = 500;
             this.character.speedY = 0;
         }
     }
@@ -158,12 +152,10 @@ class CharacterAnimator {
         const now = new Date().getTime();
         const idleTime = (now - this.character.lastMoveTime) / 1000;
 
-        // Idle animation for short periods of inactivity
         if (idleTime >= 0.1 && idleTime < 8) {
             this.handleIdleAnimation();
         }
 
-        // Long idle animation after longer inactivity
         if (idleTime >= 8) {
             this.handleLongIdleAnimation();
         }

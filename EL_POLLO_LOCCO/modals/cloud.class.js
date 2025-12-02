@@ -4,19 +4,11 @@
  * @extends MovableObject
  */
 class Cloud extends MovableObject {
-  /** Vertical position of the cloud */
   y = 10;
-
-  /** Height of the cloud */
   height = 350;
-
-  /** Width of the cloud */
   width = 500;
-
-  /** Speed at which the cloud moves left, randomized slightly */
   speed = 0.15 + Math.random() * 0.25;
 
-  /** Array storing all intervals used for animating the cloud */
   intervals = [];
 
   /**
