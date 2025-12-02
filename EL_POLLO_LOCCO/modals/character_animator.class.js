@@ -21,25 +21,27 @@ class CharacterAnimator {
      * Determines which animation to play based on character state.
      */
     animateCharacter() {
-        // Check for idle/long idle animations
-        this.handleResting();
+    this.handleResting();
 
-        // Handle different animation states
-        if (this.character.isDead()) {
-            // Character is dead -> play death animation
-            this.character.speedY = 0;
-            this.animateDeath();
-        } else if (this.character.isAboveGround() && this.isJumpAnimationOn) {
-            // Character is jumping -> play jump animation
-            this.animateJump();
-        } else if (this.character.isHurt() && !this.character.isAboveGround()) {
-            // Character got hurt on the ground -> play hurt animation
-            this.animateHurt();
-        } else if (!this.character.isAboveGround()) {
-            // Character is on the ground -> play walking animation if moving
-            this.animateWalking();
+    if (this.character.isBouncing) {
+        // Wichtig: Erlaube handleJumpEnd(), damit isJumpAnimationOn zurückgesetzt wird
+        if (this.isJumpAnimationOn) {
+            this.handleJumpEnd();
         }
+        return;
     }
+
+    if (this.character.isDead()) {
+        this.character.speedY = 0;
+        this.animateDeath();
+    } else if (this.character.isAboveGround() && this.isJumpAnimationOn) {
+        this.animateJump();
+    } else if (this.character.isHurt() && !this.character.isAboveGround()) {
+        this.animateHurt();
+    } else if (!this.character.isAboveGround()) {
+        this.animateWalking();
+    }
+}
 
     /**
      * Handles the jump animation sequence

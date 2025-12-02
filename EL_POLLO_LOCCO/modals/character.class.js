@@ -32,6 +32,12 @@ class Character extends MovableObject {
 
     /** Timestamp of the last movement for idle animations */
     lastMoveTime = new Date().getTime();
+    
+    /** Flag for bounce animation after killing enemy */
+    isBouncing = false;
+    
+    /** Current frame of bounce animation */
+    bounceFrame = 0;
 
     /** Arrays of image paths for character animations */
     IMAGES_WALKING = [
@@ -310,12 +316,41 @@ class Character extends MovableObject {
 
     /**
      * Executes the enemy death logic when jumped on
+     * Triggers bounce animation with last 3 jump frames
      * @param {Object} enemy - Enemy object
      */
     executeJumpKill(enemy) {
         enemy.deadChicken();
         this.speedY = 15;
+        
+        // Aktiviere Bounce-Animation
+        this.isBouncing = true;
+        this.bounceFrame = 0;
+        
+        // Spiele die letzten 3 Jump-Bilder ab (Frame 6, 7, 8)
+        this.playBounceAnimation();
     }
+
+    /**
+     * Plays the bounce animation (last 3 frames of jump animation)
+     */
+   playBounceAnimation() {
+    const bounceFrames = [6, 7, 8];
+    const frameDelay = 100;
+    
+    bounceFrames.forEach((frameIndex, i) => {
+        setTimeout(() => {
+            if (this.isBouncing) {
+                this.img = this.imageCache[this.IMAGES_JUMPING[frameIndex]];
+                if (i === bounceFrames.length - 1) {
+                    setTimeout(() => {
+                        this.isBouncing = false;
+                    }, frameDelay);
+                }
+            }
+        }, i * frameDelay);
+    });
+}
 
     /**
      * Handles jump input and initiates jump animation
