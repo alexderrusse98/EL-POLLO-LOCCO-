@@ -1,0 +1,284 @@
+/* ============================================
+   BUTTONS & CONTROLS
+   Alle Button-Styles inkl. Game-Buttons und Menu-Buttons
+   ============================================ */
+
+/* ============================================
+   GAME BUTTONS (Audio, Fullscreen, Back)
+   ============================================ */
+.game-btns {
+    position: fixed;
+    top: 20px;
+    right: 50%;
+    transform: translateX(calc(960px - 20px));
+    display: flex;
+    gap: 15px;
+    z-index: 2000;
+}
+
+.btn-audio,
+.btn-fullscreen,
+.btn-back-menu {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    font-size: 24px;
+    background-color: #ff6b35;
+    color: white;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-audio:hover,
+.btn-fullscreen:hover,
+.btn-back-menu:hover {
+    background-color: #ff8c42;
+    transform: scale(1.1);
+}
+
+.btn-audio.muted {
+    background-color: #666;
+}
+
+.btn-fullscreen.active {
+    background-color: #4CAF50;
+}
+
+/* ============================================
+   MENU BUTTONS
+   ============================================ */
+.menu-btn {
+    padding: 20px 41px;
+    font-size: 20px;
+    background-color: #ff6b35;
+    color: white;
+    border: 4px solid #fff;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    width: 240px;
+    height: 70px;
+}
+
+.menu-btn:hover {
+    background-color: #ff8c42;
+    transform: scale(1.1);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+}
+
+.btn-start,
+.btn-controlls,
+.btn-info,
+.btn-impressum {
+    padding: 20px 41px;
+    font-size: 20px;
+    background-color: #ff6b35;
+    color: white;
+    border: 4px solid #fff;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    width: 240px;
+    height: 70px;
+}
+
+.btn-start:hover,
+.btn-controlls:hover,
+.btn-info:hover,
+.btn-impressum:hover {
+    background-color: #ff8c42;
+    transform: scale(1.1);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   CLOSE BUTTON
+   ============================================ */
+.btn-close {
+    padding: 15px 50px;
+    font-size: 24px;
+    background-color: #dc3545;
+    color: white;
+    border: 3px solid #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: all 0.3s;
+}
+
+.btn-close:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+/* ============================================
+   RESPONSIVE: 1920px+
+   ============================================ */
+@media (min-width: 1921px) {
+    .game-btns {
+        right: 50%;
+        transform: translateX(940px);
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 1920px
+   ============================================ */
+@media (max-width: 1920px) {
+    .game-btns {
+        right: 20px;
+        transform: none;
+        right: max(20px, calc(50% - 940px));
+    }
+}
+
+/* ============================================
+   RESPONSIVE: TABLETS (bis 1024px)
+   ============================================ */
+@media (max-width: 1024px) {
+    .menu-btn {
+        width: 200px;
+        height: 60px;
+        font-size: 18px;
+    }
+
+    .btn-close {
+        padding: 12px 40px;
+        font-size: 20px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 768px
+   ============================================ */
+@media (max-width: 768px) {
+    .game-btns {
+        top: 10px;
+        right: 10px;
+        gap: 8px;
+        transform: none;
+    }
+
+    .btn-audio,
+    .btn-fullscreen,
+    .btn-back-menu {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .menu-btn {
+        width: 160px;
+        height: 50px;
+        font-size: 16px;
+        padding: 15px 30px;
+    }
+
+    .btn-close {
+        padding: 12px 35px;
+        font-size: 18px;
+        margin-top: 15px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 480px
+   ============================================ */
+@media (max-width: 480px) {
+    .menu-btn {
+        padding: 10px 30px;
+    }
+
+    .btn-close {
+        padding: 10px 30px;
+        font-size: 16px;
+        margin-top: 12px;
+        width: 100%;
+        max-width: 200px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 360px
+   ============================================ */
+@media (max-width: 360px) {
+    .game-btns {
+        gap: 6px;
+        top: 8px;
+        right: 8px;
+    }
+
+    .btn-audio,
+    .btn-fullscreen,
+    .btn-back-menu {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+
+    .btn-close {
+        padding: 8px 25px;
+        font-size: 16px;
+        margin-top: 10px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 320px
+   ============================================ */
+@media (max-width: 320px) {
+    .game-btns {
+        gap: 5px;
+        top: 5px;
+        right: 5px;
+    }
+
+    .btn-audio,
+    .btn-fullscreen,
+    .btn-back-menu {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+        border: 1px solid #fff;
+    }
+
+    .btn-close {
+        padding: 8px 20px;
+        font-size: 16px;
+        margin-top: 8px;
+        width: 100%;
+        max-width: 150px;
+        border: 2px solid #fff;
+    }
+}
+
+/* ============================================
+   LANDSCAPE ORIENTATION
+   ============================================ */
+@media (max-width: 768px) and (orientation: landscape) {
+    .btn-close {
+        padding: 8px 25px;
+        font-size: 16px;
+        margin-top: 8px;
+    }
+}
+
+/* ============================================
+   TOUCH OPTIMIZATION
+   ============================================ */
+@media (hover: none) and (pointer: coarse) {
+    .btn-close,
+    .menu-btn {
+        min-height: 44px;
+    }
+}

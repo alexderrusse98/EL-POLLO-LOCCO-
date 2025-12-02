@@ -1,0 +1,153 @@
+/* ============================================
+   MOBILE TOUCH CONTROLS
+   Touch-Steuerung für Mobile Geräte
+   ============================================ */
+
+.mobile-controls {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
+    padding: 0 20px;
+    z-index: 2000;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.mobile-controls > * {
+    pointer-events: all;
+}
+
+.controls-left,
+.controls-right {
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn {
+    width: 60px;
+    height: 60px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: rgba(255, 107, 53, 0.85);
+    color: white;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.control-btn:active {
+    background-color: #ff8c42;
+    transform: scale(0.95);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.control-btn.left,
+.control-btn.right,
+.control-btn.jump,
+.control-btn.throw {
+    font-size: 24px;
+}
+
+/* ============================================
+   RESPONSIVE: TABLETS (bis 1024px)
+   ============================================ */
+@media (max-width: 1024px) {
+    .mobile-controls:not(.hidden) {
+        display: flex;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 480px
+   ============================================ */
+@media (max-width: 480px) {
+    .mobile-controls {
+        width: 95%;
+        bottom: 10px;
+    }
+
+    .control-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 16px;
+    }
+
+    .control-btn.left,
+    .control-btn.right,
+    .control-btn.jump,
+    .control-btn.throw {
+        font-size: 20px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 360px
+   ============================================ */
+@media (max-width: 360px) {
+    .mobile-controls {
+        width: 98%;
+        bottom: 8px;
+    }
+
+    .control-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 16px;
+    }
+
+    .control-btn.left,
+    .control-btn.right,
+    .control-btn.jump,
+    .control-btn.throw {
+        font-size: 18px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 320px
+   ============================================ */
+@media (max-width: 320px) {
+    .mobile-controls {
+        width: 98%;
+        bottom: 5px;
+        padding: 0 10px;
+    }
+
+    .controls-left,
+    .controls-right {
+        gap: 8px;
+    }
+
+    .control-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 16px;
+        border: 2px solid #fff;
+    }
+
+    .control-btn.left,
+    .control-btn.right,
+    .control-btn.jump,
+    .control-btn.throw {
+        font-size: 16px;
+    }
+}
+
+/* ============================================
+   TOUCH OPTIMIZATION
+   ============================================ */
+@media (hover: none) and (pointer: coarse) {
+    .control-btn {
+        min-width: 44px;
+        min-height: 44px;
+    }
+}

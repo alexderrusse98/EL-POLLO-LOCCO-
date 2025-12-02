@@ -1,4 +1,9 @@
 /* ============================================
+   OVERLAYS
+   Controls, Story und Impressum Overlays
+   ============================================ */
+
+/* ============================================
    CONTROLS OVERLAY
    ============================================ */
 .controll-section {
@@ -61,24 +66,6 @@
     min-width: 80px;
     display: inline-block;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.btn-close {
-    padding: 15px 50px;
-    font-size: 24px;
-    background-color: #dc3545;
-    color: white;
-    border: 3px solid #fff;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    margin-top: 20px;
-    transition: all 0.3s;
-}
-
-.btn-close:hover {
-    background-color: #c82333;
-    transform: scale(1.05);
 }
 
 .controls-box::-webkit-scrollbar {
@@ -239,4 +226,337 @@
 
 .impressum-box::-webkit-scrollbar-thumb:hover {
     background: #ff8c42;
+}
+
+/* ============================================
+   RESPONSIVE: TABLETS (bis 1024px)
+   ============================================ */
+@media (max-width: 1024px) {
+    .controls-box,
+    .story-box,
+    .impressum-box {
+        padding: 30px 40px;
+        max-width: 90%;
+        border: 3px solid #ff6b35;
+    }
+
+    .controls-box h2,
+    .story-box h2,
+    .impressum-box h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+
+    .controls-list li {
+        font-size: 20px;
+        margin: 12px 0;
+    }
+
+    .key {
+        padding: 8px 16px;
+        min-width: 70px;
+        font-size: 16px;
+    }
+
+    .story-text,
+    .impressum-text {
+        font-size: 16px;
+        line-height: 1.7;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 768px
+   ============================================ */
+@media (max-width: 768px) {
+    .controll-section,
+    .character-story-section,
+    .impressum-section {
+        padding: 15px;
+    }
+
+    .controls-box,
+    .story-box,
+    .impressum-box {
+        padding: 25px 20px;
+        max-width: 95%;
+        max-height: 85vh;
+        border-radius: 15px;
+        border: 3px solid #ff6b35;
+    }
+
+    .controls-box h2,
+    .story-box h2,
+    .impressum-box h2 {
+        font-size: 28px;
+        margin-bottom: 15px;
+    }
+
+    .controls-list li {
+        font-size: 18px;
+        margin: 10px 0;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .key {
+        padding: 8px 14px;
+        min-width: 60px;
+        font-size: 16px;
+    }
+
+    .story-text {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    .impressum-text {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .impressum-text h3 {
+        font-size: 18px;
+        margin-top: 15px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 480px
+   ============================================ */
+@media (max-width: 480px) {
+    .controll-section,
+    .character-story-section,
+    .impressum-section {
+        padding: 10px;
+    }
+
+    .controls-box,
+    .story-box,
+    .impressum-box {
+        padding: 20px 15px;
+        max-width: 98%;
+        max-height: 80vh;
+        border-radius: 12px;
+        border: 2px solid #ff6b35;
+    }
+
+    .controls-box h2,
+    .story-box h2,
+    .impressum-box h2 {
+        font-size: 24px;
+        margin-bottom: 12px;
+    }
+
+    .controls-list {
+        margin: 20px 0;
+    }
+
+    .controls-list li {
+        font-size: 16px;
+        margin: 8px 0;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .key {
+        padding: 6px 12px;
+        min-width: 50px;
+        font-size: 16px;
+    }
+
+    .story-text {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    .impressum-text {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+    .impressum-text h3 {
+        font-size: 16px;
+        margin-top: 12px;
+    }
+
+    .impressum-text p {
+        margin: 6px 0;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 360px
+   ============================================ */
+@media (max-width: 360px) {
+    .controll-section,
+    .character-story-section,
+    .impressum-section {
+        padding: 8px;
+    }
+
+    .controls-box,
+    .story-box,
+    .impressum-box {
+        padding: 15px 12px;
+        max-width: 98%;
+        max-height: 78vh;
+        border-radius: 10px;
+    }
+
+    .controls-box h2,
+    .story-box h2,
+    .impressum-box h2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .controls-list {
+        margin: 15px 0;
+    }
+
+    .controls-list li {
+        font-size: 16px;
+        margin: 6px 0;
+    }
+
+    .key {
+        padding: 5px 10px;
+        min-width: 45px;
+        font-size: 16px;
+    }
+
+    .story-text {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 12px;
+    }
+
+    .impressum-text {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+    .impressum-text h3 {
+        font-size: 15px;
+        margin-top: 10px;
+    }
+
+    .controls-box::-webkit-scrollbar,
+    .story-box::-webkit-scrollbar,
+    .impressum-box::-webkit-scrollbar {
+        width: 6px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 320px
+   ============================================ */
+@media (max-width: 320px) {
+    .controll-section,
+    .character-story-section,
+    .impressum-section {
+        padding: 5px;
+    }
+
+    .controls-box,
+    .story-box,
+    .impressum-box {
+        padding: 12px 10px;
+        max-width: 98%;
+        max-height: 75vh;
+        border-radius: 8px;
+        border: 2px solid #ff6b35;
+    }
+
+    .controls-box h2,
+    .story-box h2,
+    .impressum-box h2 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    .controls-list {
+        margin: 12px 0;
+    }
+
+    .controls-list li {
+        font-size: 16px;
+        margin: 5px 0;
+        gap: 5px;
+    }
+
+    .key {
+        padding: 4px 8px;
+        min-width: 40px;
+        font-size: 16px;
+    }
+
+    .story-text {
+        font-size: 16px;
+        line-height: 1.4;
+        margin-bottom: 10px;
+    }
+
+    .impressum-text {
+        font-size: 16px;
+        line-height: 1.4;
+    }
+
+    .impressum-text h3 {
+        font-size: 16px;
+        margin-top: 8px;
+        margin-bottom: 6px;
+    }
+
+    .impressum-text p {
+        margin: 5px 0;
+    }
+
+    .controls-box::-webkit-scrollbar,
+    .story-box::-webkit-scrollbar,
+    .impressum-box::-webkit-scrollbar {
+        width: 5px;
+    }
+}
+
+/* ============================================
+   LANDSCAPE ORIENTATION
+   ============================================ */
+@media (max-width: 768px) and (orientation: landscape) {
+    .controls-box,
+    .story-box,
+    .impressum-box {
+        max-height: 80vh;
+        padding: 15px 20px;
+    }
+
+    .controls-box h2,
+    .story-box h2,
+    .impressum-box h2 {
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+
+    .controls-list li {
+        font-size: 16px;
+        margin: 6px 0;
+    }
+
+    .story-text,
+    .impressum-text {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+}
+
+/* ============================================
+   TOUCH OPTIMIZATION
+   ============================================ */
+@media (hover: none) and (pointer: coarse) {
+    .controls-list li {
+        padding: 8px 0;
+    }
 }

@@ -1,6 +1,9 @@
 /* ============================================
-   BASE STYLES
+   BASE STYLES & LAYOUT
+   Grundlegende Styles für Body, Canvas und Layout
    ============================================ */
+
+/* Base Body Styles */
 body {
     display: flex;
     align-items: center;
@@ -24,55 +27,7 @@ h1 {
     align-items: center;
 }
 
-/* ============================================
-   GAME BUTTONS
-   ============================================ */
-.game-btns {
-    position: fixed;
-    top: 20px;
-    right: 50%;
-    transform: translateX(calc(960px - 20px));
-    display: flex;
-    gap: 15px;
-    z-index: 2000;
-}
-
-.btn-audio,
-.btn-fullscreen,
-.btn-back-menu {
-    width: 50px;
-    height: 50px;
-    padding: 0;
-    font-size: 24px;
-    background-color: #ff6b35;
-    color: white;
-    border: 2px solid #fff;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-audio:hover,
-.btn-fullscreen:hover,
-.btn-back-menu:hover {
-    background-color: #ff8c42;
-    transform: scale(1.1);
-}
-
-.btn-audio.muted {
-    background-color: #666;
-}
-
-.btn-fullscreen.active {
-    background-color: #4CAF50;
-}
-
-/* ============================================
-   CANVAS
-   ============================================ */
+/* Canvas Styles */
 canvas {
     background-color: black;
     max-width: 100%;
@@ -80,6 +35,7 @@ canvas {
     display: block;
 }
 
+/* Fullscreen Canvas */
 body:fullscreen canvas,
 body:-webkit-full-screen canvas {
     position: fixed;
@@ -95,97 +51,67 @@ body:-webkit-full-screen {
     overflow: hidden;
 }
 
-/* ============================================
-   START SCREEN
-   ============================================ */
-.start-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.start-bg {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.start-content {
-    position: relative;
-    z-index: 1001;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-    justify-content: center;
-}
-
-.start-content h1 {
-    font-size: 64px;
-    color: #fff;
-    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
-    margin-bottom: 40px;
-}
-
-/* ============================================
-   MENU BUTTONS
-   ============================================ */
-.menu-btn {
-    padding: 20px 41px;
-    font-size: 20px;
-    background-color: #ff6b35;
-    color: white;
-    border: 4px solid #fff;
-    border-radius: 15px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    width: 240px;
-    height: 70px;
-}
-
-.menu-btn:hover {
-    background-color: #ff8c42;
-    transform: scale(1.1);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
-}
-
-.btn-start,
-.btn-controlls,
-.btn-info,
-.btn-impressum {
-    padding: 20px 41px;
-    font-size: 20px;
-    background-color: #ff6b35;
-    color: white;
-    border: 4px solid #fff;
-    border-radius: 15px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    width: 240px;
-    height: 70px;
-}
-
-.btn-start:hover,
-.btn-controlls:hover,
-.btn-info:hover,
-.btn-impressum:hover {
-    background-color: #ff8c42;
-    transform: scale(1.1);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
-}
-
+/* Utility Class */
 .hidden {
     display: none !important;
+}
+
+/* ============================================
+   RESPONSIVE: 1920px+
+   ============================================ */
+@media (min-width: 1921px) {
+    body {
+        max-width: 1920px;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 768px
+   ============================================ */
+@media (max-width: 768px) {
+    canvas {
+        width: 100vw;
+        height: auto;
+        max-height: 100vh;
+        object-fit: contain;
+    }
+
+    h1 {
+        font-size: 28px;
+        top: 10px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 480px
+   ============================================ */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 24px;
+    }
+
+    canvas {
+        width: 100vw;
+        height: 60vh;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 360px
+   ============================================ */
+@media (max-width: 360px) {
+    h1 {
+        font-size: 20px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE: bis 320px
+   ============================================ */
+@media (max-width: 320px) {
+    h1 {
+        font-size: 18px;
+    }
 }

@@ -1,0 +1,24 @@
+/* ============================================
+   ORIENTATION & SPECIAL VIEWS
+   Portrait-Hinweis und spezielle Ansichten
+   ============================================ */
+
+/* ============================================
+   PORTRAIT ORIENTATION WARNING
+   ============================================ */
+@media (max-width: 1024px) and (orientation: portrait) {
+    body::after {
+        content: "Please rotate your device for better experience";
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 18px;
+        text-align: center;
+        z-index: 9999;
+    }
+}
