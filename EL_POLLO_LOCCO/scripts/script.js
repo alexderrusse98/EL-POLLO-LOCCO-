@@ -110,18 +110,12 @@ function showFullscreenButton() {
 
 function updateStartScreenImage() {
   const startScreenImg = document.getElementById('startScreenImg');
-  const characterInfoBtn = document.getElementById('characterInfoBtn');
-
   if (window.innerWidth >= 800) {
     startScreenImg.src = './img/img_pollo_locco/img/9_intro_outro_screens/start/startscreen_2.png';
-    characterInfoBtn.classList.remove('hidden'); // Button wieder anzeigen
   } else {
     startScreenImg.src = './img/img_pollo_locco/img/background_full/desert.jpg';
-
-    characterInfoBtn.classList.add('hidden'); // Button ausblenden
   }
 }
-
 
 /** @returns {boolean} True if in fullscreen. */
 function isInFullscreen() {
