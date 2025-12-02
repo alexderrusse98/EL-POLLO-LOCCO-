@@ -19,20 +19,21 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('closeImpressumBtn').addEventListener('click', hideImpressum);
   document.getElementById('backToMenuBtn').addEventListener('click', backToMenu);
 
+  // Click outside to close
   document.getElementById('controllsSection').addEventListener('click', (e) => {
     if (e.target.id === 'controllsSection') hideControls();
   });
-
   document.getElementById('characterStorySection').addEventListener('click', (e) => {
     if (e.target.id === 'characterStorySection') hideCharacterStory();
   });
-
   document.getElementById('impressumSection').addEventListener('click', (e) => {
     if (e.target.id === 'impressumSection') hideImpressum();
   });
 
   document.addEventListener('fullscreenchange', handleFullscreenChange);
   document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+  updateStartScreenImage();
 });
 
 /** Starts game, initializes level and world. */
@@ -68,13 +69,14 @@ function backToMenu() {
 /** Adjusts UI on window resize. */
 window.addEventListener('resize', () => {
   detectTouchDevice();
-  document.getElementById('fullscreenBtn').style.display = 
+  document.getElementById('fullscreenBtn').style.display =
     window.innerWidth <= 1000 ? 'none' : 'flex';
+  updateStartScreenImage();
 });
 
 /** @returns {boolean} True if touch device with small screen. */
 function detectTouchDevice() {
-  const isTouchDevice = ('ontouchstart' in window) || 
+  const isTouchDevice = ('ontouchstart' in window) ||
     (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
   return isTouchDevice && window.innerWidth <= 1000;
 }
@@ -104,6 +106,15 @@ function hideFullscreenButton() {
 
 function showFullscreenButton() {
   document.getElementById('fullscreenBtn').style.display = 'flex';
+}
+
+function updateStartScreenImage() {
+  const startScreenImg = document.getElementById('startScreenImg');
+  if (window.innerWidth >= 800) {
+    startScreenImg.src = './img/img_pollo_locco/img/9_intro_outro_screens/start/startscreen_2.png';
+  } else {
+    startScreenImg.src = './img/img_pollo_locco/img/background_full/desert.jpg';
+  }
 }
 
 /** @returns {boolean} True if in fullscreen. */
@@ -251,7 +262,7 @@ function updateCanvasSize(canvas, isFullscreen) {
   } else {
     const aspectRatio = 720 / 480;
     const screenRatio = window.innerWidth / window.innerHeight;
-    
+
     if (screenRatio > aspectRatio) {
       canvas.style.height = '100vh';
       canvas.style.width = (window.innerHeight * aspectRatio) + 'px';
