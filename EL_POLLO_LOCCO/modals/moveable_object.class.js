@@ -270,7 +270,7 @@ class MovableObject extends DrawableObject {
       return {
          left: 25,
          right: 25,
-         top: 5,
+         top: 75,
          bottom: 10
       };
    }
@@ -283,8 +283,8 @@ class MovableObject extends DrawableObject {
       return {
          left: 10,
          right: 10,
-         top: 0,
-         bottom: 0
+         top: 15,
+         bottom: 15,
       };
    }
 
