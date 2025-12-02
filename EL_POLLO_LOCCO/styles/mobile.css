@@ -55,7 +55,7 @@
 
 .control-btn.jump,
 .control-btn.throw {
-    font-size: 12px;
+    font-size: 16px;
 }
 
 /* ============================================
@@ -221,17 +221,17 @@
     .key {
         padding: 8px 14px;
         min-width: 60px;
-        font-size: 14px;
+        font-size: 16px;
     }
 
     .story-text {
-        font-size: 15px;
+        font-size: 16px;
         line-height: 1.6;
         margin-bottom: 20px;
     }
 
     .impressum-text {
-        font-size: 14px;
+        font-size: 16px;
         line-height: 1.6;
     }
 
@@ -263,7 +263,7 @@
     .menu-btn {
         width: 140px;
         height: 45px;
-        font-size: 14px;
+        font-size: 16px;
     }
 
     canvas {
@@ -289,7 +289,7 @@
 
     .control-btn.jump,
     .control-btn.throw {
-        font-size: 10px;
+        font-size: 16px;
     }
 
     .controll-section,
@@ -329,17 +329,17 @@
     .key {
         padding: 6px 12px;
         min-width: 50px;
-        font-size: 13px;
+        font-size: 16px;
     }
 
     .story-text {
-        font-size: 14px;
+        font-size: 16px;
         line-height: 1.5;
         margin-bottom: 15px;
     }
 
     .impressum-text {
-        font-size: 13px;
+        font-size: 16px;
         line-height: 1.5;
     }
 
@@ -377,7 +377,7 @@
     .menu-btn {
         width: 130px;
         height: 42px;
-        font-size: 13px;
+        font-size: 16px;
         padding: 12px 25px;
     }
 
@@ -403,7 +403,7 @@
     .control-btn {
         width: 45px;
         height: 45px;
-        font-size: 14px;
+        font-size: 16px;
     }
 
     .control-btn.left,
@@ -443,24 +443,24 @@
     }
 
     .controls-list li {
-        font-size: 14px;
+        font-size: 16px;
         margin: 6px 0;
     }
 
     .key {
         padding: 5px 10px;
         min-width: 45px;
-        font-size: 12px;
+        font-size: 16px;
     }
 
     .story-text {
-        font-size: 13px;
+        font-size: 16px;
         line-height: 1.5;
         margin-bottom: 12px;
     }
 
     .impressum-text {
-        font-size: 12px;
+        font-size: 16px;
         line-height: 1.5;
     }
 
@@ -471,7 +471,7 @@
 
     .btn-close {
         padding: 8px 25px;
-        font-size: 14px;
+        font-size: 16px;
         margin-top: 10px;
     }
 
@@ -502,7 +502,7 @@
     .menu-btn {
         width: 120px;
         height: 38px;
-        font-size: 12px;
+        font-size: 16px;
         padding: 10px 20px;
         border: 2px solid #fff;
     }
@@ -518,7 +518,7 @@
     .btn-back-menu {
         width: 32px;
         height: 32px;
-        font-size: 14px;
+        font-size: 16px;
         border: 1px solid #fff;
     }
 
@@ -536,7 +536,7 @@
     .control-btn {
         width: 42px;
         height: 42px;
-        font-size: 12px;
+        font-size: 16px;
         border: 2px solid #fff;
     }
 
@@ -578,7 +578,7 @@
     }
 
     .controls-list li {
-        font-size: 13px;
+        font-size: 16px;
         margin: 5px 0;
         gap: 5px;
     }
@@ -586,22 +586,22 @@
     .key {
         padding: 4px 8px;
         min-width: 40px;
-        font-size: 11px;
+        font-size: 16px;
     }
 
     .story-text {
-        font-size: 12px;
+        font-size: 16px;
         line-height: 1.4;
         margin-bottom: 10px;
     }
 
     .impressum-text {
-        font-size: 11px;
+        font-size: 16px;
         line-height: 1.4;
     }
 
     .impressum-text h3 {
-        font-size: 14px;
+        font-size: 16px;
         margin-top: 8px;
         margin-bottom: 6px;
     }
@@ -612,7 +612,7 @@
 
     .btn-close {
         padding: 8px 20px;
-        font-size: 13px;
+        font-size: 16px;
         margin-top: 8px;
         width: 100%;
         max-width: 150px;
@@ -645,19 +645,19 @@
     }
 
     .controls-list li {
-        font-size: 14px;
+        font-size: 16px;
         margin: 6px 0;
     }
 
     .story-text,
     .impressum-text {
-        font-size: 12px;
+        font-size: 16px;
         margin-bottom: 12px;
     }
 
     .btn-close {
         padding: 8px 25px;
-        font-size: 14px;
+        font-size: 16px;
         margin-top: 8px;
     }
 }
