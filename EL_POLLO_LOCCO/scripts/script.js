@@ -6,12 +6,11 @@ let audios = new Audios();
 
 /**
  * Initializes the application once the DOM is fully loaded.
- * Sets up touch detection, UI event listeners and updates the start screen image.
+ * Sets up UI event listeners and updates the start screen image.
  * @event DOMContentLoaded
  */
 window.addEventListener('DOMContentLoaded', () => {
-  detectTouchDevice();
-
+  updateViewState();
   document.getElementById('startButton').addEventListener('click', startGame);
   document.getElementById('controllsBtn').addEventListener('click', showControls);
   document.getElementById('closeControlsBtn').addEventListener('click', hideControls);
@@ -38,7 +37,10 @@ window.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 
   updateStartScreenImage();
+  setupTouchControls();
 });
+
+window.addEventListener('orientationchange', updateViewState);
 
 /**
  * Starts the game by hiding the start menu, initializing the level and creating the game world.
@@ -48,14 +50,10 @@ function startGame() {
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('backToMenuBtn').classList.remove('hidden');
 
-  if (detectTouchDevice()) {
-    document.getElementById('mobileControls').classList.remove('hidden');
-    setupTouchControls();
-  }
-
   autoFullscreenForMobile();
   level1 = createLevel1();
   init();
+  updateViewState(); // Update controls visibility when game starts
 }
 
 /**
@@ -81,20 +79,44 @@ function backToMenu() {
  * @event resize
  */
 window.addEventListener('resize', () => {
-  detectTouchDevice();
+  updateViewState();
   document.getElementById('fullscreenBtn').style.display =
     window.innerWidth <= 1000 ? 'none' : 'flex';
   updateStartScreenImage();
 });
 
-/**
- * Detects whether the device supports touch input and has a small screen.
- * @returns {boolean} True if touch device with small resolution.
- */
-function detectTouchDevice() {
-  const isTouchDevice = ('ontouchstart' in window) ||
-    (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
-  return isTouchDevice && window.innerWidth <= 1000;
+function isPortrait() {
+  return window.innerHeight > window.innerWidth;
+}
+
+function updateViewState() {
+  const body = document.body;
+  const mobileControls = document.getElementById('mobileControls');
+  const startScreen = document.getElementById('startScreen');
+  const portrait = isPortrait();
+  const isGameActive = startScreen.classList.contains('hidden');
+  const screenWidth = window.innerWidth;
+
+  // Show portrait warning only in portrait mode
+  if (portrait) {
+    body.classList.add('portrait-warning');
+  } else {
+    body.classList.remove('portrait-warning');
+  }
+
+  // Show mobile controls only when:
+  // 1. Game is active (not in start screen)
+  // 2. NOT in portrait mode
+  // 3. Screen width is <= 500px OR already in landscape with wider screen
+  if (isGameActive && !portrait) {
+    if (screenWidth <= 500 || screenWidth > 500) {
+      mobileControls.classList.remove('hidden');
+    } else {
+      mobileControls.classList.add('hidden');
+    }
+  } else {
+    mobileControls.classList.add('hidden');
+  }
 }
 
 /**
@@ -193,12 +215,16 @@ function setupTouchControls() {
  */
 function addTouchControl(button, key) {
   button.addEventListener('touchstart', (e) => {
-    e.preventDefault();
     keyboard[key] = true;
   });
+  
   button.addEventListener('touchend', (e) => {
-    e.preventDefault();
     keyboard[key] = false;
+  });
+  
+  // Prevent context menu on long press
+  button.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
   });
 }
 

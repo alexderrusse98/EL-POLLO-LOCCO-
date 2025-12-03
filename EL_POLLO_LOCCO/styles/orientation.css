@@ -7,7 +7,7 @@
    PORTRAIT ORIENTATION WARNING
    ============================================ */
 @media (max-width: 1024px) and (orientation: portrait) {
-    body::after {
+    .portrait-warning::after {
         content: "Please rotate your device for better experience";
         position: fixed;
         top: 50%;
