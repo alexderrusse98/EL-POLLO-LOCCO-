@@ -72,11 +72,11 @@ function addTouchControl(button, key) {
   button.addEventListener('touchstart', (e) => {
     keyboard[key] = true;
   });
-  
+
   button.addEventListener('touchend', (e) => {
     keyboard[key] = false;
   });
-  
+
   // Prevent context menu on long press
   button.addEventListener('contextmenu', (e) => {
     e.preventDefault();

@@ -58,33 +58,69 @@ function isPortrait() {
 
 /**
  * Updates the UI state based on orientation and screen size.
+ * Manages portrait warning and mobile controls visibility.
+ * @returns {void}
  */
 function updateViewState() {
-  const body = document.body;
-  const mobileControls = document.getElementById('mobileControls');
-  const startScreen = document.getElementById('startScreen');
-  const portrait = isPortrait();
-  const isGameActive = startScreen.classList.contains('hidden');
-  const screenWidth = window.innerWidth;
+  const viewData = getViewStateData();
 
-  if (portrait) {
+  updatePortraitWarning(viewData.body, viewData.portrait);
+  updateMobileControlsVisibility(viewData);
+}
+
+/**
+ * Collects all necessary DOM elements and state information.
+ * @returns {Object} Object containing view state data
+ * @property {HTMLElement} body - Document body element
+ * @property {HTMLElement} mobileControls - Mobile controls container
+ * @property {HTMLElement} startScreen - Start screen element
+ * @property {boolean} portrait - Whether device is in portrait mode
+ * @property {boolean} isGameActive - Whether game is currently active
+ * @property {number} screenWidth - Current window width in pixels
+ */
+function getViewStateData() {
+  const startScreen = document.getElementById('startScreen');
+
+  return {
+    body: document.body,
+    mobileControls: document.getElementById('mobileControls'),
+    startScreen: startScreen,
+    portrait: isPortrait(),
+    isGameActive: startScreen.classList.contains('hidden'),
+    screenWidth: window.innerWidth
+  };
+}
+
+/**
+ * Toggles the portrait warning class on the body element.
+ * @param {HTMLElement} body - Document body element
+ * @param {boolean} isPortrait - Whether device is in portrait orientation
+ * @returns {void}
+ */
+function updatePortraitWarning(body, isPortrait) {
+  if (isPortrait) {
     body.classList.add('portrait-warning');
   } else {
     body.classList.remove('portrait-warning');
   }
+}
 
-  // Show mobile controls only when:
-  // 1. Game is active (not in start screen)
-  // 2. NOT in portrait mode
-  // 3. Screen width is <= 500px OR already in landscape with wider screen
-  if (isGameActive && !portrait) {
-    if (screenWidth <= 500 || screenWidth > 500) {
-      mobileControls.classList.remove('hidden');
-    } else {
-      mobileControls.classList.add('hidden');
-    }
+/**
+ * Updates mobile controls visibility based on game state and orientation.
+ * Controls are shown only when game is active and device is in landscape.
+ * @param {Object} viewData - View state data object
+ * @param {HTMLElement} viewData.mobileControls - Mobile controls element
+ * @param {boolean} viewData.isGameActive - Whether game is running
+ * @param {boolean} viewData.portrait - Whether in portrait mode
+ * @returns {void}
+ */
+function updateMobileControlsVisibility(viewData) {
+  const shouldShow = viewData.isGameActive && !viewData.portrait;
+
+  if (shouldShow) {
+    viewData.mobileControls.classList.remove('hidden');
   } else {
-    mobileControls.classList.add('hidden');
+    viewData.mobileControls.classList.add('hidden');
   }
 }
 

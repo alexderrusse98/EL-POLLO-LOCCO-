@@ -35,12 +35,10 @@ class CharacterAnimator {
         } else if (this.character.isHurt() && !this.character.isAboveGround()) {
             this.animateHurt();
         } else if (!this.character.isAboveGround()) {
-            // Check if character is moving
             const kbd = this.character.world.keyboard;
             if (kbd.RIGHT || kbd.LEFT) {
                 this.animateWalking();
             } else {
-                // Only handle resting if character is NOT moving
                 this.handleResting();
             }
         }

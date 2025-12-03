@@ -327,17 +327,14 @@ class MovableObject extends DrawableObject {
       this.energy -= 20;
       if (this.energy < 0) {
          this.energy = 0;
-
       } else {
          this.lastHit = new Date().getTime();
       }
-
       setTimeout(() => {
          if (!this.isAttackAnimation && this.energy > 0 && !this.isHurt()) {
             this.attack();
          }
       }, 600);
-
       if (this.energy > 0 && this.world && this.world.audios && this instanceof Character) {
          this.world.audios.playSound('characterHurtSound');
       }

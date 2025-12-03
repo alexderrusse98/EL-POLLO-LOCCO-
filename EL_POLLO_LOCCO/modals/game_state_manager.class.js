@@ -172,21 +172,17 @@ class GameStateManager {
  */
     cleanup() {
         this.world.stopGame();
-
         if (this.world.animationFrameId) {
             cancelAnimationFrame(this.world.animationFrameId);
             this.world.animationFrameId = null;
         }
-
         this.world.audios.stopBackgroundMusic();
         this.world.audios.stopAllSounds();
         this.world.throwAbleObjects = [];
         this.world.level.enemies = [];
         this.world.level.coins = [];
         this.world.level.bottles = [];
-        this.world.ctx.clearRect(
-            0,
-            0,
+        this.world.ctx.clearRect(0, 0,
             this.world.canvas.width,
             this.world.canvas.height
         );
