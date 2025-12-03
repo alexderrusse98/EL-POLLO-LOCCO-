@@ -129,7 +129,7 @@ class World {
     isMobileRestartCondition() {
         return (this.gameStateManager.gameOver ||
             this.gameStateManager.gameWin) &&
-            window.innerWidth <= 1000;
+            window.innerWidth <= 1181;
     }
 
     /**

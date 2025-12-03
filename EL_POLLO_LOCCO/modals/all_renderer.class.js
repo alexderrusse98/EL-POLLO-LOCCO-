@@ -29,10 +29,10 @@ class WorldRenderer {
      * @returns {boolean} True if game was restarted.
      */
     handleRestart() {
-        const shouldRestart = (this.world.gameStateManager.gameOver || 
-                              this.world.gameStateManager.gameWin) && 
-                              this.world.keyboard.R;
-        
+        const shouldRestart = (this.world.gameStateManager.gameOver ||
+            this.world.gameStateManager.gameWin) &&
+            this.world.keyboard.R;
+
         if (shouldRestart) {
             this.world.gameStateManager.restartGame();
             return true;
@@ -45,9 +45,9 @@ class WorldRenderer {
      */
     clearCanvas() {
         this.world.ctx.clearRect(
-            0, 
-            0, 
-            this.world.canvas.width, 
+            0,
+            0,
+            this.world.canvas.width,
             this.world.canvas.height
         );
     }
@@ -72,48 +72,85 @@ class WorldRenderer {
     }
 
     /**
-     * Draws character, clouds, and enemies with proper depth sorting.
-     * Objects are sorted by their bottom Y position (y + height).
-     * Objects further down (higher Y value) are drawn later = appear in front.
-     */
+ * Draws character, clouds, and enemies with proper depth sorting.
+ * Objects are sorted by their bottom Y position to create correct layering.
+ * @returns {void}
+ */
     drawCharacterAndEnemies() {
         this.world.ctx.translate(this.world.camera_x, 0);
-
-        // Clouds zeichnen (immer im Hintergrund)
         this.addObjectsToMap(this.world.level.cloud);
 
-        // Alle zu sortierenden Objekte sammeln
-        const objectsToSort = [];
+        const objectsToSort = this.collectGameObjects();
+        const sortedObjects = this.sortObjectsByDepth(objectsToSort);
 
-        // Character hinzufügen
-        objectsToSort.push(this.world.character);
+        this.drawSortedObjects(sortedObjects);
+    }
 
-        // Enemies hinzufügen (vorher filtern)
+    /**
+     * Collects all game objects that need depth sorting.
+     * Filters out objects marked for deletion.
+     * @returns {Array<Object>} Array of game objects to be rendered
+     */
+    collectGameObjects() {
+        const objects = [];
+
+        objects.push(this.world.character);
+        this.filterAndAddEnemies(objects);
+        this.addEndBossIfActive(objects);
+
+        return objects;
+    }
+
+    /**
+     * Filters enemies marked for deletion and adds valid ones to the collection.
+     * @param {Array<Object>} objects - Target array for valid enemies
+     * @returns {void}
+     */
+    filterAndAddEnemies(objects) {
         this.world.level.enemies = this.world.level.enemies.filter(
             enemy => !enemy.markForDeletion
         );
-        objectsToSort.push(...this.world.level.enemies);
+        objects.push(...this.world.level.enemies);
+    }
 
-        // Endboss hinzufügen wenn vorhanden
+    /**
+     * Adds the end boss to the object collection if it exists and is active.
+     * Removes the end boss reference if marked for deletion.
+     * @param {Array<Object>} objects - Target array for the end boss
+     * @returns {void}
+     */
+    addEndBossIfActive(objects) {
         if (this.world.endBoss && !this.world.endBoss.markForDeletion) {
-            objectsToSort.push(this.world.endBoss);
+            objects.push(this.world.endBoss);
         } else if (this.world.endBoss && this.world.endBoss.markForDeletion) {
             this.world.endBoss = null;
         }
+    }
 
-        // Nach Y-Position sortieren (Objekte weiter unten werden später gezeichnet)
-        objectsToSort.sort((a, b) => {
+    /**
+     * Sorts game objects by their bottom Y position for correct depth rendering.
+     * Objects with higher Y values are drawn later, appearing in front.
+     * @param {Array<Object>} objects - Objects to sort
+     * @returns {Array<Object>} Sorted array of objects
+     */
+    sortObjectsByDepth(objects) {
+        return objects.sort((a, b) => {
             const aBottom = a.y + a.height;
             const bBottom = b.y + b.height;
             return aBottom - bBottom;
         });
+    }
 
-        // Sortierte Objekte zeichnen
-        objectsToSort.forEach(obj => {
+    /**
+     * Draws all objects in the provided array to the canvas.
+     * @param {Array<Object>} objects - Sorted objects to render
+     * @returns {void}
+     */
+    drawSortedObjects(objects) {
+        objects.forEach(obj => {
             this.addToMap(obj);
         });
     }
-
     /**
      * Draws all collectable items (bottles, coins).
      */
@@ -135,7 +172,7 @@ class WorldRenderer {
         this.addToMap(this.world.statusBarHealth);
         this.addToMap(this.world.statusBarCoins);
         this.addToMap(this.world.statusBarBottles);
-        
+
         if (this.world.statusBarBossHealth.visible) {
             this.addToMap(this.world.statusBarBossHealth);
         }
@@ -145,12 +182,12 @@ class WorldRenderer {
      * Draws the end screen if game is over or won.
      */
     drawEndScreen() {
-        if (this.world.gameStateManager.gameOver || 
+        if (this.world.gameStateManager.gameOver ||
             this.world.gameStateManager.gameWin) {
             this.world.ctx.save();
             this.world.ctx.setTransform(1, 0, 0, 1, 0, 0);
             this.world.gameStateManager.showEndImg(
-                this.world.ctx, 
+                this.world.ctx,
                 this.world.canvas
             );
             this.world.ctx.restore();

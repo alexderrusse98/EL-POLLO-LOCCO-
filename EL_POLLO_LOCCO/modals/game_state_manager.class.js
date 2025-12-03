@@ -157,7 +157,7 @@ class GameStateManager {
         ctx.lineWidth = 3;
         ctx.textAlign = 'center';
 
-        const isMobile = window.innerWidth <= 1000;
+        const isMobile = window.innerWidth <= 1181;
         const restartMessage = isMobile ?
             'Tap screen to restart' :
             'Press R to restart';
