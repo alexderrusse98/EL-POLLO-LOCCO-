@@ -294,7 +294,7 @@ class Endboss extends MovableObject {
      */
     normalAttack() {
         this.speedY = 30;
-        this.startDash(50, 300); // 50px Distanz über 300ms
+        this.startDash(50, 300);
     }
 
     /**
@@ -302,12 +302,12 @@ class Endboss extends MovableObject {
      */
     bigAttack() {
         this.speedY = 40;
-        this.startDash(100, 400); // 100px Distanz über 400ms
+        this.startDash(100, 400);
     }
 
 
     startDash(distance, duration) {
-        if (this.dashInterval) return; // Verhindert mehrfache Dashes
+        if (this.dashInterval) return;
 
         const direction = this.otherDirection ? 1 : -1;
         const startTime = Date.now();
@@ -318,14 +318,13 @@ class Endboss extends MovableObject {
             const elapsed = Date.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
-            // Smooth movement mit easing
             this.x = startX + (distance * direction * progress);
 
             if (progress >= 1) {
                 clearInterval(this.dashInterval);
                 this.dashInterval = null;
             }
-        }, 1000 / 60); // 60 FPS
+        }, 1000 / 60);
     }
 
     /**
@@ -383,8 +382,8 @@ class Endboss extends MovableObject {
     }
 
     /**
- * Moves the boss depending on its direction & attack state
- */
+     * Moves the boss depending on its direction & attack state
+     */
     moveTowardsCharacter() {
         if (this.dashInterval) return;
 
