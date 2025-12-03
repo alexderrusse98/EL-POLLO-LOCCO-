@@ -24,7 +24,7 @@ function startGame() {
 
   level1 = createLevel1();
   init();
-  updateViewState();
+  updateCanvasResponsive();
 }
 
 /**

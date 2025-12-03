@@ -1,6 +1,6 @@
-/**
- * UI.JS - Handles all UI controls, menu management, and screen updates
- */
+// ============================================
+// UI.JS - Angepasste Version
+// ============================================
 
 /**
  * Initializes the application once the DOM is fully loaded.
@@ -9,7 +9,10 @@
  */
 window.addEventListener('DOMContentLoaded', () => {
   initializeAudioButton();
+  initStartScreenCanvas();
   updateViewState();
+  updateCanvasResponsive();
+
   document.getElementById('startButton').addEventListener('click', startGame);
   document.getElementById('controllsBtn').addEventListener('click', showControls);
   document.getElementById('closeControlsBtn').addEventListener('click', hideControls);
@@ -20,6 +23,7 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('impressumBtn').addEventListener('click', showImpressum);
   document.getElementById('closeImpressumBtn').addEventListener('click', hideImpressum);
   document.getElementById('backToMenuBtn').addEventListener('click', backToMenu);
+
   document.getElementById('controllsSection').addEventListener('click', (e) => {
     if (e.target.id === 'controllsSection') hideControls();
   });
@@ -33,7 +37,6 @@ window.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('fullscreenchange', handleFullscreenChange);
   document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 
-  updateStartScreenImage();
 });
 
 window.addEventListener('orientationchange', updateViewState);
@@ -44,9 +47,7 @@ window.addEventListener('orientationchange', updateViewState);
  */
 window.addEventListener('resize', () => {
   updateViewState();
-  document.getElementById('fullscreenBtn').style.display =
-    window.innerWidth <= 1000 ? 'none' : 'flex';
-  updateStartScreenImage();
+  updateCanvasResponsive();
 });
 
 /**
@@ -93,6 +94,44 @@ function getViewStateData() {
 }
 
 /**
+* Initializes and manages the responsive start screen canvas.
+* Draws the start screen image on a canvas that scales with window size.
+* @returns {void}
+*/
+function initStartScreenCanvas() {
+  const canvas = document.getElementById('startScreenCanvas');
+  const ctx = canvas.getContext('2d');
+  const img = document.getElementById('startScreenImg');
+
+  function drawStartScreen() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const bgScale = Math.max(canvas.width / img.width, canvas.height / img.height);
+    const bgX = (canvas.width - img.width * bgScale) / 2;
+    const bgY = (canvas.height - img.height * bgScale) / 2;
+
+    ctx.filter = 'blur(20px) brightness(0.7)';
+    ctx.drawImage(img, bgX, bgY, img.width * bgScale, img.height * bgScale);
+
+    ctx.filter = 'none';
+    const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+    const x = (canvas.width - img.width * scale) / 2;
+    const y = (canvas.height - img.height * scale) / 2;
+
+    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+  }
+
+  // Redraw on window resize
+  window.addEventListener('resize', drawStartScreen);
+
+  // Draw immediately if image already loaded
+  if (img.complete) {
+    drawStartScreen();
+  }
+}
+
+/**
  * Toggles the portrait warning class on the body element.
  * @param {HTMLElement} body - Document body element
  * @param {boolean} isPortrait - Whether device is in portrait orientation
@@ -126,37 +165,27 @@ function updateMobileControlsVisibility(viewData) {
 }
 
 /**
- * Automatically activates fullscreen mode on mobile devices.
+ * Updates canvas size responsively based on screen width.
+ * Canvas scales to 100% width when screen is 720px or smaller.
+ * Maintains 3:2 aspect ratio (720x480).
+ * @returns {void}
  */
-function autoFullscreenForMobile() {
-  if (isMobileDevice()) {
-    handleMobileFullscreen();
+function updateCanvasResponsive() {
+  const canvas = document.getElementById('canvas');
+  const screenWidth = window.innerWidth;
+  const aspectRatio = 720 / 480;
+
+  if (screenWidth <= 720) {
+    // Responsive mode: 100% width
+    canvas.style.width = '100%';
+    canvas.style.height = 'auto';
+    canvas.style.maxWidth = '720px';
   } else {
-    showFullscreenButton();
+    // Fixed size mode
+    canvas.style.width = '720px';
+    canvas.style.height = '480px';
+    canvas.style.maxWidth = '';
   }
-}
-
-/**
- * Checks if the screen size qualifies as mobile.
- * @returns {boolean} True if width is ≤ 1000px.
- */
-function isMobileDevice() {
-  return window.innerWidth <= 1000;
-}
-
-/**
- * Enables fullscreen on mobile and hides the fullscreen button.
- */
-function handleMobileFullscreen() {
-  hideFullscreenButton();
-  if (!isInFullscreen()) requestFullscreen();
-}
-
-/**
- * Hides the fullscreen toggle button.
- */
-function hideFullscreenButton() {
-  document.getElementById('fullscreenBtn').style.display = 'none';
 }
 
 /**
@@ -164,18 +193,6 @@ function hideFullscreenButton() {
  */
 function showFullscreenButton() {
   document.getElementById('fullscreenBtn').style.display = 'flex';
-}
-
-/**
- * Updates the start screen background image depending on screen size.
- */
-function updateStartScreenImage() {
-  const startScreenImg = document.getElementById('startScreenImg');
-  if (window.innerWidth >= 900) {
-    startScreenImg.src = './img/img_pollo_locco/img/9_intro_outro_screens/start/startscreen_2.png';
-  } else {
-    startScreenImg.src = './img/img_pollo_locco/img/background_full/desert.jpg';
-  }
 }
 
 /**
@@ -234,23 +251,6 @@ function hideCharacterStory() {
 }
 
 /**
- * Toggles game audio mute/unmute and updates the audio button state.
- */
-function toggleAudio() {
-  const btn = document.getElementById('audioBtn');
-  const isMuted = audios.toggleMute();
-
-  if (isMuted) {
-    btn.textContent = '🔇';
-    btn.classList.add('muted');
-  } else {
-    btn.textContent = '🔊';
-    btn.classList.remove('muted');
-    audios.playBackgroundMusic();
-  }
-}
-
-/**
  * Initializes the audio button state based on saved localStorage preference.
  * Updates button icon and class to reflect current mute state.
  * @returns {void}
@@ -265,6 +265,25 @@ function initializeAudioButton() {
   } else {
     btn.textContent = '🔊';
     btn.classList.remove('muted');
+  }
+}
+
+/**
+ * Toggles game audio mute/unmute, updates the audio button state,
+ * and saves the preference to localStorage.
+ * @returns {void}
+ */
+function toggleAudio() {
+  const btn = document.getElementById('audioBtn');
+  const isMuted = audios.toggleMute();
+
+  if (isMuted) {
+    btn.textContent = '🔇';
+    btn.classList.add('muted');
+  } else {
+    btn.textContent = '🔊';
+    btn.classList.remove('muted');
+    audios.playBackgroundMusic();
   }
 }
 
@@ -305,11 +324,14 @@ function exitFullscreen() {
  */
 function handleFullscreenChange() {
   const btn = document.getElementById('fullscreenBtn');
-  const canvas = document.getElementById('canvas');
   const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
 
   updateFullscreenButton(btn, isFullscreen);
-  updateCanvasSize(canvas, isFullscreen);
+
+  // Update canvas when exiting fullscreen
+  if (!isFullscreen) {
+    updateCanvasResponsive();
+  }
 }
 
 /**
@@ -321,49 +343,6 @@ function updateFullscreenButton(btn, isFullscreen) {
   btn.textContent = '⛶';
   btn.classList.toggle('active', isFullscreen);
   btn.title = isFullscreen ? 'Exit Fullscreen' : 'Fullscreen';
-}
-
-/**
- * Adjusts the canvas display size based on fullscreen mode and aspect ratio.
- * @param {HTMLElement} canvas - Canvas DOM element.
- * @param {boolean} isFullscreen - Current fullscreen state.
- */
-function updateCanvasSize(canvas, isFullscreen) {
-  if (!isFullscreen) {
-    canvas.style.width = '720px';
-    canvas.style.height = '480px';
-    canvas.style.maxWidth = canvas.style.maxHeight = '';
-  } else {
-    const aspectRatio = 720 / 480;
-    const screenRatio = window.innerWidth / window.innerHeight;
-
-    if (screenRatio > aspectRatio) {
-      canvas.style.height = '100vh';
-      canvas.style.width = (window.innerHeight * aspectRatio) + 'px';
-    } else {
-      canvas.style.width = '100vw';
-      canvas.style.height = (window.innerWidth / aspectRatio) + 'px';
-    }
-  }
-}
-
-/**
- * Dynamically resizes the canvas to fit within the screen while maintaining aspect ratio.
- */
-function resizeCanvas() {
-  const canvas = document.getElementById('canvas');
-  const container = canvas.parentElement;
-  const aspectRatio = 720 / 480;
-  let width = window.innerWidth * 0.9;
-  let height = width / aspectRatio;
-
-  if (height > window.innerHeight * 0.8) {
-    height = window.innerHeight * 0.8;
-    width = height * aspectRatio;
-  }
-
-  canvas.style.width = width + 'px';
-  canvas.style.height = height + 'px';
 }
 
 /**
@@ -382,4 +361,23 @@ function hideImpressum() {
   document.getElementById('impressumSection').classList.add('hidden');
   document.getElementById('startContent').classList.remove('hidden');
   document.getElementById('characterInfoBtn').classList.remove('hidden');
+}
+
+/**
+ * Starts the game by hiding the start menu, initializing the level and creating the game world.
+ * Also activates mobile controls and starts background music based on user preference.
+ * @returns {void}
+ */
+function startGame() {
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('backToMenuBtn').classList.remove('hidden');
+
+  if (!audios.isMuted) {
+    audios.playBackgroundMusic();
+  }
+
+  level1 = createLevel1();
+  init();
+  updateViewState();
+  updateCanvasResponsive();
 }

@@ -29,10 +29,10 @@ h1 {
 
 /* Canvas Styles */
 canvas {
-    background-color: black;
+    display: block;
+    margin: 0 auto;
     max-width: 100%;
     height: auto;
-    display: block;
 }
 
 /* Fullscreen Canvas */
@@ -79,8 +79,7 @@ body:-webkit-full-screen {
     }
 
     h1 {
-        font-size: 28px;
-        top: 10px;
+        display: none;
     }
 }
 
@@ -88,30 +87,8 @@ body:-webkit-full-screen {
    RESPONSIVE: bis 480px
    ============================================ */
 @media (max-width: 480px) {
-    h1 {
-        font-size: 24px;
-    }
-
     canvas {
         width: 100vw;
         height: 60vh;
-    }
-}
-
-/* ============================================
-   RESPONSIVE: bis 360px
-   ============================================ */
-@media (max-width: 360px) {
-    h1 {
-        font-size: 20px;
-    }
-}
-
-/* ============================================
-   RESPONSIVE: bis 320px
-   ============================================ */
-@media (max-width: 320px) {
-    h1 {
-        font-size: 18px;
     }
 }
