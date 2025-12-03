@@ -76,12 +76,11 @@ class Endboss extends MovableObject {
 
         this.x = 2500;
         this.speed = 0.15 + Math.random() * 0.5;
-        this.animate();
         this.movingRight = true;
         this.isAlerted = false;
-        this.deathAnimationStarted = false;
-        this.attackCounter = 0;
-        this.dashInterval = null;
+
+        this.animator = new EndbossAnimator(this);
+        this.animate();
     }
 
     /**
@@ -90,20 +89,14 @@ class Endboss extends MovableObject {
     stopAllIntervals() {
         this.intervals.forEach(clearInterval);
         this.intervals = [];
-        if (this.dashInterval) {
-            clearInterval(this.dashInterval);
-            this.dashInterval = null;
-        }
+        this.animator.cleanup();
     }
 
     /**
      * Triggers the alert state and initiates attack if not already alerted or attacking.
      */
     playAlertAnimation() {
-        if (!this.isAlerted && !this.isAttackAnimation) {
-            this.isAlerted = true;
-            this.attack();
-        }
+        this.animator.playAlertAnimation();
     }
 
     /**
@@ -111,15 +104,7 @@ class Endboss extends MovableObject {
      */
     deadChicken() {
         this.isDead = true;
-        this.showDeadAnimation();
-    }
-
-    /**
-     * Displays the first death frame and marks object for deletion after delay.
-     */
-    showDeadAnimation() {
-        this.img = this.imageCache[this.IMAGES_DEAD[0]];
-        setTimeout(() => { this.markForDeletion = true; }, 1000);
+        this.animator.showDeadAnimation();
     }
 
     /**
@@ -149,182 +134,8 @@ class Endboss extends MovableObject {
         );
 
         this.intervals.push(
-            setInterval(() => { this.animateCharacter(); }, 100)
+            setInterval(() => { this.animator.animateCharacter(); }, 100)
         );
-    }
-
-    /**
-     * Main animation handler that switches between states based on current condition.
-     */
-    animateCharacter() {
-        if (this.isDead) this.deathState();
-        else if (this.isHurt()) this.hurtState();
-        else if (this.isAttackAnimation) this.animateAttack();
-        else if (this.isAlerted) this.alertState();
-        else this.walkingState();
-    }
-
-    /**
-     * Handles hurt state animation and clears alert timeout.
-     */
-    hurtState() {
-        this.clearAlertTimeout();
-        this.animateHurt();
-    }
-
-    /**
-     * Handles alert state with direction change and animation.
-     */
-    alertState() {
-        this.alertOtherDirection();
-        this.animateAlert();
-    }
-
-    /**
-     * Handles walking state and clears alert timeout.
-     */
-    walkingState() {
-        this.clearAlertTimeout();
-        this.animateWalking();
-    }
-
-    /**
-     * Briefly changes direction during alert animation.
-     */
-    alertOtherDirection() {
-        if (!this.alertwaiting) {
-            this.alertwaiting = setTimeout(() => { this.otherDirection = false; }, 100);
-        }
-    }
-
-    /**
-     * Clears the alert direction timeout if it exists.
-     */
-    clearAlertTimeout() {
-        if (this.alertwaiting) {
-            clearTimeout(this.alertwaiting);
-            this.alertwaiting = null;
-        }
-    }
-
-    /**
-     * Plays the alert animation frames.
-     */
-    animateAlert() {
-        this.playAnimation(this.IMAGES_ALERT);
-    }
-
-    /**
-     * Plays the hurt animation frames.
-     */
-    animateHurt() {
-        this.playAnimation(this.IMAGES_HURT);
-    }
-
-    /**
-     * Plays the walking animation frames.
-     */
-    animateWalking() {
-        this.playAnimation(this.IMAGES_WALKING);
-    }
-
-    /**
-     * Handles death state by stopping vertical movement and playing death animation once.
-     */
-    deathState() {
-        this.speedY = 0;
-        if (!this.deathAnimationStarted) {
-            this.deathAnimationStarted = true;
-            this.playAnimationOnce(this.IMAGES_DEAD, () => {
-                this.markForDeletion = true;
-            }, 150);
-        }
-    }
-
-    /**
-     * Initiates an attack sequence if not already attacking.
-     */
-    attack() {
-        if (this.isAttackAnimation) return;
-        this.startAttack();
-        this.scheduleAttackExecution();
-    }
-
-    /**
-     * Sets attack flag and increments attack counter.
-     */
-    startAttack() {
-        this.isAttackAnimation = true;
-        this.attackCounter++;
-    }
-
-    /**
-     * Schedules the attack execution after a delay.
-     */
-    scheduleAttackExecution() {
-        setTimeout(() => { this.executeAttack(); }, 500);
-    }
-
-    /**
-     * Executes the attack if boss is not dead and schedules attack end.
-     */
-    executeAttack() {
-        if (this.isDead) return;
-        this.performAttackType();
-        this.scheduleAttackEnd();
-    }
-
-    /**
-     * Determines attack type based on counter (big attack every 3rd time).
-     */
-    performAttackType() {
-        if (this.attackCounter % 3 === 0) this.bigAttack();
-        else this.normalAttack();
-    }
-
-    /**
-     * Schedules the end of attack animation after delay.
-     */
-    scheduleAttackEnd() {
-        setTimeout(() => { this.isAttackAnimation = false; }, 1000);
-    }
-
-    /**
-     * Performs a normal attack with moderate jump and horizontal movement.
-     */
-    normalAttack() {
-        this.speedY = 30;
-        this.startDash(50, 300);
-    }
-
-    /**
-     * Performs a big attack with high jump and fast dash movement.
-     */
-    bigAttack() {
-        this.speedY = 40;
-        this.startDash(100, 400);
-    }
-
-
-    startDash(distance, duration) {
-        if (this.dashInterval) return;
-
-        const direction = this.otherDirection ? 1 : -1;
-        const startTime = Date.now();
-        const startX = this.x;
-        const targetX = startX + (distance * direction);
-
-        this.dashInterval = setInterval(() => {
-            const elapsed = Date.now() - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-
-            this.x = startX + (distance * direction * progress);
-
-            if (progress >= 1) {
-                clearInterval(this.dashInterval);
-                this.dashInterval = null;
-            }
-        }, 1000 / 60);
     }
 
     /**
@@ -344,17 +155,6 @@ class Endboss extends MovableObject {
     }
 
     /**
-     * Plays attack or walking animation based on dash state.
-     */
-    animateAttack() {
-        if (this.dashInterval) {
-            this.playAnimation(this.IMAGES_WALKING);
-        } else {
-            this.playAnimation(this.IMAGES_ATTACK);
-        }
-    }
-
-    /**
      * Main method: handles following logic
      */
     followCharacter() {
@@ -369,6 +169,7 @@ class Endboss extends MovableObject {
 
     /**
      * Prevents errors by checking references
+     * @returns {boolean} True if world and character exist
      */
     canFollowCharacter() {
         return this.world && this.world.character;
@@ -376,6 +177,8 @@ class Endboss extends MovableObject {
 
     /**
      * Updates facing direction based on character's position
+     * @param {number} characterX - Character's X position
+     * @param {number} bossX - Boss's X position
      */
     updateDirection(characterX, bossX) {
         this.otherDirection = !(characterX < bossX);
@@ -385,7 +188,7 @@ class Endboss extends MovableObject {
      * Moves the boss depending on its direction & attack state
      */
     moveTowardsCharacter() {
-        if (this.dashInterval) return;
+        if (this.animator.dashInterval) return;
 
         const moveSpeed = this.speed * 3;
         if (this.otherDirection) {
