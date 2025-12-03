@@ -44,9 +44,6 @@ class MovableObject extends DrawableObject {
       );
    }
 
-   /**
-    * Updates the object's position and velocity based on gravity.
-    */
    updateGravity() {
       if (this.shouldSkipGravity()) return;
 
@@ -65,8 +62,11 @@ class MovableObject extends DrawableObject {
     * @returns {boolean} True if gravity should be skipped.
     */
    shouldSkipGravity() {
-      return this.isDead && this.isDead();
-   }
+    if (this.isDead && this.isDead()) {
+        return this.y >= 500;
+    }
+    return false;
+}
 
    /**
     * Checks if object should handle splash animation.

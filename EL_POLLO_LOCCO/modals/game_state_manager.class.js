@@ -68,9 +68,6 @@ class GameStateManager {
             !this.gameWin;
     }
 
-    /**
-     * Handles game over sequence.
-     */
     handleGameOver() {
         this.gameOverTriggered = true;
         this.world.audios.playSound('characterDeadSound');
@@ -81,12 +78,11 @@ class GameStateManager {
             this.world.audios.stopBackgroundMusic();
             this.world.audios.playSound('gameOverSound');
             this.world.stopGame();
+            
+            this.hideMobileControls();
         }, 2000);
     }
 
-    /**
-     * Handles game win sequence.
-     */
     handleGameWin() {
         this.gameWinTriggered = true;
         clearInterval(this.world.intervals[0]);
@@ -96,6 +92,7 @@ class GameStateManager {
             this.world.audios.stopBackgroundMusic();
             this.world.audios.playSound('winSound');
             this.world.stopGame();
+            this.hideMobileControls();
         }, 2000);
     }
 
@@ -168,8 +165,8 @@ class GameStateManager {
     }
 
     /**
- * Cleans up game resources.
- */
+     * Cleans up game resources.
+     */
     cleanup() {
         this.world.stopGame();
         if (this.world.animationFrameId) {
@@ -188,15 +185,32 @@ class GameStateManager {
         );
     }
 
-    /**
-     * Restarts the game by resetting all states.
-     */
+    
     restartGame() {
         this.cleanup();
         this.resetGameState();
         this.resetGameObjects();
         this.resetStatusBars();
         this.restartGameSystems();
+        this.showMobileControls();
+    }
+
+  
+    hideMobileControls() {
+        const mobileControls = document.getElementById('mobileControls');
+        if (mobileControls) {
+            mobileControls.classList.add('hidden');
+        }
+    }
+
+  
+    showMobileControls() {
+        const mobileControls = document.getElementById('mobileControls');
+        const isPortrait = window.innerHeight > window.innerWidth;
+        
+        if (mobileControls && !isPortrait) {
+            mobileControls.classList.remove('hidden');
+        }
     }
 
     /**

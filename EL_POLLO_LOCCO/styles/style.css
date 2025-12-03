@@ -35,14 +35,32 @@ canvas {
     height: auto;
 }
 
-/* Fullscreen Canvas */
-body:fullscreen canvas,
-body:-webkit-full-screen canvas {
+/* Fullscreen Canvas - NUR für Game-Canvas */
+body:fullscreen #canvas,
+body:-webkit-full-screen #canvas {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     object-fit: contain;
+}
+
+/* ✅ Start-Screen Canvas im Hintergrund */
+body:fullscreen #startScreenCanvas,
+body:-webkit-full-screen #startScreenCanvas {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    transform: none !important;
+    z-index: 999 !important;
+}
+
+/* ✅ Start-Screen Container über dem Canvas */
+body:fullscreen .start-screen,
+body:-webkit-full-screen .start-screen {
+    z-index: 1000 !important;
 }
 
 body:fullscreen,
@@ -67,6 +85,12 @@ body:-webkit-full-screen {
     }
 }
 
+@media (max-width: 1280px) {
+    h1 {
+        display: none;
+    }
+}
+
 /* ============================================
    RESPONSIVE: bis 768px
    ============================================ */
@@ -76,10 +100,6 @@ body:-webkit-full-screen {
         height: auto;
         max-height: 100vh;
         object-fit: contain;
-    }
-
-    h1 {
-        display: none;
     }
 }
 

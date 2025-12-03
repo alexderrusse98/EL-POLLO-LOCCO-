@@ -36,7 +36,7 @@
 
 .start-content {
     position: relative;
-    z-index: 1;
+    z-index: 1001;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -50,15 +50,6 @@
     color: #fff;
     text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
     margin-bottom: 40px;
-}
-
-/* ============================================
-   RESPONSIVE: bis 768px
-   ============================================ */
-@media (max-width: 768px) {
-    .start-content h1 {
-       overflow: hidden;
-    }
 }
 
 /* ============================================

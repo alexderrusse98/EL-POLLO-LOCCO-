@@ -17,14 +17,9 @@ function startGame() {
   document.getElementById('backToMenuBtn').classList.remove('hidden');
 
   autoFullscreenForMobile();
-
-  if (!audios.isMuted) {
-    audios.playBackgroundMusic();
-  }
-
   level1 = createLevel1();
   init();
-  updateCanvasResponsive();
+  updateViewState();
 }
 
 /**
@@ -82,7 +77,6 @@ function addTouchControl(button, key) {
     keyboard[key] = false;
   });
 
-  // Prevent context menu on long press
   button.addEventListener('contextmenu', (e) => {
     e.preventDefault();
   });

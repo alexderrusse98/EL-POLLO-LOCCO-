@@ -1,24 +1,65 @@
 /* ============================================
-   ORIENTATION & SPECIAL VIEWS
-   Portrait-Hinweis und spezielle Ansichten
+   PORTRAIT ORIENTATION WARNING - BLOCKING
+   Verhindert jegliche Interaktion im Portrait-Modus
    ============================================ */
 
-/* ============================================
-   PORTRAIT ORIENTATION WARNING
-   ============================================ */
 @media (max-width: 1024px) and (orientation: portrait) {
+    /* Vollbild-Overlay das ALLES blockiert */
+    .portrait-warning::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 9998;
+        pointer-events: all; /* Blockiert alle Klicks */
+    }
+
+    /* Nachricht über dem Overlay */
     .portrait-warning::after {
-        content: "Please rotate your device for better experience";
+        content: "Please rotate your device\A for better experience";
+        white-space: pre; /* Erlaubt Zeilenumbruch mit \A */
         position: fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         background: rgba(0, 0, 0, 0.9);
         color: white;
-        padding: 20px;
-        border-radius: 10px;
-        font-size: 18px;
+        padding: 30px 40px;
+        border-radius: 15px;
+        font-size: 20px;
         text-align: center;
         z-index: 9999;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        pointer-events: none; /* Text selbst nicht klickbar */
+    }
+
+    /* Alle Inhalte deaktivieren wenn Portrait */
+    .portrait-warning > * {
+        pointer-events: none !important;
+        user-select: none !important;
+    }
+
+    /* Canvas speziell blockieren */
+    .portrait-warning #canvas,
+    .portrait-warning .wrapper,
+    .portrait-warning button,
+    .portrait-warning .mobile-controls {
+        pointer-events: none !important;
+        opacity: 0.3; /* Optional: Inhalt abdunkeln */
+    }
+}
+
+/* ============================================
+   OPTIONAL: Rotation Icon hinzufügen
+   ============================================ */
+@media (max-width: 1024px) and (orientation: portrait) {
+    .portrait-warning::after {
+        content: "Please rotate your device\A for better experience";
+        font-size: 18px;
+        line-height: 1.6;
     }
 }

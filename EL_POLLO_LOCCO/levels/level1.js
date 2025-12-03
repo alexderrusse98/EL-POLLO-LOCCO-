@@ -27,9 +27,21 @@ function bottles(minCount, maxCount, minX, maxX) {
  */
 function createLevel1() {
     return new Level(
-       [
+        [
             new ChickenNormal(),
-             new ChickenSmall(),
+            new ChickenSmall(),
+            new ChickenNormal(),
+            new ChickenNormal(),
+            new ChickenSmall(),
+            new ChickenNormal(),
+            new ChickenNormal(),
+            new ChickenSmall(),
+            new ChickenNormal(),
+            new ChickenNormal(),
+            new ChickenSmall(),
+            new ChickenNormal(),
+            new ChickenNormal(),
+            new ChickenSmall(),
             new ChickenNormal(),
             new ChickenNormal(),
             new ChickenSmall(),

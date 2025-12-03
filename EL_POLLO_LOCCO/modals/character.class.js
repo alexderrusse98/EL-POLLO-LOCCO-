@@ -271,7 +271,7 @@ class Character extends MovableObject {
      * @returns {boolean} True if collision occurs
      */
     isJumpHit(playerBounds, enemyBounds) {
-        const yTolerance = 50;
+        const yTolerance = 40;
         const horizontalHit = playerBounds.right > enemyBounds.left &&
             playerBounds.left < enemyBounds.right;
         const verticalHit = playerBounds.bottom >= enemyBounds.top &&
@@ -286,6 +286,7 @@ class Character extends MovableObject {
      */
     executeJumpKill(enemy) {
         enemy.deadChicken();
+        this.y = enemy.y - this.height;
         this.speedY = 15;
         this.isBouncing = true;
         this.bounceFrame = 0;
@@ -297,7 +298,7 @@ class Character extends MovableObject {
      */
     playBounceAnimation() {
         const bounceFrames = [6, 7, 8];
-        const frameDelay = 100;
+        const frameDelay = 60;
 
         bounceFrames.forEach((frameIndex, i) => {
             setTimeout(() => {
@@ -312,7 +313,6 @@ class Character extends MovableObject {
             }, i * frameDelay);
         });
     }
-
     /**
      * Handles jump input and initiates jump animation
      * @returns {boolean} True if a jump was performed
