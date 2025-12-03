@@ -44,6 +44,9 @@ class MovableObject extends DrawableObject {
       );
    }
 
+   /**
+    * Updates the object's position and velocity based on gravity.
+    */
    updateGravity() {
       if (this.shouldSkipGravity()) return;
 
@@ -58,15 +61,17 @@ class MovableObject extends DrawableObject {
    }
 
    /**
-    * Checks if gravity update should be skipped (e.g., when dead).
+    * Checks if gravity update should be skipped (e.g., when dead and fallen).
     * @returns {boolean} True if gravity should be skipped.
     */
    shouldSkipGravity() {
-    if (this.isDead && this.isDead()) {
-        return this.y >= 500;
-    }
-    return false;
-}
+      // FÜR CHARACTER: Gravity läuft immer weiter wenn er tot ist, bis er bei y=500 ist
+      // Für andere Objekte: Standard-Verhalten
+      if (this instanceof Character && this.isDead()) {
+         return this.y >= 500;
+      }
+      return false;
+   }
 
    /**
     * Checks if object should handle splash animation.
@@ -79,18 +84,15 @@ class MovableObject extends DrawableObject {
    }
 
    /**
-    * Handles the splash animation for throwable objects.
-    */
-   handleSplash() {
-      this.hasSplashed = true;
-      this.animateSplash();
-   }
-
-   /**
     * Checks if falling physics should be applied.
     * @returns {boolean} True if object should fall.
     */
    shouldApplyFalling() {
+      // FÜR CHARACTER: Immer fallen wenn in der Luft ODER tot und noch nicht am Boden
+      if (this instanceof Character && this.isDead()) {
+         return this.y < 500;
+      }
+      // Standard: Fallen wenn in der Luft oder aufwärts bewegt
       return this.isAboveGround() || this.speedY > 0;
    }
 
@@ -143,12 +145,12 @@ class MovableObject extends DrawableObject {
    }
 
    /**
- * Creates an interval for playing animation frames sequentially.
- * @param {string[]} images - Array of image paths for the animation.
- * @param {Function} [callback] - Optional callback function to execute after animation.
- * @param {number} intervalTime - Time between frames in milliseconds.
- * @returns {number} The interval ID.
- */
+    * Creates an interval for playing animation frames sequentially.
+    * @param {string[]} images - Array of image paths for the animation.
+    * @param {Function} [callback] - Optional callback function to execute after animation.
+    * @param {number} intervalTime - Time between frames in milliseconds.
+    * @returns {number} The interval ID.
+    */
    createAnimationInterval(images, callback, intervalTime) {
       let i = 0;
       const interval = setInterval(() => {

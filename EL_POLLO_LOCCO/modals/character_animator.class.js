@@ -13,6 +13,7 @@ class CharacterAnimator {
         this.isDeadAnimationOn = false;
         this.isIdleAnimationOn = false;
         this.isLongIdleAnimationOn = false;
+        this.deathAnimationStarted = false;
     }
 
     /**
@@ -26,9 +27,8 @@ class CharacterAnimator {
             }
             return;
         }
-        
+
         if (this.character.isDead()) {
-            this.character.speedY = 0;
             this.animateDeath();
         } else if (this.character.isAboveGround() && this.isJumpAnimationOn) {
             this.animateJump();
@@ -95,6 +95,14 @@ class CharacterAnimator {
      * Handles death animation sequence
      */
     animateDeath() {
+        if (!this.deathAnimationStarted) {
+            this.deathAnimationStarted = true;
+            this.isDeadAnimationOn = true;
+
+            this.character.speedY = 0;
+            this.deathSpeedX = 2;
+        }
+
         this.setDeathImage();
         this.updateDeathPhysics();
     }
@@ -110,35 +118,32 @@ class CharacterAnimator {
     }
 
     /**
-     * Determines which death frame to show based on how far character has fallen
+     * Determines which death frame to show based on Y position
      */
     getDeathFrame() {
-        const fallDown = Math.max(0, this.character.y - 80);
+        const yPos = this.character.y;
 
-        if (fallDown < 10) return 0;
-        if (fallDown < 50) return 2;
-        if (fallDown < 100) return 3;
-        if (fallDown < 150) return 4;
-        if (fallDown < 300) return 5;
+        if (yPos < 140) return 0;
+        if (yPos < 180) return 1;
+        if (yPos < 220) return 2;
+        if (yPos < 280) return 3;
+        if (yPos < 350) return 4;
+        if (yPos < 420) return 5;
         return 6;
     }
 
     /**
      * Updates physics for death animation (falling and sliding)
+     * Manuelle Physik weil die normale Gravity hier nicht greift
      */
     updateDeathPhysics() {
-        if (!this.character.speedY) this.character.speedY = 10;
-
         if (this.character.y < 500) {
-            this.character.y += this.character.speedY;
-            this.character.speedY += 0.8;
-            this.character.x += 10;
+            this.character.y += 2;
+            this.character.x += 2;
         } else {
             this.character.y = 500;
-            this.character.speedY = 0;
         }
     }
-
     /** Plays hurt animation */
     animateHurt() {
         this.character.playAnimation(this.character.IMAGES_HURT);
@@ -151,7 +156,7 @@ class CharacterAnimator {
         this.isLongIdleAnimationOn = false;
         this.character.playAnimation(this.character.IMAGES_WALKING);
     }
-    
+
     /**
      * Handles idle and long idle animations based on last movement time
      */
