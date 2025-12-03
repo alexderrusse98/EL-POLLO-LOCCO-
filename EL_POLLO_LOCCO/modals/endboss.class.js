@@ -76,6 +76,7 @@ class Endboss extends MovableObject {
 
         this.x = 2500;
         this.speed = 0.15 + Math.random() * 0.5;
+        this.energy = 100;
         this.movingRight = true;
         this.isAlerted = false;
 
@@ -105,6 +106,13 @@ class Endboss extends MovableObject {
     deadChicken() {
         this.isDead = true;
         this.animator.showDeadAnimation();
+    }
+
+    /**
+     * Initiates an attack sequence.
+     */
+    attack() {
+        this.animator.attack();
     }
 
     /**

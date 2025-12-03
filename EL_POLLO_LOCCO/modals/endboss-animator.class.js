@@ -12,17 +12,27 @@ class EndbossAnimator {
         this.deathAnimationStarted = false;
         this.attackCounter = 0;
         this.dashInterval = null;
+        this.isDashing = false;
+        this.isPlayingAttackAnimation = false;
     }
 
     /**
      * Main animation handler that switches between states based on current condition.
      */
     animateCharacter() {
-        if (this.endboss.isDead) this.deathState();
-        else if (this.endboss.isHurt()) this.hurtState();
-        else if (this.endboss.isAttackAnimation) this.animateAttack();
-        else if (this.endboss.isAlerted) this.alertState();
-        else this.walkingState();
+        if (this.endboss.isDead) {
+            this.deathState();
+        } else if (this.endboss.isHurt()) {
+            this.hurtState();
+        } else if (this.isPlayingAttackAnimation && !this.isDashing) {
+            // Nur Attack-Animation wenn nicht am Dashen
+            this.animateAttack();
+        } else if (this.endboss.isAlerted) {
+            // Immer Walking wenn alerted (außer bei Attack-Animation oben)
+            this.animateWalking();
+        } else {
+            this.walkingState();
+        }
     }
 
     /**
@@ -31,14 +41,6 @@ class EndbossAnimator {
     hurtState() {
         this.clearAlertTimeout();
         this.animateHurt();
-    }
-
-    /**
-     * Handles alert state with direction change and animation.
-     */
-    alertState() {
-        this.alertOtherDirection();
-        this.animateAlert();
     }
 
     /**
@@ -54,8 +56,8 @@ class EndbossAnimator {
      */
     alertOtherDirection() {
         if (!this.alertwaiting) {
-            this.alertwaiting = setTimeout(() => { 
-                this.endboss.otherDirection = false; 
+            this.alertwaiting = setTimeout(() => {
+                this.endboss.otherDirection = false;
             }, 100);
         }
     }
@@ -92,14 +94,10 @@ class EndbossAnimator {
     }
 
     /**
-     * Plays attack or walking animation based on dash state.
+     * Plays the attack animation frames.
      */
     animateAttack() {
-        if (this.dashInterval) {
-            this.endboss.playAnimation(this.endboss.IMAGES_WALKING);
-        } else {
-            this.endboss.playAnimation(this.endboss.IMAGES_ATTACK);
-        }
+        this.endboss.playAnimation(this.endboss.IMAGES_ATTACK);
     }
 
     /**
@@ -120,8 +118,8 @@ class EndbossAnimator {
      */
     showDeadAnimation() {
         this.endboss.img = this.endboss.imageCache[this.endboss.IMAGES_DEAD[0]];
-        setTimeout(() => { 
-            this.endboss.markForDeletion = true; 
+        setTimeout(() => {
+            this.endboss.markForDeletion = true;
         }, 1000);
     }
 
@@ -131,8 +129,28 @@ class EndbossAnimator {
     playAlertAnimation() {
         if (!this.endboss.isAlerted && !this.endboss.isAttackAnimation) {
             this.endboss.isAlerted = true;
-            this.attack();
+            // Spiele einmalig die Alert-Animation
+            this.playAlertSequence();
+            // Starte dann die Attacks
+            setTimeout(() => {
+                this.attack();
+            }, 800);
         }
+    }
+
+    /**
+     * Plays the alert animation sequence once
+     */
+    playAlertSequence() {
+        this.alertOtherDirection();
+        let alertFrameCount = 0;
+        const alertInterval = setInterval(() => {
+            this.animateAlert();
+            alertFrameCount++;
+            if (alertFrameCount >= this.endboss.IMAGES_ALERT.length) {
+                clearInterval(alertInterval);
+            }
+        }, 100);
     }
 
     /**
@@ -149,6 +167,7 @@ class EndbossAnimator {
      */
     startAttack() {
         this.endboss.isAttackAnimation = true;
+        this.isPlayingAttackAnimation = true;
         this.attackCounter++;
     }
 
@@ -180,8 +199,9 @@ class EndbossAnimator {
      * Schedules the end of attack animation after delay.
      */
     scheduleAttackEnd() {
-        setTimeout(() => { 
-            this.endboss.isAttackAnimation = false; 
+        setTimeout(() => {
+            this.endboss.isAttackAnimation = false;
+            this.isPlayingAttackAnimation = false;
         }, 1000);
     }
 
@@ -189,7 +209,7 @@ class EndbossAnimator {
      * Performs a normal attack with moderate jump and horizontal movement.
      */
     normalAttack() {
-        this.endboss.speedY = 30;
+        this.endboss.speedY = 45;
         this.startDash(50, 300);
     }
 
@@ -197,7 +217,7 @@ class EndbossAnimator {
      * Performs a big attack with high jump and fast dash movement.
      */
     bigAttack() {
-        this.endboss.speedY = 40;
+        this.endboss.speedY = 60;
         this.startDash(100, 400);
     }
 
@@ -209,6 +229,8 @@ class EndbossAnimator {
     startDash(distance, duration) {
         if (this.isDashActive()) return;
 
+        this.isDashing = true;
+        this.isPlayingAttackAnimation = false; // Während Dash: Walking Animation
         const dashData = this.prepareDashData(distance);
         this.executeDash(dashData, duration);
     }
@@ -290,6 +312,7 @@ class EndbossAnimator {
     endDash() {
         clearInterval(this.dashInterval);
         this.dashInterval = null;
+        this.isDashing = false;
     }
 
     /**
@@ -300,6 +323,7 @@ class EndbossAnimator {
         if (this.dashInterval) {
             clearInterval(this.dashInterval);
             this.dashInterval = null;
+            this.isDashing = false;
         }
     }
 }
