@@ -51,10 +51,10 @@
     color: white;
     font-size: 24px;
     margin: 15px 0;
-    display: flex;
+    display: grid;
+    grid-template-columns: 150px 1fr;
     align-items: center;
-    justify-content: center;
-    gap: 15px;
+    gap: 20px;
 }
 
 .key {
@@ -232,6 +232,7 @@
    RESPONSIVE: TABLETS (bis 1024px)
    ============================================ */
 @media (max-width: 1024px) {
+
     .controls-box,
     .story-box,
     .impressum-box {
@@ -269,6 +270,7 @@
    RESPONSIVE: bis 768px
    ============================================ */
 @media (max-width: 768px) {
+
     .controll-section,
     .character-story-section,
     .impressum-section {
@@ -326,6 +328,7 @@
    RESPONSIVE: bis 480px
    ============================================ */
 @media (max-width: 480px) {
+
     .controll-section,
     .character-story-section,
     .impressum-section {
@@ -391,6 +394,7 @@
    RESPONSIVE: bis 360px
    ============================================ */
 @media (max-width: 360px) {
+
     .controll-section,
     .character-story-section,
     .impressum-section {
@@ -455,6 +459,7 @@
    RESPONSIVE: bis 320px
    ============================================ */
 @media (max-width: 320px) {
+
     .controll-section,
     .character-story-section,
     .impressum-section {
@@ -526,6 +531,7 @@
    LANDSCAPE ORIENTATION
    ============================================ */
 @media (max-width: 768px) and (orientation: landscape) {
+
     .controls-box,
     .story-box,
     .impressum-box {
