@@ -158,9 +158,12 @@ class CharacterAnimator {
     }
 
     /**
-     * Handles idle and long idle animations based on last movement time
-     */
+    * Handles idle and long idle animations based on last movement time
+    */
     handleResting() {
+        // Setze sofort das erste Idle-Frame beim ersten Aufruf
+        this.ensureIdleFrame();
+
         const now = new Date().getTime();
         const idleTime = (now - this.character.lastMoveTime) / 1000;
 
@@ -174,6 +177,15 @@ class CharacterAnimator {
     }
 
     /**
+     * Ensures character shows idle frame when not animating
+     */
+    ensureIdleFrame() {
+        if (!this.isIdleAnimationOn && !this.isLongIdleAnimationOn) {
+            this.character.img = this.character.imageCache[this.character.IMAGES_IDLE[0]];
+        }
+    }
+
+    /**
      * Plays the short idle animation once
      */
     handleIdleAnimation() {
@@ -182,7 +194,9 @@ class CharacterAnimator {
             this.isLongIdleAnimationOn = false;
             this.character.playAnimationOnce(
                 this.character.IMAGES_IDLE,
-                () => { this.isIdleAnimationOn = false; },
+                () => {
+                    this.isIdleAnimationOn = false;
+                },
                 200
             );
         }
