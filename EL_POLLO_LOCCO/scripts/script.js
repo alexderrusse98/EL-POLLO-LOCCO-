@@ -31,8 +31,6 @@ function initDeviceDetection() {
       showMobileControls();
     }
   }, { once: true });
-  
-  console.log('Touch Device:', isTouchDevice);
 }
 
 /**

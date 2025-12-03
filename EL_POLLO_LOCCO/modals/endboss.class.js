@@ -290,14 +290,15 @@ class Endboss extends MovableObject {
     normalAttack() {
         this.speedY = 30;
         const direction = this.otherDirection ? 1 : -1;
-        this.x += 150 * direction;
+        this.x += 50 * direction;
     }
 
     bigAttack() {
         this.speedY = 40;
         const direction = this.otherDirection ? 1 : -1;
-        this.x += 300 * direction;
+        this.x += 100 * direction;
     }
+
 
     /**
      * Handles movement logic when boss is in walking state.
