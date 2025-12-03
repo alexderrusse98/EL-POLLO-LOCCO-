@@ -75,12 +75,13 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_DEAD);
 
         this.x = 2500;
-        this.speed = 0.15 + Math.random() * 0.25;
+        this.speed = 0.15 + Math.random() * 0.5;
         this.animate();
         this.movingRight = true;
         this.isAlerted = false;
         this.deathAnimationStarted = false;
         this.attackCounter = 0;
+        this.dashInterval = null;
     }
 
     /**
@@ -89,6 +90,10 @@ class Endboss extends MovableObject {
     stopAllIntervals() {
         this.intervals.forEach(clearInterval);
         this.intervals = [];
+        if (this.dashInterval) {
+            clearInterval(this.dashInterval);
+            this.dashInterval = null;
+        }
     }
 
     /**
@@ -257,7 +262,7 @@ class Endboss extends MovableObject {
      * Schedules the attack execution after a delay.
      */
     scheduleAttackExecution() {
-        setTimeout(() => { this.executeAttack(); }, 1000);
+        setTimeout(() => { this.executeAttack(); }, 500);
     }
 
     /**
@@ -281,7 +286,7 @@ class Endboss extends MovableObject {
      * Schedules the end of attack animation after delay.
      */
     scheduleAttackEnd() {
-        setTimeout(() => { this.isAttackAnimation = false; }, 1500);
+        setTimeout(() => { this.isAttackAnimation = false; }, 1000);
     }
 
     /**
@@ -289,16 +294,39 @@ class Endboss extends MovableObject {
      */
     normalAttack() {
         this.speedY = 30;
-        const direction = this.otherDirection ? 1 : -1;
-        this.x += 50 * direction;
+        this.startDash(50, 300); // 50px Distanz über 300ms
     }
 
+    /**
+     * Performs a big attack with high jump and fast dash movement.
+     */
     bigAttack() {
         this.speedY = 40;
-        const direction = this.otherDirection ? 1 : -1;
-        this.x += 100 * direction;
+        this.startDash(100, 400); // 100px Distanz über 400ms
     }
 
+
+    startDash(distance, duration) {
+        if (this.dashInterval) return; // Verhindert mehrfache Dashes
+
+        const direction = this.otherDirection ? 1 : -1;
+        const startTime = Date.now();
+        const startX = this.x;
+        const targetX = startX + (distance * direction);
+
+        this.dashInterval = setInterval(() => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Smooth movement mit easing
+            this.x = startX + (distance * direction * progress);
+
+            if (progress >= 1) {
+                clearInterval(this.dashInterval);
+                this.dashInterval = null;
+            }
+        }, 1000 / 60); // 60 FPS
+    }
 
     /**
      * Handles movement logic when boss is in walking state.
@@ -317,49 +345,54 @@ class Endboss extends MovableObject {
     }
 
     /**
-     * Plays the attack animation frames.
+     * Plays attack or walking animation based on dash state.
      */
     animateAttack() {
-        this.playAnimation(this.IMAGES_ATTACK);
+        if (this.dashInterval) {
+            this.playAnimation(this.IMAGES_WALKING);
+        } else {
+            this.playAnimation(this.IMAGES_ATTACK);
+        }
     }
 
-/**
- * Main method: handles following logic
- */
-followCharacter() {
-    if (!this.canFollowCharacter()) return;
+    /**
+     * Main method: handles following logic
+     */
+    followCharacter() {
+        if (!this.canFollowCharacter()) return;
 
-    const characterX = this.world.character.x;
-    const bossX = this.x;
+        const characterX = this.world.character.x;
+        const bossX = this.x;
 
-    this.updateDirection(characterX, bossX);
-    this.moveTowardsCharacter();
-}
+        this.updateDirection(characterX, bossX);
+        this.moveTowardsCharacter();
+    }
 
-/**
- * Prevents errors by checking references
- */
-canFollowCharacter() {
-    return this.world && this.world.character;
-}
+    /**
+     * Prevents errors by checking references
+     */
+    canFollowCharacter() {
+        return this.world && this.world.character;
+    }
 
-/**
- * Updates facing direction based on character's position
- */
-updateDirection(characterX, bossX) {
-    this.otherDirection = !(characterX < bossX);
-}
+    /**
+     * Updates facing direction based on character's position
+     */
+    updateDirection(characterX, bossX) {
+        this.otherDirection = !(characterX < bossX);
+    }
 
-/**
+    /**
  * Moves the boss depending on its direction & attack state
  */
-moveTowardsCharacter() {
-    if (this.isAttackAnimation) return;
-    const moveSpeed = this.speed * 3;
-    if (this.otherDirection) {
-        this.x += moveSpeed;
-    } else {
-        this.x -= moveSpeed;
+    moveTowardsCharacter() {
+        if (this.dashInterval) return;
+
+        const moveSpeed = this.speed * 3;
+        if (this.otherDirection) {
+            this.x += moveSpeed;
+        } else {
+            this.x -= moveSpeed;
+        }
     }
-}
 }
