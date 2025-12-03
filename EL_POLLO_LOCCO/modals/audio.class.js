@@ -45,6 +45,7 @@ class Audios {
                 this.sounds[key].volume = 0.5;
             }
         });
+        this.loadAudioPreference();
     }
 
     /**
@@ -130,6 +131,7 @@ class Audios {
      */
     toggleMute() {
         this.isMuted = !this.isMuted;
+        this.saveAudioPreference();
 
         if (this.isMuted) {
             this.sounds.backgroundMusic.pause();
@@ -139,4 +141,28 @@ class Audios {
 
         return this.isMuted;
     }
+
+    /**
+   * Loads the audio mute preference from localStorage.
+   * Defaults to muted if no preference is saved.
+   * @returns {void}
+   */
+    loadAudioPreference() {
+        const savedMuteState = localStorage.getItem('audioMuted');
+
+        if (savedMuteState !== null) {
+            this.isMuted = savedMuteState === 'true';
+        } else {
+            this.isMuted = true;
+        }
+    }
+
+    /**
+  * Saves the current mute state to localStorage.
+  * @returns {void}
+  */
+    saveAudioPreference() {
+        localStorage.setItem('audioMuted', this.isMuted.toString());
+    }
+
 }

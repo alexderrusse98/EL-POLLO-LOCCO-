@@ -8,6 +8,7 @@
  * @event DOMContentLoaded
  */
 window.addEventListener('DOMContentLoaded', () => {
+  initializeAudioButton();
   updateViewState();
   document.getElementById('startButton').addEventListener('click', startGame);
   document.getElementById('controllsBtn').addEventListener('click', showControls);
@@ -246,6 +247,24 @@ function toggleAudio() {
     btn.textContent = '🔊';
     btn.classList.remove('muted');
     audios.playBackgroundMusic();
+  }
+}
+
+/**
+ * Initializes the audio button state based on saved localStorage preference.
+ * Updates button icon and class to reflect current mute state.
+ * @returns {void}
+ */
+function initializeAudioButton() {
+  const btn = document.getElementById('audioBtn');
+  const isMuted = audios.isMuted;
+
+  if (isMuted) {
+    btn.textContent = '🔇';
+    btn.classList.add('muted');
+  } else {
+    btn.textContent = '🔊';
+    btn.classList.remove('muted');
   }
 }
 

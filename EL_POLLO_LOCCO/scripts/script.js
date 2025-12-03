@@ -17,6 +17,11 @@ function startGame() {
   document.getElementById('backToMenuBtn').classList.remove('hidden');
 
   autoFullscreenForMobile();
+
+  if (!audios.isMuted) {
+    audios.playBackgroundMusic();
+  }
+
   level1 = createLevel1();
   init();
   updateViewState();
