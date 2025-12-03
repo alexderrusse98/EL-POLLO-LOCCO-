@@ -151,6 +151,7 @@ class WorldRenderer {
             this.addToMap(obj);
         });
     }
+    
     /**
      * Draws all collectable items (bottles, coins).
      */

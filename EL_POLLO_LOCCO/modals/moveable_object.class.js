@@ -65,8 +65,6 @@ class MovableObject extends DrawableObject {
     * @returns {boolean} True if gravity should be skipped.
     */
    shouldSkipGravity() {
-      // FÜR CHARACTER: Gravity läuft immer weiter wenn er tot ist, bis er bei y=500 ist
-      // Für andere Objekte: Standard-Verhalten
       if (this instanceof Character && this.isDead()) {
          return this.y >= 500;
       }
@@ -88,11 +86,9 @@ class MovableObject extends DrawableObject {
     * @returns {boolean} True if object should fall.
     */
    shouldApplyFalling() {
-      // FÜR CHARACTER: Immer fallen wenn in der Luft ODER tot und noch nicht am Boden
       if (this instanceof Character && this.isDead()) {
          return this.y < 500;
       }
-      // Standard: Fallen wenn in der Luft oder aufwärts bewegt
       return this.isAboveGround() || this.speedY > 0;
    }
 

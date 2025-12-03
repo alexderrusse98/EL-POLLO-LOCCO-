@@ -1,7 +1,6 @@
 /**
  * GAME.JS - Handles game logic, initialization, and controls
  */
-
 let canvas;
 let world;
 let keyboard = new Keyboard();
@@ -15,8 +14,8 @@ let isTouchDevice = false;
  */
 function detectTouchDevice() {
   return ('ontouchstart' in window) ||
-         (navigator.maxTouchPoints > 0) ||
-         (navigator.msMaxTouchPoints > 0);
+    (navigator.maxTouchPoints > 0) ||
+    (navigator.msMaxTouchPoints > 0);
 }
 
 /**
@@ -24,7 +23,7 @@ function detectTouchDevice() {
  */
 function initDeviceDetection() {
   isTouchDevice = detectTouchDevice();
-  
+
   window.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'touch') {
       isTouchDevice = true;
@@ -55,20 +54,30 @@ function hideMobileControls() {
 
 /**
  * Starts the game by hiding the start menu, initializing the level and creating the game world.
- * Also activates mobile controls when available.
+ * Also handles canvas dimensions and activates mobile controls when available.
  */
 function startGame() {
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('backToMenuBtn').classList.remove('hidden');
 
+  if (!audios.isMuted) {
+    audios.playBackgroundMusic();
+  }
+
   if (isTouchDevice) {
     showMobileControls();
   }
 
-  autoFullscreenForMobile();
   level1 = createLevel1();
   init();
   updateViewState();
+  
+  const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+  if (isFullscreen) {
+    updateCanvasFullscreen(document.getElementById('canvas'));
+  } else {
+    updateCanvasResponsive();
+  }
 }
 
 /**
@@ -105,12 +114,10 @@ function setupTouchControls() {
   const rightBtn = document.querySelector('.control-btn.right');
   const jumpBtn = document.querySelector('.control-btn.jump');
   const throwBtn = document.querySelector('.control-btn.throw');
-
   if (!leftBtn || !rightBtn || !jumpBtn || !throwBtn) {
     console.warn('Touch control buttons not found');
     return;
   }
-
   addTouchControl(leftBtn, 'LEFT');
   addTouchControl(rightBtn, 'RIGHT');
   addTouchControl(jumpBtn, 'SPACE');
@@ -118,29 +125,51 @@ function setupTouchControls() {
 }
 
 /**
- * Registers touch events on a control button that map to keyboard actions.
- * @param {HTMLElement} button - Visual touch button.
- * @param {string} key - Keyboard property to toggle.
+ * Registers all touch/pointer events for a control button.
+ * @param {HTMLElement} button - Button element
+ * @param {string} key - Keyboard key mapping
  */
 function addTouchControl(button, key) {
+  registerTouchStart(button, key);
+  registerTouchEnd(button, key);
+  registerPointerEvents(button, key);
+  disableContextMenu(button);
+}
+
+/**
+ * Handles touchstart event (activate key + button state)
+ * @param {HTMLElement} button - Button element
+ * @param {string} key - Keyboard key mapping
+ */
+function registerTouchStart(button, key) {
   button.addEventListener('touchstart', (e) => {
     e.preventDefault();
     keyboard[key] = true;
     button.classList.add('active');
   });
+}
 
-  button.addEventListener('touchend', (e) => {
+/**
+ * Handles touchend + touchcancel event (deactivate key + button state)
+ * @param {HTMLElement} button - Button element
+ * @param {string} key - Keyboard key mapping
+ */
+function registerTouchEnd(button, key) {
+  const endHandler = (e) => {
     e.preventDefault();
     keyboard[key] = false;
     button.classList.remove('active');
-  });
+  };
+  button.addEventListener('touchend', endHandler);
+  button.addEventListener('touchcancel', endHandler);
+}
 
-  button.addEventListener('touchcancel', (e) => {
-    e.preventDefault();
-    keyboard[key] = false;
-    button.classList.remove('active');
-  });
-
+/**
+ * Handles pointerdown/up for touch devices
+ * @param {HTMLElement} button - Button element
+ * @param {string} key - Keyboard key mapping
+ */
+function registerPointerEvents(button, key) {
   button.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'touch') {
       e.preventDefault();
@@ -148,7 +177,6 @@ function addTouchControl(button, key) {
       button.classList.add('active');
     }
   });
-
   button.addEventListener('pointerup', (e) => {
     if (e.pointerType === 'touch') {
       e.preventDefault();
@@ -156,17 +184,20 @@ function addTouchControl(button, key) {
       button.classList.remove('active');
     }
   });
+}
 
-  // Verhindere Kontext-Menü
-  button.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-  });
+/**
+ * Prevents long-press menu on touchscreen buttons
+ * @param {HTMLElement} button - Button element
+ */
+function disableContextMenu(button) {
+  button.addEventListener('contextmenu', (e) => e.preventDefault());
 }
 
 /**
  * Handles keyboard keydown events and maps them to game controls.
  * @event keydown
- * @param {KeyboardEvent} e
+ * @param {KeyboardEvent} e - Keyboard event
  */
 window.addEventListener('keydown', (e) => {
   if (e.keyCode == 39) keyboard.RIGHT = true;
@@ -181,7 +212,7 @@ window.addEventListener('keydown', (e) => {
 /**
  * Handles keyboard keyup events and deactivates game control actions.
  * @event keyup
- * @param {KeyboardEvent} e
+ * @param {KeyboardEvent} e - Keyboard event
  */
 window.addEventListener('keyup', (e) => {
   if (e.keyCode == 39) keyboard.RIGHT = false;
@@ -193,7 +224,10 @@ window.addEventListener('keyup', (e) => {
   if (e.keyCode == 82) keyboard.R = false;
 });
 
-// Initialize device detection and touch controls when DOM is ready
+/**
+ * Initialize device detection and touch controls when DOM is ready
+ * @listens DOMContentLoaded
+ */
 window.addEventListener('DOMContentLoaded', () => {
   initDeviceDetection();
   setupTouchControls();

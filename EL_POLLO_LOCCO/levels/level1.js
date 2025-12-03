@@ -40,18 +40,6 @@ function createLevel1() {
             new ChickenNormal(),
             new ChickenSmall(),
             new ChickenNormal(),
-            new ChickenNormal(),
-            new ChickenSmall(),
-            new ChickenNormal(),
-            new ChickenNormal(),
-            new ChickenSmall(),
-            new ChickenNormal(),
-            new ChickenNormal(),
-            new ChickenSmall(),
-            new ChickenNormal(),
-            new ChickenNormal(),
-            new ChickenSmall(),
-            new ChickenNormal(),
         ],
 
         [

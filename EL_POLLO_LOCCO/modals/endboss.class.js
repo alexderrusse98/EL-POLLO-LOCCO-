@@ -323,24 +323,43 @@ class Endboss extends MovableObject {
         this.playAnimation(this.IMAGES_ATTACK);
     }
 
-    /**
-     * Folgt dem Character und passt die Richtung an
-     */
-    followCharacter() {
-        if (!this.world || !this.world.character) return;
+/**
+ * Main method: handles following logic
+ */
+followCharacter() {
+    if (!this.canFollowCharacter()) return;
 
-        const characterX = this.world.character.x;
-        const bossX = this.x;
-        if (characterX < bossX) {
-            this.otherDirection = false;
-            if (!this.isAttackAnimation) {
-                this.x -= this.speed * 3;
-            }
-        } else {
-            this.otherDirection = true;
-            if (!this.isAttackAnimation) {
-                this.x += this.speed * 3;
-            }
-        }
+    const characterX = this.world.character.x;
+    const bossX = this.x;
+
+    this.updateDirection(characterX, bossX);
+    this.moveTowardsCharacter();
+}
+
+/**
+ * Prevents errors by checking references
+ */
+canFollowCharacter() {
+    return this.world && this.world.character;
+}
+
+/**
+ * Updates facing direction based on character's position
+ */
+updateDirection(characterX, bossX) {
+    this.otherDirection = !(characterX < bossX);
+}
+
+/**
+ * Moves the boss depending on its direction & attack state
+ */
+moveTowardsCharacter() {
+    if (this.isAttackAnimation) return;
+    const moveSpeed = this.speed * 3;
+    if (this.otherDirection) {
+        this.x += moveSpeed;
+    } else {
+        this.x -= moveSpeed;
     }
+}
 }

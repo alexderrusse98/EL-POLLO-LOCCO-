@@ -1,5 +1,5 @@
 /**
- * Manages game state including game over and win conditions.
+ * Manages all game state transitions such as game over and win conditions.
  */
 class GameStateManager {
     /** @type {boolean} Whether game over has been triggered */
@@ -22,6 +22,7 @@ class GameStateManager {
 
     /**
      * Creates a GameStateManager instance.
+     * @constructor
      * @param {World} world - Reference to the main world instance.
      */
     constructor(world) {
@@ -31,16 +32,19 @@ class GameStateManager {
 
     /**
      * Loads the game over and win screen images.
+     * @returns {void}
      */
     loadEndScreenImages() {
         this.gameOverImage = new Image();
         this.gameOverImage.src = './img/img_pollo_locco/img/You won, you lost/Game Over.png';
+
         this.winImage = new Image();
         this.winImage.src = './img/img_pollo_locco/img/You won, you lost/You Win A.png';
     }
 
     /**
-     * Checks game over and win conditions.
+     * Evaluates win or game over conditions and triggers appropriate handlers.
+     * @returns {void}
      */
     checkGameOver() {
         if (this.isCharacterDead()) {
@@ -51,26 +55,33 @@ class GameStateManager {
     }
 
     /**
-     * Checks if character is dead and game over not yet triggered.
-     * @returns {boolean} True if character is dead.
+     * Determines whether the character is dead and game over not yet triggered.
+     * @returns {boolean} True if character is dead and no game over processed.
      */
     isCharacterDead() {
         return this.world.character.isDead() && !this.gameOver;
     }
 
     /**
-     * Checks if boss is defeated and game not yet won.
-     * @returns {boolean} True if boss is defeated.
+     * Determines whether the boss is defeated and game win not yet triggered.
+     * @returns {boolean} True if the boss is defeated.
      */
     isBossDefeated() {
-        return this.world.endBoss &&
+        return (
+            this.world.endBoss &&
             this.world.endBoss.energy <= 0 &&
-            !this.gameWin;
+            !this.gameWin
+        );
     }
 
+    /**
+     * Handles game over logic (cleanup, audio, UI, flags).
+     * @returns {void}
+     */
     handleGameOver() {
         this.gameOverTriggered = true;
         this.world.audios.playSound('characterDeadSound');
+
         clearInterval(this.world.intervals[0]);
 
         setTimeout(() => {
@@ -78,13 +89,17 @@ class GameStateManager {
             this.world.audios.stopBackgroundMusic();
             this.world.audios.playSound('gameOverSound');
             this.world.stopGame();
-            
             this.hideMobileControls();
         }, 2000);
     }
 
+    /**
+     * Handles game win logic (cleanup, audio, UI, flags).
+     * @returns {void}
+     */
     handleGameWin() {
         this.gameWinTriggered = true;
+
         clearInterval(this.world.intervals[0]);
 
         setTimeout(() => {
@@ -97,9 +112,10 @@ class GameStateManager {
     }
 
     /**
-     * Displays the end game image (win or game over).
-     * @param {CanvasRenderingContext2D} ctx - Canvas context.
-     * @param {HTMLCanvasElement} canvas - Canvas element.
+     * Draws the final screen image (win or game over) and restart text.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     * @param {HTMLCanvasElement} canvas - Canvas element used for rendering.
+     * @returns {void}
      */
     showEndImg(ctx, canvas) {
         const imgToShow = this.gameOver ? this.gameOverImage : this.winImage;
@@ -110,15 +126,16 @@ class GameStateManager {
     }
 
     /**
-     * Calculates scaled image dimensions.
+     * Computes properly scaled image dimensions for the end screen.
      * @param {HTMLCanvasElement} canvas - Canvas element.
-     * @returns {Object} Image dimensions and position.
+     * @returns {{imgX:number, imgY:number, imgWidth:number, imgHeight:number}} Scaled dimensions.
      */
     calculateImageDimensions(canvas) {
         const scaleFactor = 0.6;
         const imgWidth = canvas.width * scaleFactor;
         const imgHeight = canvas.height * scaleFactor;
         const offsetY = -40;
+
         const imgX = (canvas.width - imgWidth) / 2;
         const imgY = (canvas.height - imgHeight) / 2 + offsetY;
 
@@ -126,10 +143,11 @@ class GameStateManager {
     }
 
     /**
-     * Draws the end game image.
-     * @param {CanvasRenderingContext2D} ctx - Canvas context.
+     * Draws the end screen image.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
      * @param {HTMLImageElement} img - Image to draw.
-     * @param {Object} dimensions - Image dimensions.
+     * @param {{imgX:number,imgY:number,imgWidth:number,imgHeight:number}} dimensions - Image dimensions.
+     * @returns {void}
      */
     drawEndImage(ctx, img, dimensions) {
         ctx.drawImage(
@@ -142,10 +160,11 @@ class GameStateManager {
     }
 
     /**
-     * Draws restart instruction text.
-     * @param {CanvasRenderingContext2D} ctx - Canvas context.
+     * Draws restart instructions depending on device type.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
      * @param {HTMLCanvasElement} canvas - Canvas element.
-     * @param {Object} dimensions - Image dimensions.
+     * @param {{imgY:number,imgHeight:number}} dimensions - Image geometry.
+     * @returns {void}
      */
     drawRestartText(ctx, canvas, dimensions) {
         ctx.font = 'bold 30px Arial';
@@ -155,9 +174,7 @@ class GameStateManager {
         ctx.textAlign = 'center';
 
         const isMobile = window.innerWidth <= 1181;
-        const restartMessage = isMobile ?
-            'Tap screen to restart' :
-            'Press R to restart';
+        const restartMessage = isMobile ? 'Tap screen to restart' : 'Press R to restart';
         const textY = dimensions.imgY + dimensions.imgHeight + 50;
 
         ctx.strokeText(restartMessage, canvas.width / 2, textY);
@@ -165,27 +182,62 @@ class GameStateManager {
     }
 
     /**
-     * Cleans up game resources.
-     */
+  * Fully cleans up running game systems before restart.
+  * @returns {void}
+  */
     cleanup() {
+        this.stopGameLoops();
+        this.cleanupAudio();
+        this.resetWorldArrays();
+        this.clearCanvas();
+    }
+
+    /**
+     * Stops running game loops & animation frames.
+     */
+    stopGameLoops() {
         this.world.stopGame();
+
         if (this.world.animationFrameId) {
             cancelAnimationFrame(this.world.animationFrameId);
             this.world.animationFrameId = null;
         }
+    }
+
+    /**
+     * Stops all audio playback.
+     */
+    cleanupAudio() {
         this.world.audios.stopBackgroundMusic();
         this.world.audios.stopAllSounds();
+    }
+
+    /**
+     * Clears enemies, items, and thrown objects from the world.
+     */
+    resetWorldArrays() {
         this.world.throwAbleObjects = [];
         this.world.level.enemies = [];
         this.world.level.coins = [];
         this.world.level.bottles = [];
-        this.world.ctx.clearRect(0, 0,
+    }
+
+    /**
+     * Clears the entire canvas.
+     */
+    clearCanvas() {
+        this.world.ctx.clearRect(
+            0,
+            0,
             this.world.canvas.width,
             this.world.canvas.height
         );
     }
 
-    
+    /**
+     * Restarts the entire game by resetting objects, bars, and systems.
+     * @returns {void}
+     */
     restartGame() {
         this.cleanup();
         this.resetGameState();
@@ -195,7 +247,10 @@ class GameStateManager {
         this.showMobileControls();
     }
 
-  
+    /**
+     * Hides mobile control UI.
+     * @returns {void}
+     */
     hideMobileControls() {
         const mobileControls = document.getElementById('mobileControls');
         if (mobileControls) {
@@ -203,18 +258,22 @@ class GameStateManager {
         }
     }
 
-  
+    /**
+     * Shows mobile controls unless device orientation is portrait.
+     * @returns {void}
+     */
     showMobileControls() {
         const mobileControls = document.getElementById('mobileControls');
         const isPortrait = window.innerHeight > window.innerWidth;
-        
+
         if (mobileControls && !isPortrait) {
             mobileControls.classList.remove('hidden');
         }
     }
 
     /**
-     * Resets game state flags.
+     * Resets game state flags and camera.
+     * @returns {void}
      */
     resetGameState() {
         this.gameOver = false;
@@ -226,7 +285,8 @@ class GameStateManager {
     }
 
     /**
-     * Resets game objects to initial state.
+     * Resets all major game objects (character, enemies, items).
+     * @returns {void}
      */
     resetGameObjects() {
         this.world.level = createLevel1();
@@ -237,7 +297,8 @@ class GameStateManager {
     }
 
     /**
-     * Resets all status bars to initial values.
+     * Resets all HUD status bars to initial values.
+     * @returns {void}
      */
     resetStatusBars() {
         this.world.statusBarHealth.setPercentage(100);
@@ -248,7 +309,8 @@ class GameStateManager {
     }
 
     /**
-     * Restarts game systems and loops.
+     * Restarts all game loops, world systems, and audio.
+     * @returns {void}
      */
     restartGameSystems() {
         this.world.setWorld();

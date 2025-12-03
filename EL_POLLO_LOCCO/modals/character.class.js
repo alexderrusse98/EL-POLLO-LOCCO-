@@ -299,7 +299,6 @@ class Character extends MovableObject {
     playBounceAnimation() {
         const bounceFrames = [6, 7, 8];
         const frameDelay = 60;
-
         bounceFrames.forEach((frameIndex, i) => {
             setTimeout(() => {
                 if (this.isBouncing) {
@@ -313,6 +312,7 @@ class Character extends MovableObject {
             }, i * frameDelay);
         });
     }
+    
     /**
      * Handles jump input and initiates jump animation
      * @returns {boolean} True if a jump was performed
