@@ -1,8 +1,9 @@
 /**
  * Base class for all chicken-type enemies.
  * Handles movement, animations, and death behavior.
+ * Can be instantiated as normal or small chicken via type parameter.
  */
-class ChickenBase extends MovableObject {
+class Chicken extends MovableObject {
     height = 55;
     width = 70;
     y = 375;
@@ -13,10 +14,43 @@ class ChickenBase extends MovableObject {
     static lastSpawnX = 300;
     static minDistance = 200;
 
-    constructor() {
+    IMAGES_WALKING_NORMAL = [
+        './img/img_pollo_locco/img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
+        './img/img_pollo_locco/img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
+        './img/img_pollo_locco/img/3_enemies_chicken/chicken_normal/1_walk/3_w.png',
+    ];
+
+    IMAGES_DEAD_NORMAL = [
+        './img/img_pollo_locco/img/3_enemies_chicken/chicken_normal/2_dead/dead.png'
+    ];
+
+    IMAGES_WALKING_SMALL = [
+        './img/img_pollo_locco/img/3_enemies_chicken/chicken_small/1_walk/1_w.png',
+        './img/img_pollo_locco/img/3_enemies_chicken/chicken_small/1_walk/2_w.png',
+        './img/img_pollo_locco/img/3_enemies_chicken/chicken_small/1_walk/3_w.png',
+    ];
+
+    IMAGES_DEAD_SMALL = [
+        './img/img_pollo_locco/img/3_enemies_chicken/chicken_small/2_dead/dead.png'
+    ];
+
+    /**
+     * Creates a new chicken enemy
+     * @param {string} type - Type of chicken: 'normal' or 'small' (default: 'normal')
+     */
+    constructor(type = 'normal') {
         super();
-        this.x = ChickenBase.lastSpawnX + ChickenBase.minDistance + Math.random() * 300;
-        ChickenBase.lastSpawnX = this.x;
+        
+        this.type = type;
+        this.IMAGES_WALKING = type === 'small' ? this.IMAGES_WALKING_SMALL : this.IMAGES_WALKING_NORMAL;
+        this.IMAGES_DEAD = type === 'small' ? this.IMAGES_DEAD_SMALL : this.IMAGES_DEAD_NORMAL;
+
+        this.loadImage(this.IMAGES_WALKING[0]);
+        this.loadImages(this.IMAGES_WALKING);
+        this.loadImages(this.IMAGES_DEAD);
+
+        this.x = Chicken.lastSpawnX + Chicken.minDistance + Math.random() * 300;
+        Chicken.lastSpawnX = this.x;
         this.x = 300 + Math.random() * 2500;
 
         this.speed = 0.15 + Math.random() * 0.25;

@@ -241,7 +241,7 @@ class MovableObject extends DrawableObject {
       if (this instanceof Character) {
          return this.getCharacterOffset();
       }
-      if (this instanceof ChickenBase) {
+      if (this instanceof Chicken) {
          return this.getChickenOffset();
       }
       return this.getDefaultOffset();
