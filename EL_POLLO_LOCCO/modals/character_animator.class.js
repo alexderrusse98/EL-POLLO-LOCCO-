@@ -20,12 +20,13 @@ class CharacterAnimator {
      * Determines which animation to play based on character state.
      */
     animateCharacter() {
-        this.handleResting();
         if (this.character.isBouncing) {
             if (this.isJumpAnimationOn) {
                 this.handleJumpEnd();
             }
-            return;}
+            return;
+        }
+        
         if (this.character.isDead()) {
             this.character.speedY = 0;
             this.animateDeath();
@@ -34,7 +35,15 @@ class CharacterAnimator {
         } else if (this.character.isHurt() && !this.character.isAboveGround()) {
             this.animateHurt();
         } else if (!this.character.isAboveGround()) {
-            this.animateWalking(); }
+            // Check if character is moving
+            const kbd = this.character.world.keyboard;
+            if (kbd.RIGHT || kbd.LEFT) {
+                this.animateWalking();
+            } else {
+                // Only handle resting if character is NOT moving
+                this.handleResting();
+            }
+        }
     }
 
     /**
@@ -137,14 +146,14 @@ class CharacterAnimator {
         this.character.playAnimation(this.character.IMAGES_HURT);
     }
 
-    /** Plays walking animation if moving left or right */
+    /** Plays walking animation */
     animateWalking() {
-        const kbd = this.character.world.keyboard;
-        if (kbd.RIGHT || kbd.LEFT) {
-            this.character.playAnimation(this.character.IMAGES_WALKING);
-        }
+        this.character.clearIdleIntervals();
+        this.isIdleAnimationOn = false;
+        this.isLongIdleAnimationOn = false;
+        this.character.playAnimation(this.character.IMAGES_WALKING);
     }
-
+    
     /**
      * Handles idle and long idle animations based on last movement time
      */

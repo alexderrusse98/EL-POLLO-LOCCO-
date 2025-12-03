@@ -155,7 +155,7 @@ class MovableObject extends DrawableObject {
          this.updateAnimationFrame(images, i);
          i++;
          if (this.isAnimationComplete(i, images.length)) {
-            clearInterval(interval);  // ✅ Interval direkt hier clearen
+            clearInterval(interval);
             callback?.();
          }
       }, intervalTime);
