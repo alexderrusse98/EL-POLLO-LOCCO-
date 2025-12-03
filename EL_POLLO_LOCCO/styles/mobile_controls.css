@@ -58,9 +58,9 @@
 }
 
 /* ============================================
-   RESPONSIVE: TABLETS (bis 1024px)
+   RESPONSIVE: TABLETS (bis 1181px)
    ============================================ */
-@media (max-width: 1024px) {
+@media (max-width: 1181px) {
     .mobile-controls:not(.hidden) {
         display: flex;
     }

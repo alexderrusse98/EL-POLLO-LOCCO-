@@ -21,8 +21,6 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('impressumBtn').addEventListener('click', showImpressum);
   document.getElementById('closeImpressumBtn').addEventListener('click', hideImpressum);
   document.getElementById('backToMenuBtn').addEventListener('click', backToMenu);
-
-  // Close overlays when clicking outside
   document.getElementById('controllsSection').addEventListener('click', (e) => {
     if (e.target.id === 'controllsSection') hideControls();
   });
@@ -53,7 +51,7 @@ function startGame() {
   autoFullscreenForMobile();
   level1 = createLevel1();
   init();
-  updateViewState(); // Update controls visibility when game starts
+  updateViewState();
 }
 
 /**
@@ -97,7 +95,6 @@ function updateViewState() {
   const isGameActive = startScreen.classList.contains('hidden');
   const screenWidth = window.innerWidth;
 
-  // Show portrait warning only in portrait mode
   if (portrait) {
     body.classList.add('portrait-warning');
   } else {
