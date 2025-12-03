@@ -37,16 +37,22 @@
     border: 3px solid #fff;
     border-radius: 50%;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.1s ease;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     user-select: none;
     -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.control-btn:active {
+/* Active State beim Drücken */
+.control-btn:active,
+.control-btn.active {
     background-color: #ff8c42;
-    transform: scale(0.95);
+    transform: scale(0.92);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
@@ -61,6 +67,13 @@
    RESPONSIVE: TABLETS (bis 1181px)
    ============================================ */
 @media (max-width: 1181px) {
+    .mobile-controls:not(.hidden) {
+        display: flex;
+    }
+}
+
+/* Zeige Controls NUR auf Touch-Geräten */
+@media (hover: none) and (pointer: coarse) {
     .mobile-controls:not(.hidden) {
         display: flex;
     }
@@ -112,9 +125,6 @@
     }
 }
 
-/* ============================================
-   RESPONSIVE: bis 320px
-   ============================================ */
 @media (max-width: 320px) {
     .mobile-controls {
         width: 98%;
@@ -142,12 +152,15 @@
     }
 }
 
-/* ============================================
-   TOUCH OPTIMIZATION
-   ============================================ */
 @media (hover: none) and (pointer: coarse) {
     .control-btn {
         min-width: 44px;
         min-height: 44px;
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .mobile-controls {
+        display: none !important;
     }
 }

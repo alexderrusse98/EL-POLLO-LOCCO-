@@ -7,6 +7,53 @@ let world;
 let keyboard = new Keyboard();
 let level1;
 let audios = new Audios();
+let isTouchDevice = false;
+
+/**
+ * Detects if the device supports touch input
+ * @returns {boolean} True if touch is supported
+ */
+function detectTouchDevice() {
+  return ('ontouchstart' in window) ||
+         (navigator.maxTouchPoints > 0) ||
+         (navigator.msMaxTouchPoints > 0);
+}
+
+/**
+ * Initializes device detection on page load
+ */
+function initDeviceDetection() {
+  isTouchDevice = detectTouchDevice();
+  
+  window.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch') {
+      isTouchDevice = true;
+      showMobileControls();
+    }
+  }, { once: true });
+  
+  console.log('Touch Device:', isTouchDevice);
+}
+
+/**
+ * Shows mobile controls if touch device is detected
+ */
+function showMobileControls() {
+  const mobileControls = document.getElementById('mobileControls');
+  if (mobileControls && isTouchDevice) {
+    mobileControls.classList.remove('hidden');
+  }
+}
+
+/**
+ * Hides mobile controls
+ */
+function hideMobileControls() {
+  const mobileControls = document.getElementById('mobileControls');
+  if (mobileControls) {
+    mobileControls.classList.add('hidden');
+  }
+}
 
 /**
  * Starts the game by hiding the start menu, initializing the level and creating the game world.
@@ -15,6 +62,10 @@ let audios = new Audios();
 function startGame() {
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('backToMenuBtn').classList.remove('hidden');
+
+  if (isTouchDevice) {
+    showMobileControls();
+  }
 
   autoFullscreenForMobile();
   level1 = createLevel1();
@@ -32,7 +83,7 @@ function backToMenu() {
     world = null;
   }
   document.getElementById('backToMenuBtn').classList.add('hidden');
-  document.getElementById('mobileControls').classList.add('hidden');
+  hideMobileControls();
   document.getElementById('startScreen').classList.remove('hidden');
   document.getElementById('startContent').classList.remove('hidden');
   document.getElementById('characterInfoBtn').classList.remove('hidden');
@@ -57,6 +108,11 @@ function setupTouchControls() {
   const jumpBtn = document.querySelector('.control-btn.jump');
   const throwBtn = document.querySelector('.control-btn.throw');
 
+  if (!leftBtn || !rightBtn || !jumpBtn || !throwBtn) {
+    console.warn('Touch control buttons not found');
+    return;
+  }
+
   addTouchControl(leftBtn, 'LEFT');
   addTouchControl(rightBtn, 'RIGHT');
   addTouchControl(jumpBtn, 'SPACE');
@@ -70,13 +126,40 @@ function setupTouchControls() {
  */
 function addTouchControl(button, key) {
   button.addEventListener('touchstart', (e) => {
+    e.preventDefault();
     keyboard[key] = true;
+    button.classList.add('active');
   });
 
   button.addEventListener('touchend', (e) => {
+    e.preventDefault();
     keyboard[key] = false;
+    button.classList.remove('active');
   });
 
+  button.addEventListener('touchcancel', (e) => {
+    e.preventDefault();
+    keyboard[key] = false;
+    button.classList.remove('active');
+  });
+
+  button.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch') {
+      e.preventDefault();
+      keyboard[key] = true;
+      button.classList.add('active');
+    }
+  });
+
+  button.addEventListener('pointerup', (e) => {
+    if (e.pointerType === 'touch') {
+      e.preventDefault();
+      keyboard[key] = false;
+      button.classList.remove('active');
+    }
+  });
+
+  // Verhindere Kontext-Menü
   button.addEventListener('contextmenu', (e) => {
     e.preventDefault();
   });
@@ -112,5 +195,8 @@ window.addEventListener('keyup', (e) => {
   if (e.keyCode == 82) keyboard.R = false;
 });
 
-// Initialize touch controls when DOM is ready
-window.addEventListener('DOMContentLoaded', setupTouchControls);
+// Initialize device detection and touch controls when DOM is ready
+window.addEventListener('DOMContentLoaded', () => {
+  initDeviceDetection();
+  setupTouchControls();
+});
